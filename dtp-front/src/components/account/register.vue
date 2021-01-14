@@ -1,7 +1,10 @@
 <template lang="html">
 
-  <section class="register">
-    <h1>register Component</h1>
+  <section class="login">
+    <h1>Register Component</h1>
+    <input type="text" v-bind:value="username"/>
+    <input type="text" v-bind:value="password"/>
+    <button v-on:click="registering"></button>
   </section>
 
 </template>
@@ -10,7 +13,7 @@
 
   export default  {
     name: 'register',
-    props: [],
+    props: ['username', 'password'],
     mounted () {
 
     },
@@ -20,7 +23,9 @@
       }
     },
     methods: {
+      registering() {
 
+      }
     },
     computed: {
 

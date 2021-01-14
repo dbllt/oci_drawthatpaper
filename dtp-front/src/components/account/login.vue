@@ -1,9 +1,10 @@
 <template lang="html">
 
   <section class="login">
-    <h1>login Component</h1>
-    <input type="text" v-bind:value="user"/>
+    <h1>Login Component</h1>
+    <input type="text" v-bind:value="username"/>
     <input type="text" v-bind:value="password"/>
+    <button v-on:click="connect"></button>
   </section>
 
 </template>
@@ -12,9 +13,9 @@
 
   export default  {
     name: 'login',
-    props: ['user', 'password'],
+    props: ['username', 'password'],
     mounted () {
-
+      self.username = "TEST";
     },
     data () {
       return {
@@ -22,7 +23,9 @@
       }
     },
     methods: {
+      connect(){
 
+      }
     },
     computed: {
 
