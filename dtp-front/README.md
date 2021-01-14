@@ -22,3 +22,10 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+# Start with android
+npm install
+cd src-cordova
+cordova platform add android # Verify utility
+npm run cordova-serve-android
