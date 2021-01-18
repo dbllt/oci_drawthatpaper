@@ -91,6 +91,25 @@ export default {
       this.$refs.canvas.addEventListener('mousemove', this.draw);
       this.$refs.canvas.addEventListener('mouseup', () => this.isDrawing = false);
       this.$refs.canvas.addEventListener('mouseout', () => this.isDrawing = false);
+      // this should remain a temporary hack. obviously it will stay
+      let touchToMouseHack = (event) => {
+        let touch = event.changedTouches[0];
+        let rect = touch.target.getBoundingClientRect();
+        event.offsetX = touch.clientX - rect.left;
+        event.offsetY = touch.clientY - rect.top;
+      };
+      this.$refs.canvas.addEventListener('touchstart', (event) => {
+        touchToMouseHack(event);
+        this.isDrawing = true;
+        [this.lastX, this.lastY] = [event.offsetX, event.offsetY];
+        event.preventDefault();
+      });
+      this.$refs.canvas.addEventListener('touchmove', (event) => {
+        touchToMouseHack(event);
+        this.draw(event);
+        event.preventDefault();
+      });
+      this.$refs.canvas.addEventListener('touchend', () => this.isDrawing = false);
     },
     changeTool(tool) {
       this.selectedToolIdx = tool;

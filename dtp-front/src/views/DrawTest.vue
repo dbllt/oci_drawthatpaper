@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CanvasDraw :width="640" :height="480" :outputName="'example'"/>
+    <CanvasDraw :width="256" :height="480" :brushSize="4" :outputName="'example'"/>
   </div>
 </template>
 <script>
