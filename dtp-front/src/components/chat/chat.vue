@@ -2,8 +2,9 @@
 
   <div class="chat">
     <h1>chat Component</h1>
-    <ul style="height:300px;width:99%;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
-      <chat-msg v-for="m in messages" :key="m" :client="m.client" :msg="m.msg"/>
+    <ul ref="box">
+      <chat-msg v-for="(m, idx) in messages" :key="idx" :client="m.client" :msg="m.msg"/>
+      <br>
     </ul>
     <section class="login">
       <input type="text" v-model="inputMessage" @keydown.enter="_submit()"/>
@@ -23,9 +24,7 @@ export default  {
     'messageLimit',
   ],
   mounted () {
-    for (let i = 0; i < 200; i++) {
-      this.addMessage("Max", i.toString());
-    }
+    this.scrollToBottom();
   },
   data () {
     return {
@@ -42,23 +41,29 @@ export default  {
       this.messages.clear();
     },
     addMessage : function(client, msg) {
+      if (msg.length === 0) {
+        return ;
+      }
       this.messages.push({"client":client, "msg":msg});
       if (this.messages.length >= this.messageLimit && this.messages.length !== 0) {
         this.messages.shift();
       }
     },
     sendMessage : function(client, msg) {
-      if (this.onMessageSent) {
-        return this.onMessageSent(client,msg);
+      if (msg.length === 0) {
+        return false;
       }
-      /*if (this.onMessageSent(client, msg)) {
-        return this.onMessageSent(client, msg);
-      }*/
-      return false;
+      //this.addMessage(client, msg);
+      return this.onMessageSent(client,msg);
+    },
+
+    scrollToBottom() {
+      this.$refs.box.scrollTop = this.$refs.box.scrollHeight;
     },
 
     _submit() {
       this.sendMessage(this.clientId, this.inputMessage);
+      this.scrollToBottom();
       this.inputMessage = "";
     }
 
@@ -77,5 +82,11 @@ export default  {
 }
 ul {
   text-align: left;
+  height:300px;
+  width:99%;
+  border: 1px solid #ccc;
+  font:16px/26px Georgia, Garamond, Serif;
+  overflow:auto;
+  overflow-y:scroll;
 }
 </style>
