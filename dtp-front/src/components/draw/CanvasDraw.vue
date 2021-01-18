@@ -88,34 +88,35 @@ export default {
         this.isDrawing = true;
         [this.lastX, this.lastY] = [event.offsetX, event.offsetY];
       });
-      this.$refs.canvas.addEventListener('mousemove', this.draw);
+      this.$refs.canvas.addEventListener('mousemove', (event) => this.draw(event.offsetX, event.offsetY));
       this.$refs.canvas.addEventListener('mouseup', () => this.isDrawing = false);
+      // TODO instead of abandoning the draw on mouseout, use mousemove on whole page
       this.$refs.canvas.addEventListener('mouseout', () => this.isDrawing = false);
-      // this should remain a temporary hack. obviously it will stay
-      let touchToMouseHack = (event) => {
-        let touch = event.changedTouches[0];
+      // TODO handle multiple touches
+      // TODO maybe move this function elsewhere
+      let offsetFromTouch = (touch) => {
         let rect = touch.target.getBoundingClientRect();
-        event.offsetX = touch.clientX - rect.left;
-        event.offsetY = touch.clientY - rect.top;
+        return [touch.clientX - rect.left, touch.clientY - rect.top];
       };
       this.$refs.canvas.addEventListener('touchstart', (event) => {
-        touchToMouseHack(event);
         this.isDrawing = true;
-        [this.lastX, this.lastY] = [event.offsetX, event.offsetY];
+        [this.lastX, this.lastY] = offsetFromTouch(event.changedTouches[0]);
         event.preventDefault();
       });
       this.$refs.canvas.addEventListener('touchmove', (event) => {
-        touchToMouseHack(event);
-        this.draw(event);
+        this.draw(...offsetFromTouch(event.changedTouches[0]));
         event.preventDefault();
       });
-      this.$refs.canvas.addEventListener('touchend', () => this.isDrawing = false);
+      this.$refs.canvas.addEventListener('touchend', (event) => {
+        this.isDrawing = false;
+        event.preventDefault();
+      });
     },
     changeTool(tool) {
       this.selectedToolIdx = tool;
     },
-    draw(event) {
-      this.drawCursor(event);
+    draw(x, y) {
+      this.drawCursor(x, y);
       if (!this.isDrawing) return;
 
       if (this.tools[this.selectedToolIdx].name === 'Eraser') {
@@ -127,14 +128,14 @@ export default {
 
       this.canvasContext.beginPath();
       this.canvasContext.moveTo(this.lastX, this.lastY);
-      this.canvasContext.lineTo(event.offsetX, event.offsetY);
+      this.canvasContext.lineTo(x, y);
       this.canvasContext.stroke();
-      [this.lastX, this.lastY] = [event.offsetX, event.offsetY];
+      [this.lastX, this.lastY] = [x, y];
     },
-    drawCursor(event) {
+    drawCursor(x, y) {
       this.cursorContext.beginPath();
       this.cursorContext.ellipse(
-        event.offsetX, event.offsetY,
+        x, y,
         this.brushSize, this.brushSize,
         Math.PI / 4, 0, 2 * Math.PI
       );
