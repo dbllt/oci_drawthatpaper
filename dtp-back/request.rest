@@ -1,20 +1,26 @@
-GET http://localhost:3000/users
+GET http://localhost:3000/user/info
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTEwMDg1MjQsImV4cCI6MTYxMTAwODUzOX0.SfxZVpOYK7osHjm7X2lp4AlFa7eQufu4hsfasdr6Y-o
+
+###
+
+PATCH http://localhost:3000/user/update
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTEwMDgyNzAsImV4cCI6MTYxMTAxMDA3MH0.IjB5mM-xy9pxOkf5qBa09pXDzpDIe4FDgcAw6lPJOIk
 
 ### register
 
 POST /register HTTP/1.1
-Host: localhost:4000
+Host: localhost:3000
 Content-Type: application/json
 
 {
-    "name": "Kylo",
+    "username": "Kylo",
     "email": "test@test.com",
     "password": "password"
 }
 
 ### login
 POST /login HTTP/1.1
-Host: localhost:4000
+Host: localhost:3000
 Content-Type: application/json
 
 {
@@ -25,13 +31,22 @@ Content-Type: application/json
 ###
 
 GET http://localhost:3000/users/data
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiS3lsbyIsImlhdCI6MTYxMDk5ODQwNCwiZXhwIjoxNjEwOTk4NDE5fQ.w11O7tBw7-CxrfkYI4PxJr11dwF7gK91BV09Wbrq5IQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiS3lsbyIsImlhdCI6MTYxMDk5ODUyMSwiZXhwIjoxNjEwOTk4NTM2fQ.OxhTQYYQTN8JLJWV9Ur1oH44RrqrhLw7ovJ1vtONY-I
 
 ###
 
-POST http://localhost:4000/token
+DELETE http://localhost:3000/logout
 Content-Type: application/json
 
 {
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiS3lsbyIsImlhdCI6MTYxMDk5ODQwNCwiZXhwIjoxNjEwOTk4NDE5fQ.w11O7tBw7-CxrfkYI4PxJr11dwF7gK91BV09Wbrq5IQ"
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiS3lsbyIsImlhdCI6MTYxMDk5ODk5MX0.mUJFqsCLnqUxBdoX3paDES4bgdArnQqrVtc9pN86EbE"
+}
+
+###
+
+POST http://localhost:3000/token
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTEwMDg1NjJ9.f9UKe7bqiAgyJb9lvdkfCGU-BqN1Aualy5Hlu5AL8VQ"
 }

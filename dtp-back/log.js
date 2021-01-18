@@ -1,6 +1,6 @@
 const FgRed = "\x1b[31m"
 const FgYellow = "\x1b[33m"
-const FgNormal = "'\x1b[0m'"
+const FgNormal = "\x1b[0m"
 
 const logWithColor = function (color, msg) {
     console.log(color, msg, FgNormal)

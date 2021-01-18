@@ -1,14 +1,13 @@
 require('dotenv').config()
 const log = require('./log')
 const express = require('express')
-
 const app = express()
+
+const mysql = require('mysql');
 
 const {
     PORT = 3000,
 } = process.env
-
-console.log(PORT)
 
 const http = require('http').Server(app)
 const io = require('socket.io')(http, {
@@ -33,9 +32,11 @@ io.on('connection', function (socket) {
 
 app.use(express.json())
 
-const usersRouter = require('./routes/users')
-const { JsonWebTokenError } = require('jsonwebtoken')
-app.use('/users', usersRouter)
+const userRouter = require('./routes/user')
+app.use('/user', userRouter)
+
+const authRouter = require('./routes/auth')
+app.use('/', authRouter)
 
 
 http.listen(PORT, function () {

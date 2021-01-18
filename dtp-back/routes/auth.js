@@ -1,32 +1,25 @@
-require('dotenv').config()
-const log = require('./log')
-const bcrypt = require('bcrypt')
 const express = require('express')
+const router = express.Router()
+const log = require('../log')
+const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const app = express()
-
-app.use(express.json())
-
-const users = [{
-    "name": "Kylo",
-    "email": "anothertest@test.com",
-    "password": "$2b$10$fHp51yny58xDJyBjgPfyH.W04MQ22rHYrteFbn2h50TTyJPNFvDVO"
-}]
-
-let refreshTokens = []
+const UsersDao = require('../database/dao').UsersDao
+const RefreshTokensDao = require('../database/dao').RefreshTokensDao
 
 const {
-    AUTH_PORT = 3000,
-        ACCESS_TOKEN_SECRET,
-        REFRESH_TOKEN_SECRET
+    ACCESS_TOKEN_EXPIRATION_TIME,
+    ACCESS_TOKEN_SECRET,
+    REFRESH_TOKEN_SECRET
 } = process.env
 
-app.post('/token', (req, res) => {
+router.post('/token', async (req, res) => {
     const refreshToken = req.body.refreshToken
     if (refreshToken == null) return res.sendStatus(401)
-    if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
+    const refreshTokens = await RefreshTokensDao.getAll()
+    if (!refreshTokens.find(token => token.tokenValue == refreshToken)) return res.sendStatus(403)
     jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, user) => {
         if (err) return res.sendStatus(403)
+        log.debug("Refreshing a token")
         const accessToken = generateAccessToken(user)
         res.json({
             accessToken: accessToken
@@ -34,17 +27,18 @@ app.post('/token', (req, res) => {
     })
 })
 
-app.delete('/logout', (req,res)=>{
+router.delete('/logout', (req, res) => {
     refreshTokens = refreshTokens.filter(token => token !== req.body.refreshToken)
     res.sendStatus(204)
 })
 
-app.post('/login', async (req, res) => {
+router.post('/login', async (req, res) => {
     const {
         email,
         password
     } = req.body
 
+    const users = await UsersDao.getAll();
     const user = users.find(user => user.email == email)
 
     if (user == null) return res.status(400).send('User not found')
@@ -68,11 +62,11 @@ app.post('/login', async (req, res) => {
     }
 })
 
-app.post('/register', async (req, res) => {
+router.post('/register', async (req, res) => {
 
     const {
+        username,
         email,
-        name,
         password
     } = req.body
 
@@ -80,11 +74,14 @@ app.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10) // hashes the password with 10 rounds
 
         const user = {
-            name: name,
+            username: username,
             email: email,
             password: hashedPassword
         }
-        users.push(user)
+        UsersDao.insert(user)
+
+
+
         res.status(201).send()
 
     } catch (err) {
@@ -99,7 +96,7 @@ function generateAccessToken(user) {
         name: user.name
     }
     return jwt.sign(userForToken, ACCESS_TOKEN_SECRET, {
-        expiresIn: '15s'
+        expiresIn: ACCESS_TOKEN_EXPIRATION_TIME
     })
 }
 
@@ -108,10 +105,8 @@ function generateRefreshToken(user) {
         name: user.name
     }
     const refreshToken = jwt.sign(userForToken, REFRESH_TOKEN_SECRET)
-    refreshTokens.push(refreshToken)
+    RefreshTokensDao.insert(refreshToken)
     return refreshToken
 }
 
-app.listen(AUTH_PORT, function () {
-    log.debug("Auth server running on, " + AUTH_PORT)
-})
+module.exports = router

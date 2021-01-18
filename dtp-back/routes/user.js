@@ -1,14 +1,23 @@
 const express = require('express')
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
 const router = express.Router()
+const jwt = require('jsonwebtoken')
+
+const UsersDao = require('../database/dao').UsersDao
+
 const log = require('../log')
 
-router.get('/', (req, res) => {
-    res.json(users)
+
+// Getting all
+// Getting one
+// Creating one
+// Updating one
+// Deleting one
+
+router.get('/info', authenticationToken, (req, res) => {
+    res.json(req.user)
 })
 
-router.get('/data',authenticationToken, (req, res) => {
+router.patch('/update', authenticationToken, (req, res) => {
     res.json(req.user)
 })
 
