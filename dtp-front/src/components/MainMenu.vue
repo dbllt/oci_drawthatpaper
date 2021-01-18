@@ -24,11 +24,11 @@ export default {
   methods: {
     create: function () {
 
-      this.$parent.create();
+      this.$router.push("/create");
     },
     join: function () {
 
-      this.$parent.join();
+      this.$router.push("/join");
     },
 
   }

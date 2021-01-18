@@ -21,7 +21,7 @@ export default {
   methods: {
 
     leave: function () {
-      this.$parent.goHome();
+      this.$router.push('/menu')
     }
   }
 }

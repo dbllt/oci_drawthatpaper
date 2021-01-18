@@ -20,12 +20,12 @@ export default {
   methods: {
 
     validateId: function () {
-      this.$parent.startGame(this.gameId)
+      this.$router.push('/game/'+this.gameId)
     },
 
     back: function () {
 
-      this.$parent.goHome();
+      this.$router.push('/menu')
     }
   }
 }
