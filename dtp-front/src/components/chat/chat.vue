@@ -2,12 +2,20 @@
 
   <div class="chat">
     <h1>chat Component</h1>
-    <ul ref="box">
-      <chat-msg v-for="(m, idx) in messages" :key="idx" :client="m.client" :msg="m.msg"/>
-      <br>
-    </ul>
+    <div>
+      <ul ref="box">
+        <chat-msg v-for="(m, idx) in this.messages" :key="idx" :client="m.client" :msg="m.msg"/>
+        <br>
+      </ul>
+      <div style="float:left;">
+        <p>{{inputMessage.length}} / 512</p>
+      </div>
+      <div style="float:right;">
+        <button v-on:click="scrollToBottom()">\/</button>
+      </div>
+    </div>
     <section class="login">
-      <input type="text" v-model="inputMessage" @keydown.enter="_submit()"/>
+      <input type="text" maxlength="512" v-model="inputMessage" @keydown.enter="_submit()"/>
       <button v-on:click="_submit()">Send</button>
     </section>
   </div>
@@ -24,7 +32,7 @@ export default  {
     'messageLimit',
   ],
   mounted () {
-    this.scrollToBottom();
+    this.scrollToBottom(0);
   },
   data () {
     return {
@@ -36,7 +44,6 @@ export default  {
     }
   },
   methods: {
-    // eslint-disable-next-line no-unused-vars
     /**
      * Clear all messages from UI.
      */
@@ -76,8 +83,8 @@ export default  {
     /**
      * Called internally to scroll to bottom of <ul ref="box">
      */
-    scrollToBottom() {
-      this.$refs.box.scrollTop = this.$refs.box.scrollHeight;
+    scrollToBottom(ms=100) {
+      window.setTimeout(()=>{this.$refs.box.scrollTop = this.$refs.box.scrollHeight;}, ms);
     },
 
     /**
@@ -88,7 +95,7 @@ export default  {
       this.sendMessage(this.clientId, this.inputMessage);
       this.scrollToBottom();
       this.inputMessage = "";
-    }
+    },
 
   },
   computed: {
@@ -104,6 +111,8 @@ export default  {
 
 }
 ul {
+  margin: 0;
+  padding: 0;
   text-align: left;
   height:300px;
   width:99%;
@@ -111,5 +120,7 @@ ul {
   font:16px/26px Georgia, Garamond, Serif;
   overflow:auto;
   overflow-y:scroll;
+  scroll-behavior: smooth;
+  list-style: none;
 }
 </style>
