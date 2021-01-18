@@ -37,9 +37,18 @@ export default  {
   },
   methods: {
     // eslint-disable-next-line no-unused-vars
+    /**
+     * Clear all messages from UI.
+     */
     clear() {
       this.messages.clear();
     },
+    /**
+     * Add directly a message into UI.
+     * Message length must be at least 1 to be added.
+     * @param client the username that add the message.
+     * @param msg the string message added to UI.
+     */
     addMessage : function(client, msg) {
       if (msg.length === 0) {
         return ;
@@ -49,18 +58,32 @@ export default  {
         this.messages.shift();
       }
     },
+    /**
+     * Try to sent a message to an handler by using
+     * onMessageSent(client, msg) that decide the behaviour.
+     * Message length must be at least 1 to be added.
+     * @param client the username that add the message.
+     * @param msg the string message sent.
+     * @returns {BooleanConstructor|boolean}
+     */
     sendMessage : function(client, msg) {
       if (msg.length === 0) {
         return false;
       }
-      //this.addMessage(client, msg);
       return this.onMessageSent(client,msg);
     },
 
+    /**
+     * Called internally to scroll to bottom of <ul ref="box">
+     */
     scrollToBottom() {
       this.$refs.box.scrollTop = this.$refs.box.scrollHeight;
     },
 
+    /**
+     * SendMessage using text input value @inputMessage and current client id.
+     * @private
+     */
     _submit() {
       this.sendMessage(this.clientId, this.inputMessage);
       this.scrollToBottom();
