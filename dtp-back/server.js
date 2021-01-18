@@ -1,25 +1,43 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http, {
+require('dotenv').config()
+const log = require('./log')
+const express = require('express')
+
+const app = express()
+
+const {
+    PORT = 3000,
+} = process.env
+
+console.log(PORT)
+
+const http = require('http').Server(app)
+const io = require('socket.io')(http, {
     cors: {
         origin: "http://localhost:8080",
         methods: ["GET", "POST"],
         credentials: true
-      }
-});
+    }
+})
 
 io.on('connection', function (socket) {
-    console.log('a user is connected');
+    log.debug('a user is connected')
     socket.on('disconnect', function () {
-        console.log("A user is disconnected");
+        log.debug("A user is disconnected")
     })
 
     socket.on('chat', function (msg) {
-        console.log("message recu: " + msg);
-        io.emit('chat', msg);
+        log.debug("message recu: " + msg)
+        io.emit('chat', msg)
     })
-});
+})
 
-http.listen(3000, function () {
-    console.log("Server running on, 3000");
-});
+app.use(express.json())
+
+const usersRouter = require('./routes/users')
+const { JsonWebTokenError } = require('jsonwebtoken')
+app.use('/users', usersRouter)
+
+
+http.listen(PORT, function () {
+    log.debug("Server running on, " + PORT)
+})

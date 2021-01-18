@@ -4,14 +4,20 @@
   "description": "server for draw that paper",
   "main": "server.js",
   "dependencies": {
+    "bcrypt": "^5.0.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "http": "^0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
     "socket.io": "^3.1.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js",
+    "startAuth": "nodemon auth.js"
   },
   "author": "",
   "license": "ISC"

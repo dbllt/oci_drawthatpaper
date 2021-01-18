@@ -9,3 +9,17 @@ Make sure to have Node installed.
 ## Start server
 
 `npm start`
+
+
+
+
+
+## Authentification
+
+
+
+- hashage de mdp
+- creation d'utilisateur sur bdd
+- 
+- creation de session avec infos dans la session
+
