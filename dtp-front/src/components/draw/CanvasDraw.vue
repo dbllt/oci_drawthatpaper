@@ -1,7 +1,3 @@
-<!--
-    from https://github.com/sametaylak/vue-draw
-    available under MIT license
--->
 <template>
   <div class="canvas-wrapper" ref="canvasWrapper">
     <div class="draw-area">
