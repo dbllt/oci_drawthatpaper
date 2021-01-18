@@ -1,32 +1,63 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <component :is="currentComponent"></component>
   </div>
 </template>
 
+
+
+
+<script>
+import MainMenu from "@/components/MainMenu";
+import CreateGame from "@/components/CreateGame";
+import JoinGame from "@/components/JoinGame";
+import Game from "@/components/Game";
+export default {
+  name: 'app',
+  data() {
+    return {
+      currentComponent: 'MainMenu'
+    }
+  },
+  methods: {
+    create: function () {
+      this.$router.push('CreateGame')
+
+      this.currentComponent= 'CreateGame'
+
+    },
+    join: function () {
+      this.$router.push('JoinGame')
+      this.currentComponent= 'JoinGame'
+    },
+
+    startGame: function (id) {
+      this.$router.push('game_'+id)
+      this.currentComponent= 'Game'
+    },
+
+    goHome: function () {
+      this.$router.push('/')
+      this.currentComponent= 'MainMenu'
+    }
+  },
+  components: {
+    MainMenu,
+    CreateGame,
+    JoinGame,
+    Game
+  }
+}
+</script>
+
+
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+  margin-top: 60px;
 }
 </style>
