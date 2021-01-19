@@ -1,7 +1,7 @@
 <template lang="html">
 
   <div class="chat">
-    <h1>chat Component</h1>
+    <h1>{{title}}</h1>
     <div>
       <ul ref="box">
         <chat-msg v-for="(m, idx) in this.messages" :key="idx" :client="m.client" :msg="m.msg"/>
@@ -30,11 +30,12 @@ export default  {
   components: {ChatMsg},
   props: [
     'messageLimit',
+    'title'
   ],
   mounted () {
     this.scrollToBottom(0);
   },
-  data () {
+  data: function () {
     return {
       inputMessage: "",
       // eslint-disable-next-line no-unused-vars
@@ -114,7 +115,7 @@ ul {
   margin: 0;
   padding: 0;
   text-align: left;
-  height:300px;
+  height:200px;
   width:99%;
   border: 1px solid #ccc;
   font:16px/26px Georgia, Garamond, Serif;
@@ -122,5 +123,8 @@ ul {
   overflow-y:scroll;
   scroll-behavior: smooth;
   list-style: none;
+}
+.login {
+  display:inline-block;
 }
 </style>

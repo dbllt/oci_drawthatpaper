@@ -1,6 +1,6 @@
 <template lang="html">
 
-  <li class="chat-msg">
+  <li class="chat-msg autofill">
     <p class="box" ref="text">{{client}}</p>
     {{msg}}
   </li>
@@ -8,7 +8,6 @@
 </template>
 
 <script lang="js">
-
   export default  {
     name: 'chat-msg',
     props: ['client', 'msg'],
@@ -68,5 +67,12 @@
     display: inline;
     border-radius: 25px;
     border: 2px solid #00000000;
+  }
+  @media (min-width: 150px) {
+    @media (max-width: 400px) {
+      .autofill {
+        font-size: 3vw;
+      }
+    }
   }
 </style>
