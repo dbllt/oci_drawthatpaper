@@ -38,6 +38,9 @@ router.post('/login', async (req, res) => {
         password
     } = req.body
 
+    log.error(email)
+    log.error(password)
+
     const users = await UsersDao.getAll();
     const user = users.find(user => user.email == email)
 
@@ -54,7 +57,7 @@ router.post('/login', async (req, res) => {
             })
 
         } else {
-            res.send('Not allowed')
+            res.status(401).send('Incorrect password')
         }
     } catch (err) {
         log.error(err)
@@ -70,6 +73,10 @@ router.post('/register', async (req, res) => {
         password
     } = req.body
 
+    const users = await UsersDao.getAll();
+    const user = users.find(user => user.email == email)
+    if (user != null) return res.status(409).send('Email adress already in use')
+
     try {
         const hashedPassword = await bcrypt.hash(password, 10) // hashes the password with 10 rounds
 
@@ -82,7 +89,7 @@ router.post('/register', async (req, res) => {
 
 
 
-        res.status(201).send()
+        res.status(201).send("You have been registered")
 
     } catch (err) {
         log.error(err)

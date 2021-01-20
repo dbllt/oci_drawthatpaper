@@ -1,12 +1,14 @@
 require('dotenv').config()
 const log = require('./log')
 const express = require('express')
+var cors = require('cors')
 const app = express()
 
 const mysql = require('mysql');
 
 const {
     PORT = 3000,
+    SERVER_URL = "http://localhost:"+PORT,
 } = process.env
 
 const http = require('http').Server(app)
@@ -31,6 +33,7 @@ io.on('connection', function (socket) {
 })
 
 app.use(express.json())
+app.use(cors())
 
 const userRouter = require('./routes/user')
 app.use('/user', userRouter)
