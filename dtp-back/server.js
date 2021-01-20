@@ -43,6 +43,7 @@ io.use((socket, next) => {
     return next()
 })
 
+// Chat
 io.on('connection', (socket) => {
     const username = socket.decoded_token.name
     log.debug("User: " + username + " is connected")

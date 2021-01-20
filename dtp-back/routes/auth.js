@@ -50,6 +50,7 @@ router.post('/login', async (req, res) => {
             const refreshToken = generateRefreshToken(user)
             res.json({
                 accessToken: accessToken,
+                expiresIn: ACCESS_TOKEN_EXPIRATION_TIME,
                 refreshToken: refreshToken
             })
 

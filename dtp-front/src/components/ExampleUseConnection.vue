@@ -10,6 +10,7 @@
     <button v-on:click="register()">Register</button>
     <button v-on:click="login()">login</button>
     <button v-on:click="loginError()">login wrong password</button>
+    <button v-on:click="connectToChat()">Connect To Chat</button>
   </div>
 </template>
 
@@ -47,6 +48,9 @@ export default {
         email: "test@test.com",
         password: "something",
       });
+    },
+    connectToChat: function() {
+      this.$connection.$emit(this.$network_actions.ConnectToChat);
     },
   },
   created: function() {
