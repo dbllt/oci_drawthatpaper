@@ -27,7 +27,6 @@ export default {
   },
   methods: {
     clickButton: function() {
-      console.log("sending");
       this.$connection.$emit(this.$network_actions.SendMsg, this.message);
     },
     register: function() {
@@ -61,7 +60,7 @@ export default {
       this.msgs.push("error "+msg);
     });
     this.$connection.$on(this.$network_events.Login.success, (msg) => {
-      this.msgs.push(msg);
+      this.msgs.push("Logged in"+msg);
     });
     this.$connection.$on(this.$network_events.Login.error, (msg) => {
       this.msgs.push("error "+msg);

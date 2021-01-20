@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const log = require('../log')
 
 const {
     DATABASE_URL,
@@ -16,7 +17,7 @@ var connection = mysql.createConnection({
 
 connection.connect(function (err) {
     if (err) throw err;
-    console.log("Connected!");
+    log.debug("Connection to database established")
 });
 
 module.exports = connection;

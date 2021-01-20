@@ -9,12 +9,12 @@ const logWithColor = function (color, msg) {
 const log = {
     error: function (error) {
         if (process.env.NODE_ENV == 'development') {
-            logWithColor(FgRed, "ERROR: " + error)
+            logWithColor(FgRed, "[ERROR] " + error)
         }
     },
     debug: function (msg) {
         if (process.env.NODE_ENV == 'development') {
-            logWithColor(FgYellow, "DEBUG: " + msg)
+            logWithColor(FgYellow, "[DEBUG] " + msg)
         }
     }
 }
