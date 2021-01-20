@@ -34,9 +34,10 @@ const socketEvents = {
 const connection = new Vue()
 
 // Chat
-socket.on(socketEvents.chat, (data) => connection.$emit(actions.ReceiveMsg, data))
+socket.on(socketEvents.chat, (data) => connection.$emit(events.ReceiveMsg, data))
+
 connection.$on(actions.SendMsg, (msg) => {
-    socket.emit(socketEvents.chat, msg)
+    if (msg) socket.emit(socketEvents.chat, msg)
 })
 
 // Authentication

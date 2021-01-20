@@ -38,9 +38,6 @@ router.post('/login', async (req, res) => {
         password
     } = req.body
 
-    log.error(email)
-    log.error(password)
-
     const users = await UsersDao.getAll();
     const user = users.find(user => user.email == email)
 
