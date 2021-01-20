@@ -1,42 +1,70 @@
 <template>
   <div>
-    <Connection />
     <ul>
       <li v-for="m in msgs" :key="m.id">
         {{ m }}
       </li>
     </ul>
-    <input v-model="message" /> <button v-on:click="clickButton()">Send</button>
+    <input v-model="message" />
+    <button v-on:click="clickButton()">Send</button>
+    <button v-on:click="register()">Register</button>
+    <button v-on:click="login()">login</button>
+    <button v-on:click="loginError()">login wrong password</button>
   </div>
 </template>
 
 <script>
-import { bus } from "@/main.js";
-import Connection from "@/components/network/Connection.vue";
-
 export default {
   name: "ExampleUseConnection",
-  components: {
-    Connection,
-  },
   props: {
     msg: String,
   },
   data: function() {
     return {
-      message: '',
+      message: "",
       msgs: [],
     };
   },
   methods: {
     clickButton: function() {
       console.log("sending");
-      bus.$emit(this.$network.SendMsg, this.message);
+      this.$connection.$emit(this.$network_actions.SendMsg, this.message);
+    },
+    register: function() {
+      this.$connection.$emit(this.$network_actions.Register, {
+        username: "John",
+        email: "test@test.com",
+        password: "something",
+      });
+    },
+    loginError: function() {
+      this.$connection.$emit(this.$network_actions.Login, {
+        email: "test@test.com",
+        password: "password",
+      });
+    },
+    login: function() {
+      this.$connection.$emit(this.$network_actions.Login, {
+        email: "test@test.com",
+        password: "something",
+      });
     },
   },
   created: function() {
-    bus.$on(this.$network.ReceiveMsg, (msg) => {
+    this.$connection.$on(this.$network_events.ReceiveMsg, (msg) => {
       this.msgs.push(msg);
+    });
+    this.$connection.$on(this.$network_events.Register.success, (msg) => {
+      this.msgs.push(msg);
+    });
+    this.$connection.$on(this.$network_events.Register.error, (msg) => {
+      this.msgs.push("error "+msg);
+    });
+    this.$connection.$on(this.$network_events.Login.success, (msg) => {
+      this.msgs.push(msg);
+    });
+    this.$connection.$on(this.$network_events.Login.error, (msg) => {
+      this.msgs.push("error "+msg);
     });
   },
 };
