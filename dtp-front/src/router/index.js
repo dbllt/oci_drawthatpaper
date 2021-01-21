@@ -5,6 +5,8 @@ import CreateGame from "@/components/CreateGame";
 import JoinGame from "@/components/JoinGame";
 import Home from "@/views/Home";
 import Game from "@/components/Game";
+import Login from "@/components/Login";
+import Register from "@/components/Register";
 
 
 Vue.use(VueRouter)
@@ -29,6 +31,16 @@ const routes= [
         path: '/menu',
         name: 'MainMenu',
         component: MainMenu
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: Login
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: Register
     },
     {
         path: '/game/:id',
