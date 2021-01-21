@@ -1,0 +1,28 @@
+{
+  "name": "dtp-back",
+  "version": "1.0.0",
+  "description": "server for draw that paper",
+  "main": "server.js",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "http": "^0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "long-timeout": "^0.1.1",
+    "mysql": "^2.18.1",
+    "socket.io": "^3.1.0",
+    "socketio-jwt": "^4.6.2"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js",
+    "startAuth": "nodemon auth.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
