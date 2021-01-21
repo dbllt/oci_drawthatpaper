@@ -24,6 +24,7 @@
     "cordova-serve-osx": "cross-env CORDOVA_PLATFORM=osx vue-cli-service cordova-serve-osx"
   },
   "dependencies": {
+    "@voerro/vue-tagsinput": "^2.4.3",
     "core-js": "^3.6.5",
     "vue": "^2.6.12",
     "vue-carousel": "^0.18.0",

@@ -8,16 +8,17 @@
         <br>
       </ul>
       <div style="float:left;">
-        <p>{{inputMessage.length}} / 512</p>
+        <p style="font-size:10px;">{{inputMessage.length}} / 512</p>
       </div>
       <div style="float:right;">
         <button v-on:click="scrollToBottom()">\/</button>
       </div>
     </div>
-    <section class="login">
+    <section>
       <input type="text" maxlength="512" v-model="inputMessage" @keydown.enter="_submit()"/>
       <button v-on:click="_submit()">Send</button>
     </section>
+    <br/>
   </div>
 
 </template>
@@ -118,6 +119,7 @@ ul {
   height:200px;
   width:99%;
   border: 1px solid #ccc;
+  background-color: #00000012;
   font:16px/26px Georgia, Garamond, Serif;
   overflow:auto;
   overflow-y:scroll;

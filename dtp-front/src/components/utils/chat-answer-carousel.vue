@@ -71,7 +71,7 @@
 
   .carousel-cell {
     width: 90%;
-    height: 400px;
+    height: auto;
     margin-right: 5%;
     #background: #8C8;
     border-radius: 5px;
