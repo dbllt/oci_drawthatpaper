@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 const log = require('./log')
 
 const {
-    SERVER_URL = 'http://localhost:3000'
+    SERVER_URL = 'https://drawthatpaper.istic.univ-rennes1.fr'
 } = process.env
 
 const actions = {

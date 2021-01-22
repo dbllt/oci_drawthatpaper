@@ -6,7 +6,6 @@ import JoinGame from "@/components/JoinGame";
 import Game from "@/components/Game";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
-import Home from '@/components/ExampleUseConnection.vue'
 
 Vue.use(VueRouter)
 

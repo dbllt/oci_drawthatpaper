@@ -1,7 +1,8 @@
 <template>
   <div id="login">
     <h1>Login</h1>
-    <p v-if="error">Please enter an email and a password</p>
+    <p v-if="errorEmpty">Please enter an email and a password</p>
+    <p v-if="error">Invalid email or password</p>
     <input type="text" name="username" v-model="input.email" placeholder="Email"/>
     <input type="password" name="password" v-model="input.password" placeholder="Password"/>
     <button type="button" class="loginButton" v-on:click="login()">Login</button>
@@ -18,22 +19,37 @@ export default {
         email: "",
         password: ""
       },
-      error: false
+      errorEmpty: false,
+      error: false,
     }
   },
   methods: {
     login() {
       if (this.input.email != "" && this.input.password != "") {
-        this.$router.push('/menu');
+
+        this.$connection.$emit(this.$network_actions.Login, {
+          email: this.input.email,
+          password: this.input.password,
+        });
 
       } else {
-        this.error=true;
+        this.errorEmpty = true;
       }
     },
     register() {
       this.$router.push('/register');
     },
-  }
+  },
+    created: function() {
+      this.$connection.$on(this.$network_events.Login.success, () => {
+        console.log('allo');
+        this.$router.push('/menu');
+      });
+      this.$connection.$on(this.$network_events.Login.error, () => {
+        this.error=true;
+      });
+    },
+
 
 }
 </script>
