@@ -97,7 +97,7 @@ router.post('/register', async (req, res) => {
 })
 
 function generateAccessToken(user) {
-    log.debug(JSON.stringify(user))
+    log.debug('Generating an AccessToken')
     const userForToken = {
         userId: user.id,
         name: user.username
