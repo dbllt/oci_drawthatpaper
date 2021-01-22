@@ -7,14 +7,14 @@
     </ul>
     <input v-model="message" />
     <button v-on:click="clickButton()">Send</button>
-    <button v-on:click="register()">Register</button>
+    <!-- <button v-on:click="register()">Register</button>
     <button v-on:click="register2()">Register2</button>
     <button v-on:click="login()">login</button>
-    <button v-on:click="login2()">login2</button>
+    <button v-on:click="login2()">login2</button> -->
     <button v-on:click="createRoom()">create room</button>
     <button v-on:click="joinRoom()">join room</button>
-    <button v-on:click="loginError()">login wrong password</button>
-    <button v-on:click="connectToChat()">Connect To Chat</button>
+    <!-- <button v-on:click="loginError()">login wrong password</button> -->
+    <!-- <button v-on:click="connectToChat()">Connect To Chat</button> -->
   </div>
 </template>
 
