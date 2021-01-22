@@ -2,7 +2,8 @@ import Vue from 'vue'
 import log from '@/log'
 import authentication from '@/network/auth'
 const {
-    SERVER_URL = 'http://localhost:3000'
+    SERVER_URL = 'https://drawthatpaper.istic.univ-rennes1.fr'
+    // SERVER_URL = 'http://localhost:3000'
 } = process.env
 const connection = Vue.prototype.$connection
 const events = Vue.prototype.$network_events
