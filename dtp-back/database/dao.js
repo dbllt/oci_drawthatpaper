@@ -32,7 +32,6 @@ class RefreshTokensDao {
 
         connection.query(sql, token, function (err, result) {
             if (err) throw err;
-            log.debug("refreshToken inserted")
         })
     }
     static async getAll() {

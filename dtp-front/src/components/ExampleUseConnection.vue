@@ -8,7 +8,11 @@
     <input v-model="message" />
     <button v-on:click="clickButton()">Send</button>
     <button v-on:click="register()">Register</button>
+    <button v-on:click="register2()">Register2</button>
     <button v-on:click="login()">login</button>
+    <button v-on:click="login2()">login2</button>
+    <button v-on:click="createRoom()">create room</button>
+    <button v-on:click="joinRoom()">join room</button>
     <button v-on:click="loginError()">login wrong password</button>
     <button v-on:click="connectToChat()">Connect To Chat</button>
   </div>
@@ -30,10 +34,20 @@ export default {
     clickButton: function() {
       this.$connection.$emit(this.$network_actions.SendMsg, this.message);
     },
+    joinRoom: function() {
+      this.$connection.$emit(this.$network_actions.JoinRoom, 1);
+    },
     register: function() {
       this.$connection.$emit(this.$network_actions.Register, {
         username: "John",
         email: "test@test.com",
+        password: "something",
+      });
+    },
+    register2: function() {
+      this.$connection.$emit(this.$network_actions.Register, {
+        username: "Kylo",
+        email: "testtest@test.com",
         password: "something",
       });
     },
@@ -49,8 +63,19 @@ export default {
         password: "something",
       });
     },
+    login2: function() {
+      this.$connection.$emit(this.$network_actions.Login, {
+        email: "testtest@test.com",
+        password: "something",
+      });
+    },
     connectToChat: function() {
       this.$connection.$emit(this.$network_actions.ConnectToChat);
+    },
+    createRoom: function() {
+      this.$connection.$emit(this.$network_actions.CreateRoom, {
+        name:"chat room 1"
+      });
     },
   },
   created: function() {
@@ -67,6 +92,12 @@ export default {
       this.msgs.push("Logged in"+msg);
     });
     this.$connection.$on(this.$network_events.Login.error, (msg) => {
+      this.msgs.push("error "+msg);
+    });
+    this.$connection.$on(this.$network_events.CreateRoom.success, (msg) => {
+      this.msgs.push(msg);
+    });
+    this.$connection.$on(this.$network_events.CreateRoom.error, (msg) => {
       this.msgs.push("error "+msg);
     });
   },
