@@ -3,7 +3,6 @@ import VueRouter from 'vue-router'
 import MainMenu from "@/components/MainMenu";
 import CreateGame from "@/components/CreateGame";
 import JoinGame from "@/components/JoinGame";
-import Home from "@/views/Home";
 import Game from "@/components/Game";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
