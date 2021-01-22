@@ -6,7 +6,7 @@ import JoinGame from "@/components/JoinGame";
 import Game from "@/components/Game";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
-import Home from "@/views/Home";
+import ExampleUseConnection from "@/components/ExampleUseConnection";
 
 Vue.use(VueRouter)
 
@@ -14,7 +14,7 @@ const routes= [
     {
         path: '/',
         name: 'Home',
-        component: Home
+        component: ExampleUseConnection
     },
     {
         path: '/create',

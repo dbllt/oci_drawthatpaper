@@ -5,7 +5,7 @@ CREATE TABLE users (
     password varchar(100) NOT NULL,
     createdAt timestamp NOT NULL DEFAULT current_timestamp
 );
-CREATE TABLE refreshTokens (
+CREATE TABLE refreshtokens (
     id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     tokenValue varchar(200) NOT NULL
 );

@@ -97,7 +97,9 @@ router.post('/register', async (req, res) => {
 })
 
 function generateAccessToken(user) {
+    log.debug('Generating an AccessToken')
     const userForToken = {
+        userId: user.id,
         name: user.username
     }
     return jwt.sign(userForToken, ACCESS_TOKEN_SECRET, {
@@ -107,6 +109,7 @@ function generateAccessToken(user) {
 
 function generateRefreshToken(user) {
     const userForToken = {
+        userId: user.id,
         name: user.username
     }
     const refreshToken = jwt.sign(userForToken, REFRESH_TOKEN_SECRET)
