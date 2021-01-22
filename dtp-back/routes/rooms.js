@@ -47,6 +47,7 @@ router.post('/', authenticationToken, (req, res) => {
 // Join a room
 router.put('/:id', authenticationToken, (req, res) => {
     const room = rooms.find(r => req.params.id == r.id)
+    if(!room) return res.status(404).send()
     room.participants.push(req.user.name)
     res.json(room)
 })
