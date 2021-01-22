@@ -42,7 +42,6 @@ export default {
   },
     created: function() {
       this.$connection.$on(this.$network_events.Login.success, () => {
-        console.log('allo');
         this.$router.push('/menu');
       });
       this.$connection.$on(this.$network_events.Login.error, () => {
