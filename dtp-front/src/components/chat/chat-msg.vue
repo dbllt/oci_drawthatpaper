@@ -1,18 +1,31 @@
 <template lang="html">
 
+<<<<<<< HEAD
   <li class="chat-msg autofill">
     <p class="box" ref="text">{{client}}</p>
     {{msg}}
+=======
+  <li class="chat-msg">
+    {{client}}:{{msg}}
+>>>>>>> main
   </li>
 
 </template>
 
 <script lang="js">
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
   export default  {
     name: 'chat-msg',
     props: ['client', 'msg'],
     mounted () {
+<<<<<<< HEAD
       this.$refs.text.style.background = this.getColor(this.client);
+=======
+
+>>>>>>> main
     },
     data () {
       return {
@@ -20,6 +33,7 @@
       }
     },
     methods: {
+<<<<<<< HEAD
       getColor: function(hash) {
         //const letters = '23456789ABC';
         const letters = 'A3B4C56C7B8A9';
@@ -39,6 +53,9 @@
         }
         return color;
       }
+=======
+
+>>>>>>> main
     },
     computed: {
 
@@ -50,6 +67,7 @@
 
 <style scoped lang="scss">
   .chat-msg {
+<<<<<<< HEAD
     padding:8px;
     list-style: none;
     overflow-wrap: anywhere;
@@ -74,5 +92,8 @@
         font-size: 3vw;
       }
     }
+=======
+    list-style: none;
+>>>>>>> main
   }
 </style>

@@ -98,7 +98,6 @@ export default  {
       this.scrollToBottom();
       this.inputMessage = "";
     },
-
   },
   computed: {
 
