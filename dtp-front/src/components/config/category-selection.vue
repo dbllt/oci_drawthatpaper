@@ -1,14 +1,14 @@
 <template lang="html">
 
   <div class="tags-workspace">
-    <ul>
+    <ul class="button" :style="boardStyle">
       <li class="button" :style="categoryStyle" v-for="(s,idx) in selectedTags" :key="idx">
         #{{s.value}}
         <button class="del" @click="remove(s)">✖</button>
       </li>
       <li class="inputs" :style="inputStyle">
         <button class="del" style="display: inline-block;" @click="_submit()">➕</button>
-        <input class="inputs" :style="inputStyle" v-bind:placeholder="placeholder" type="text" maxlength="512" v-model="inputMessage"
+        <input class="inputs" v-bind:maxlength="inputLimit" :style="inputStyle" v-bind:placeholder="placeholder" type="text" v-model="inputMessage"
                @keydown.enter="_submit()"
                @keydown.delete="_erase()">
 
@@ -39,9 +39,17 @@ Array.prototype.remove = function() {
 };
 
 export default  {
-  name: 'tags-workspace',
+  name: 'category-selection',
   components: {},
   props: {
+    limit: {
+      type: Number,
+      default: -1
+    },
+    inputLimit: {
+      type: Number,
+      default: 64
+    },
     categoryColor: {
       type: String,
       default: "#4CAF50"
@@ -49,6 +57,10 @@ export default  {
     inputColor: {
       type: String,
       default: "#5C5FA1"
+    },
+    boardColor: {
+      type: String,
+      default: "#4CAF50"
     },
     creation: {
       type: Boolean,
@@ -63,7 +75,6 @@ export default  {
     }
   },
   mounted () {
-    console.log(this.defaultTags);
     this.existingTags = this.existingTags.concat(this.defaultTags);
   },
   data: function () {
@@ -77,6 +88,9 @@ export default  {
     add: function(s) {
       this.existingTags.remove(s);
       this.selectedTags.push(s);
+      if (this.limit > 0 && this.selectedTags.length > this.limit) {
+        this.selectedTags.splice(0, this.selectedTags.length - this.limit);
+      }
     },
     remove: function(s) {
       this.selectedTags.remove(s);
@@ -113,8 +127,10 @@ export default  {
       return 'background-color: ' + this.categoryColor + ";";
     },
     inputStyle () {
-      //return "";
       return 'background-color: ' + this.inputColor + ";";
+    },
+    boardStyle () {
+      return 'background-color: ' + this.boardColor + ";";
     }
   },
 }

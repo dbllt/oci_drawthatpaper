@@ -2,7 +2,17 @@
 
   <section class="chat-answer-carousel">
     <flickity class="carousel" ref="flickity" :options="flickityOptions">
-      <div class="carousel-cell"><p>ANSWER AREA</p></div>
+      <div class="carousel-cell">
+        <category-selection
+            :default-tags="[]"
+            :board-color="'#777777'"
+            :input-color="'#999999'"
+            :creation="true"
+            :limit="6"
+            :input-limit="20"
+            :placeholder="'Give an answer!'"
+        ></category-selection>
+      </div>
       <div class="carousel-cell"><chat :message-limit="100" :title="'Game Chat'" ref="chat"></chat></div>
     </flickity>
 
@@ -14,6 +24,7 @@
 </template>
 
 <script lang="js">
+  import CategorySelection from "@/components/config/category-selection";
   import Flickity from 'vue-flickity';
   import Chat from "@/components/chat/chat";
 
@@ -21,7 +32,7 @@
 
     name: 'chat-answer-carousel',
     props: ['buttons'],
-    components: {Flickity, Chat},
+    components: {Flickity, Chat, CategorySelection},
 
     mounted () {
       this.$refs.chat.clientId = "A0123456";
