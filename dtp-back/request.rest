@@ -1,10 +1,10 @@
 GET http://localhost:3000/user/info
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTEwMDg1MjQsImV4cCI6MTYxMTAwODUzOX0.SfxZVpOYK7osHjm7X2lp4AlFa7eQufu4hsfasdr6Y-o
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE2LCJuYW1lIjoiS3lsbyIsImlhdCI6MTYxMTI3NTk2OSwiZXhwIjoyMjU5Mjc1OTY5fQ.ACESLWSHN0Syt7GttRXf0KvytYfWRvUpdC_tSp4ewus
 
 ###
 
 PATCH http://localhost:3000/user/update
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTEwMDgyNzAsImV4cCI6MTYxMTAxMDA3MH0.IjB5mM-xy9pxOkf5qBa09pXDzpDIe4FDgcAw6lPJOIk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE2LCJuYW1lIjoiS3lsbyIsImlhdCI6MTYxMTI3NTk2OSwiZXhwIjoyMjU5Mjc1OTY5fQ.ACESLWSHN0Syt7GttRXf0KvytYfWRvUpdC_tSp4ewus
 
 ### register
 
@@ -14,7 +14,7 @@ Content-Type: application/json
 
 {
     "username": "Kylo",
-    "email": "test@test.com",
+    "email": "kylo@test.com",
     "password": "password"
 }
 
@@ -24,14 +24,14 @@ Host: localhost:3000
 Content-Type: application/json
 
 {
-    "email": "test@test.com",
+    "email": "kylo@test.com",
     "password": "password"
 }
 
 ###
 
 GET http://localhost:3000/users/data
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiS3lsbyIsImlhdCI6MTYxMDk5ODUyMSwiZXhwIjoxNjEwOTk4NTM2fQ.OxhTQYYQTN8JLJWV9Ur1oH44RrqrhLw7ovJ1vtONY-I
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE2LCJuYW1lIjoiS3lsbyIsImlhdCI6MTYxMTI3NTk2OSwiZXhwIjoyMjU5Mjc1OTY5fQ.ACESLWSHN0Syt7GttRXf0KvytYfWRvUpdC_tSp4ewus
 
 ###
 
@@ -50,3 +50,29 @@ Content-Type: application/json
 {
     "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTEwMDg1NjJ9.f9UKe7bqiAgyJb9lvdkfCGU-BqN1Aualy5Hlu5AL8VQ"
 }
+
+###
+
+GET http://localhost:3000/rooms
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE2LCJuYW1lIjoiS3lsbyIsImlhdCI6MTYxMTI3NTk2OSwiZXhwIjoyMjU5Mjc1OTY5fQ.ACESLWSHN0Syt7GttRXf0KvytYfWRvUpdC_tSp4ewus
+###
+
+GET http://localhost:3000/rooms/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE2LCJuYW1lIjoiS3lsbyIsImlhdCI6MTYxMTI3NTk2OSwiZXhwIjoyMjU5Mjc1OTY5fQ.ACESLWSHN0Syt7GttRXf0KvytYfWRvUpdC_tSp4ewus
+
+###
+
+POST http://localhost:3000/rooms
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE2LCJuYW1lIjoiS3lsbyIsImlhdCI6MTYxMTI3NTk2OSwiZXhwIjoyMjU5Mjc1OTY5fQ.ACESLWSHN0Syt7GttRXf0KvytYfWRvUpdC_tSp4ewus
+Content-Type: application/json
+
+{
+    "name": "testRoom"
+}
+
+###
+
+GET http://localhost:3000/rooms/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE2LCJuYW1lIjoiS3lsbyIsImlhdCI6MTYxMTI3NTk2OSwiZXhwIjoyMjU5Mjc1OTY5fQ.ACESLWSHN0Syt7GttRXf0KvytYfWRvUpdC_tSp4ewus
+
+###

@@ -6,9 +6,7 @@ const app = express()
 var cors = require('cors')
 
 const {
-    PORT = 3000,
-        SERVER_URL = "http://localhost:" + PORT,
-        ACCESS_TOKEN_SECRET
+    PORT = 3000,  ACCESS_TOKEN_SECRET
 } = process.env
 
 // Chat
@@ -43,19 +41,8 @@ io.use((socket, next) => {
     return next()
 })
 
-// Chat
-io.on('connection', (socket) => {
-    const username = socket.decoded_token.name
-    log.debug("User: " + username + " is connected")
-    socket.on('disconnect', function () {
-        log.debug("User: " + username + " disconnected")
-    })
-
-    socket.on('chat', function (msg) {
-        log.debug("(" + username + ") : " + msg)
-        io.emit('chat', msg)
-    })
-})
+module.exports = io
+require('./chat')
 
 // API
 app.use(express.json())
@@ -64,9 +51,11 @@ app.use(cors())
 const userRouter = require('./routes/user')
 app.use('/user', userRouter)
 
+const roomsRouter = require('./routes/rooms')
+app.use('/rooms', roomsRouter)
+
 const authRouter = require('./routes/auth')
 app.use('/', authRouter)
-
 
 http.listen(PORT, function () {
     log.debug("Server running on, " + PORT)
