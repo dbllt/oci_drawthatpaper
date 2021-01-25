@@ -64,6 +64,7 @@ export default {
   mounted() {
     this.setCanvas();
     this.bindEvents();
+    this.$connection.$emit(this.$network_actions.JoinRoom, 1);
   },
   methods: {
     setCanvas() {
@@ -107,6 +108,13 @@ export default {
         this.isDrawing = false;
         event.preventDefault();
       });
+      this.$connection.$on(this.$network_events.ReceiveMsg, (msg) => {
+        console.log("rcv", msg);
+        this.canvasContext.beginPath();
+        this.canvasContext.moveTo(msg[1], msg[2]);
+        this.canvasContext.lineTo(msg[3], msg[4]);
+        this.canvasContext.stroke();
+      });
     },
     changeTool(tool) {
       this.selectedToolIdx = tool;
@@ -126,6 +134,9 @@ export default {
       this.canvasContext.moveTo(this.lastX, this.lastY);
       this.canvasContext.lineTo(x, y);
       this.canvasContext.stroke();
+      let cmd = ["line", this.lastX, this.lastY, x, y]
+      console.log(cmd);
+      this.$connection.$emit(this.$network_actions.SendMsg, cmd);
       [this.lastX, this.lastY] = [x, y];
     },
     drawCursor(x, y) {
