@@ -84,20 +84,25 @@ export default {
       this.cursorContext = this.$refs.cursor.getContext('2d');
     },
     bindEvents() {
+      // TODO maybe move these functions elsewhere
+      let transformOffset = (x, y) => {
+        let transform = this.$refs.canvas.getContext("2d").getTransform();
+        let point = transform.inverse().transformPoint(new DOMPoint(x, y));
+        return [point.x, point.y];
+      }
+      let offsetFromTouch = (touch) => {
+        let rect = touch.target.getBoundingClientRect();
+        return transformOffset(touch.clientX - rect.left, touch.clientY - rect.top);
+      };
       this.$refs.canvas.addEventListener('mousedown', (event) => {
         this.isDrawing = true;
-        [this.lastX, this.lastY] = [event.offsetX, event.offsetY];
+        [this.lastX, this.lastY] = transformOffset(event.offsetX, event.offsetY);
       });
-      this.$refs.canvas.addEventListener('mousemove', (event) => this.draw(event.offsetX, event.offsetY));
+      this.$refs.canvas.addEventListener('mousemove', (event) => this.draw(...transformOffset(event.offsetX, event.offsetY)));
       this.$refs.canvas.addEventListener('mouseup', () => this.isDrawing = false);
       // TODO instead of abandoning the draw on mouseout, use mousemove on whole page
       this.$refs.canvas.addEventListener('mouseout', () => this.isDrawing = false);
       // TODO handle multiple touches
-      // TODO maybe move this function elsewhere
-      let offsetFromTouch = (touch) => {
-        let rect = touch.target.getBoundingClientRect();
-        return [touch.clientX - rect.left, touch.clientY - rect.top];
-      };
       this.$refs.canvas.addEventListener('touchstart', (event) => {
         this.isDrawing = true;
         [this.lastX, this.lastY] = offsetFromTouch(event.changedTouches[0]);
