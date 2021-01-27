@@ -2,6 +2,7 @@ import Vue from 'vue'
 
 const actions = {
     SendMsg: "sendMessage",
+    SendDraw: "sendDraw",
     Register: "register",
     Login: "login",
     Logout: "logout",
@@ -13,6 +14,7 @@ Vue.prototype.$network_actions = actions
 
 const events = {
     ReceiveMsg: "receiveMessage",
+    ReceiveDraw: "receiveDraw",
     Register: {
         success: "registerSuccess",
         error: "registerError",

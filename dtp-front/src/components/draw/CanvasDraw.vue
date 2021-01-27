@@ -22,6 +22,10 @@
 </template>
 
 <script>
+const DrawCmd = {
+  LINE: 0,
+  LINE_ERASE: 1,
+};
 export default {
   name: 'CanvasDraw',
   props: {
@@ -64,6 +68,7 @@ export default {
   mounted() {
     this.setCanvas();
     this.bindEvents();
+    this.$connection.$emit(this.$network_actions.JoinRoom, 1);
   },
   methods: {
     setCanvas() {
@@ -107,25 +112,51 @@ export default {
         this.isDrawing = false;
         event.preventDefault();
       });
+      this.$connection.$on(this.$network_events.ReceiveDraw, (msg) => {
+        console.log("rcv", msg);
+        this.renderDrawCmd(msg);
+      });
     },
     changeTool(tool) {
       this.selectedToolIdx = tool;
+    },
+    renderDrawCmd(cmd) {
+      // setup
+      switch(cmd[0]) {
+        case DrawCmd.LINE:
+          this.canvasContext.globalCompositeOperation = 'source-over';
+          this.canvasContext.strokeStyle = cmd[5];
+          break;
+        case DrawCmd.LINE_ERASE:
+          this.canvasContext.globalCompositeOperation = 'destination-out';
+          break;
+      }
+      // actual draw
+      switch (cmd[0]) {
+        case DrawCmd.LINE:
+        case DrawCmd.LINE_ERASE:
+          this.canvasContext.beginPath();
+          this.canvasContext.moveTo(cmd[1], cmd[2]);
+          this.canvasContext.lineTo(cmd[3], cmd[4]);
+          this.canvasContext.stroke();
+          break;
+      }
     },
     draw(x, y) {
       this.drawCursor(x, y);
       if (!this.isDrawing) return;
 
+      let cmd;
+
       if (this.tools[this.selectedToolIdx].name === 'Eraser') {
-        this.canvasContext.globalCompositeOperation = 'destination-out';
+        cmd = [DrawCmd.LINE_ERASE, this.lastX, this.lastY, x, y];
       } else {
-        this.canvasContext.globalCompositeOperation = 'source-over';
-        this.canvasContext.strokeStyle = this.tools[this.selectedToolIdx].color;
+        cmd = [DrawCmd.LINE, this.lastX, this.lastY, x, y, this.tools[this.selectedToolIdx].color];
       }
 
-      this.canvasContext.beginPath();
-      this.canvasContext.moveTo(this.lastX, this.lastY);
-      this.canvasContext.lineTo(x, y);
-      this.canvasContext.stroke();
+      console.log(cmd);
+      this.renderDrawCmd(cmd);
+      this.$connection.$emit(this.$network_actions.SendDraw, cmd);
       [this.lastX, this.lastY] = [x, y];
     },
     drawCursor(x, y) {

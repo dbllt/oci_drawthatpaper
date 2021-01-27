@@ -16,5 +16,9 @@ io.on('connection', (socket) => {
             log.debug('('+chatRoom+') (' + username + ') : ' + msg)
             io.to(chatRoom).emit('chat', msg)
         })
+        socket.on('draw', (msg)=>{
+            log.debug('('+chatRoom+') (' + username + ') [draw] : ' + msg)
+            io.to(chatRoom).emit('draw', msg)
+        })
     })
 })

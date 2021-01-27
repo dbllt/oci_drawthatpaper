@@ -12,6 +12,7 @@ const actions = Vue.prototype.$network_actions
 
 const socketEvents = {
     chat: 'chat',
+    draw: 'draw',
     connectMeTo: 'connectMeTo'
 }
 
@@ -36,9 +37,13 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
         socket.emit(socketEvents.connectMeTo, chatRoom)
 
         socket.on(socketEvents.chat, (data) => connection.$emit(events.ReceiveMsg, data))
+        socket.on(socketEvents.draw, (data) => connection.$emit(events.ReceiveDraw, data))
 
         connection.$on(actions.SendMsg, (msg) => {
             if (msg) socket.emit(socketEvents.chat, msg)
+        })
+        connection.$on(actions.SendDraw, (msg) => {
+            if (msg) socket.emit(socketEvents.draw, msg)
         })
     })
 
