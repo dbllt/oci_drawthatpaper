@@ -108,7 +108,7 @@ export default {
         this.isDrawing = false;
         event.preventDefault();
       });
-      this.$connection.$on(this.$network_events.ReceiveMsg, (msg) => {
+      this.$connection.$on(this.$network_events.ReceiveDraw, (msg) => {
         console.log("rcv", msg);
         this.canvasContext.beginPath();
         this.canvasContext.moveTo(msg[1], msg[2]);
@@ -136,7 +136,7 @@ export default {
       this.canvasContext.stroke();
       let cmd = ["line", this.lastX, this.lastY, x, y]
       console.log(cmd);
-      this.$connection.$emit(this.$network_actions.SendMsg, cmd);
+      this.$connection.$emit(this.$network_actions.SendDraw, cmd);
       [this.lastX, this.lastY] = [x, y];
     },
     drawCursor(x, y) {
