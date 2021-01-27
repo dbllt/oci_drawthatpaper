@@ -10,7 +10,6 @@ nextId = () => {
     return id++
 }
 
-
 // Get all rooms
 router.get("/", authenticationToken, (req, res) => {
     res.json(rooms)

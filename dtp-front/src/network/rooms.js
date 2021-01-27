@@ -86,3 +86,28 @@ connection.$on(actions.GetAllRooms, () => {
             connection.$emit(events.GetAllRooms.error, error)
         });
 })
+
+// Get one room
+connection.$on(actions.GetOneRoom, (roomId) => {
+    if (!roomId) return log.error("No room specified")
+    if (!authentication.isConnected()) return log.error("User not logged in")
+
+    log.debug("Getting one room")
+
+    fetch(SERVER_URL + "/rooms/" + roomId, authentication.requestOptions(null, "GET"))
+        .then(response => {
+            response.text().then(result => {
+                if (response.status == 200) {
+                    const room = JSON.parse(result)
+                    connection.$emit(events.GetOneRoom.success, room)
+                } else {
+                    log.error("Did not get room")
+                    connection.$emit(events.GetOneRoom.error, result)
+                }
+            })
+        })
+        .catch(error => {
+            log.debug("error", error)
+            connection.$emit(events.GetOneRoom.error, error)
+        });
+})

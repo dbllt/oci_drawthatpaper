@@ -9,6 +9,7 @@ const actions = {
     CreateRoom: "createRoom",
     JoinRoom: "joinRoom",
     GetAllRooms: "getAllRooms",
+    GetOneRoom: "getOneRoom",
     ConnectToChat: "connectToChat",
 }
 Vue.prototype.$network_actions = actions
@@ -16,6 +17,7 @@ Vue.prototype.$network_actions = actions
 const events = {
     ReceiveMsg: "receiveMessage",
     ReceiveDraw: "receiveDraw",
+    NewUserInRoom: "newUserInRoom",
     Register: {
         success: "registerSuccess",
         error: "registerError",
@@ -35,6 +37,10 @@ const events = {
     GetAllRooms: {
         success: "getAllRoomsSuccess",
         error: "getAllRoomsError",
+    },
+    GetOneRoom: {
+        success: "getOneRoomSuccess",
+        error: "getOneRoomError",
     },
     Logout: "logoutSuccess",
 }
