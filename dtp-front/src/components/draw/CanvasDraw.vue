@@ -68,7 +68,6 @@ export default {
   mounted() {
     this.setCanvas();
     this.bindEvents();
-    this.$connection.$emit(this.$network_actions.JoinRoom, 1);
   },
   methods: {
     setCanvas() {

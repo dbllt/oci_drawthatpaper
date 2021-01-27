@@ -42,5 +42,5 @@ Vue.prototype.$network_events = events
 
 Vue.prototype.$connection = new Vue()
 
-// Vue.prototype.$server_url = "https://drawthatpaper.istic.univ-rennes1.fr"
-Vue.prototype.$server_url = "http://localhost:3000"
+Vue.prototype.$server_url = "https://drawthatpaper.istic.univ-rennes1.fr"
+//Vue.prototype.$server_url = "http://localhost:3000"

@@ -38,7 +38,7 @@ export default {
   methods: {
     start: function () {
 
-      this.$router.push('/game/'+this.gameId)
+      this.$router.push('/game/'+this.$route.params.room.id)
     },
     back: function () {
     console.log(this.$route.params.room.participants);

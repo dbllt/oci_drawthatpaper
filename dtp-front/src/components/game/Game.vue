@@ -2,9 +2,9 @@
   <div>
     <h1>Draw That Paper</h1>
     <br>
-    <svg width="500" height="500">
-      <rect width="500" height="500" style="fill:white;stroke-width:3;stroke:rgb(0,0,0)" />
-    </svg>
+    <div>
+      <CanvasDraw :width="256" :height="480" :brushSize="4" :outputName="'example'"/>
+    </div>
 
     <button  type="button" class="block" v-on:click="leave">Leave</button>
   </div>
@@ -13,8 +13,11 @@
 
 
 <script>
+import CanvasDraw from "@/components/draw/CanvasDraw";
+
 export default {
   name: 'Game',
+  components: {CanvasDraw},
   data : function(){
     return {}
   },
