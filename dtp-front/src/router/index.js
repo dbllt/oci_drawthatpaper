@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import MainMenu from "@/components/MainMenu";
-import CreateGame from "@/components/CreateGame";
-import JoinGame from "@/components/JoinGame";
-import Game from "@/components/Game";
-import Login from "@/components/Login";
-import Register from "@/components/Register";
+import MainMenu from "@/components/game/MainMenu";
+import CreateGame from "@/components/game/CreateGame";
+import JoinGame from "@/components/game/JoinGame";
+import Game from "@/components/game/Game";
+import Login from "@/components/account/Login";
+import Register from "@/components/account/Register";
 import Home from "@/views/Home";
 
 Vue.use(VueRouter)
