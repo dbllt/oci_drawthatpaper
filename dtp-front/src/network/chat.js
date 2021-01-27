@@ -3,7 +3,7 @@ import log from "@/log"
 import io from "socket.io-client"
 import authentication from "@/network/auth"
 
-const SERVER_URL = Vue.prototype.$server_url
+const SOCKET_URL = Vue.prototype.$socket_url
 const connection = Vue.prototype.$connection
 const events = Vue.prototype.$network_events
 const actions = Vue.prototype.$network_actions
@@ -24,7 +24,7 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
 
     log.debug("Connecting to chat")
 
-    const socket = io.connect(SERVER_URL, {
+    const socket = io.connect(SOCKET_URL, {
         extraHeaders: {
             Authorization: `Bearer ${authentication.getAccessToken()}`
         }
