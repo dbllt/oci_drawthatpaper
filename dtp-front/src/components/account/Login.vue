@@ -26,7 +26,6 @@ export default {
   methods: {
     login() {
       if (this.input.email !== "" && this.input.password !== "") {
-
         this.$connection.$emit(this.$network_actions.Login, {
           email: this.input.email,
           password: this.input.password,
