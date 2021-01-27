@@ -5,6 +5,14 @@
         {{ m }}
       </li>
     </ul>
+
+    <div v-if="currentRoom">
+      <h1>Participants</h1>
+      <div v-for="user in currentRoom.participants" :key="user.id">
+        {{ user.username }}
+      </div>
+    </div>
+
     <input v-model="message" />
     <button v-on:click="clickButton()">Send</button>
     <button v-on:click="login()">login</button>
@@ -28,6 +36,7 @@ export default {
     return {
       message: "",
       msgs: [],
+      currentRoom: "",
     };
   },
   methods: {
@@ -74,7 +83,7 @@ export default {
     },
     createRoom: function() {
       this.$connection.$emit(this.$network_actions.CreateRoom, {
-        name:"chat room 1"
+        name: "chat room 1",
       });
     },
   },
@@ -86,31 +95,47 @@ export default {
       this.msgs.push(msg);
     });
     this.$connection.$on(this.$network_events.Register.error, (msg) => {
-      this.msgs.push("error "+msg);
+      this.msgs.push("error " + msg);
     });
     this.$connection.$on(this.$network_events.Login.success, (msg) => {
-      this.msgs.push("Logged in"+msg);
+      this.msgs.push("Logged in" + msg);
     });
     this.$connection.$on(this.$network_events.Login.error, (msg) => {
-      this.msgs.push("error "+msg);
+      this.msgs.push("error " + msg);
     });
     this.$connection.$on(this.$network_events.CreateRoom.success, (msg) => {
-      this.msgs.push(msg);
+      this.currentRoom = msg;
+      this.msgs.push("Room created and joined");
     });
     this.$connection.$on(this.$network_events.CreateRoom.error, (msg) => {
-      this.msgs.push("error "+msg);
+      this.msgs.push("error " + msg);
     });
     this.$connection.$on(this.$network_events.GetAllRooms.success, (msg) => {
       this.msgs.push(msg);
     });
     this.$connection.$on(this.$network_events.GetAllRooms.error, (msg) => {
-      this.msgs.push("error "+msg);
+      this.msgs.push("error " + msg);
     });
     this.$connection.$on(this.$network_events.JoinRoom.success, (msg) => {
-      this.msgs.push(msg);
+      this.currentRoom=msg
     });
     this.$connection.$on(this.$network_events.JoinRoom.error, (msg) => {
-      this.msgs.push("error "+msg);
+      this.msgs.push("error " + msg);
+    });
+    this.$connection.$on(this.$network_events.NewUserInRoom, () => {
+      if (this.currentRoom) {
+        this.$connection.$emit(
+          this.$network_actions.GetOneRoom,
+          this.currentRoom.id
+        );
+      }
+      this.msgs.push("new user in room");
+    });
+    this.$connection.$on(this.$network_events.GetOneRoom.success, (msg) => {
+      this.currentRoom = msg;
+    });
+    this.$connection.$on(this.$network_events.GetOneRoom.error, (msg) => {
+      this.msgs.push("error " + msg);
     });
   },
 };

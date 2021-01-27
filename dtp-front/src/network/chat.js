@@ -49,7 +49,9 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
     socket.on(socketEvents.game, (event) => {
         switch (event) {
             case socketEvents.newUserInRoom :
+                connection.$emit(events.NewUserInRoom)
                 log.debug("Someone just joined the room")
+                break
         }
     })
 
