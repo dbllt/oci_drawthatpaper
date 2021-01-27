@@ -40,7 +40,7 @@ export default {
 
     back: function () {
 
-      this.$router.push('/login')
+      this.$router.push('/')
     },},
     created :function(){
 
