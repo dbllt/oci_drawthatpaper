@@ -14,7 +14,7 @@ const routes= [
     {
         path: '/',
         name: 'Home',
-        component: ExampleUseConnection
+        component: Login
     },
     {
         path: '/room/:id',
@@ -34,7 +34,7 @@ const routes= [
     {
         path: '/login',
         name: 'Login',
-        component: Login
+        component: ExampleUseConnection
     },
     {
         path: '/register',
