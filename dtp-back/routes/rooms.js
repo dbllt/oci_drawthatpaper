@@ -1,7 +1,7 @@
 const {
     authenticationToken
-} = require('./common')
-const express = require('express')
+} = require("./common")
+const express = require("express")
 const router = express.Router()
 
 const rooms = []
@@ -12,12 +12,12 @@ nextId = () => {
 
 
 // Get all rooms
-router.get('/', authenticationToken, (req, res) => {
+router.get("/", authenticationToken, (req, res) => {
     res.json(rooms)
 })
 
 // Get one room
-router.get('/:id', authenticationToken, (req, res) => {
+router.get("/:id", authenticationToken, (req, res) => {
     const room = rooms.find(r => req.params.id == r.id)
     if(!room) return res.status(404).send()
     res.json(room)
@@ -28,15 +28,16 @@ router.get('/:id', authenticationToken, (req, res) => {
 //     name: name,
 // }
 const crypto = require("crypto");
-router.post('/', authenticationToken, (req, res) => {
+router.post("/", authenticationToken, (req, res) => {
     const roomName = req.body.name
-    if (!roomName) return res.status(400).send('No name specified')
+    if (!roomName) return res.status(400).send("No name specified")
     
     const chatRoom = crypto.randomBytes(16).toString("hex");
     const room = {
         id: nextId(),
         name: roomName,
         chatRoom: chatRoom,
+        creator: req.user,
         participants: [req.user]
     }
     rooms.push(room)
@@ -45,10 +46,13 @@ router.post('/', authenticationToken, (req, res) => {
 })
 
 // Join a room
-router.put('/:id', authenticationToken, (req, res) => {
+router.put("/:id", authenticationToken, (req, res) => {
     const room = rooms.find(r => req.params.id == r.id)
     if(!room) return res.status(404).send()
-    room.participants.push(req.user.name)
+    const alreadyInRoom = room.participants.find(p => p.id == req.user.id)
+    if(alreadyInRoom) return res.status(400).send("User already in the room")
+
+    room.participants.push(req.user)
     res.json(room)
 })
 

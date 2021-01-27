@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import MainMenu from "@/components/MainMenu";
-import CreateGame from "@/components/CreateGame";
-import JoinGame from "@/components/JoinGame";
-import Game from "@/components/Game";
-import Login from "@/components/Login";
-import Register from "@/components/Register";
+import MainMenu from "@/components/game/MainMenu";
+import Room from "@/components/game/Room";
+import JoinGame from "@/components/game/JoinGame";
+import Game from "@/components/game/Game";
+import Login from "@/components/account/Login";
+import Register from "@/components/account/Register";
 import ExampleUseConnection from "@/components/ExampleUseConnection";
 
 Vue.use(VueRouter)
@@ -17,9 +17,9 @@ const routes= [
         component: ExampleUseConnection
     },
     {
-        path: '/create',
-        name: 'CreateGame',
-        component: CreateGame
+        path: '/room/:id',
+        name: 'Room',
+        component: Room
     },
     {
         path: '/join',

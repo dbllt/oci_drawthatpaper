@@ -1,10 +1,7 @@
-import Vue from 'vue'
-import log from '@/log'
+import Vue from "vue"
+import log from "@/log"
 
-const {
-    SERVER_URL = 'https://drawthatpaper.istic.univ-rennes1.fr'
-    // SERVER_URL = 'http://localhost:3000'
-} = process.env
+const SERVER_URL = Vue.prototype.$server_url
 const connection = Vue.prototype.$connection
 const events = Vue.prototype.$network_events
 const actions = Vue.prototype.$network_actions
@@ -37,13 +34,13 @@ var authentication = {
         return auth && !isExpired(auth)
     },
     requestOptions(body, method) {
-        var m = 'POST'
+        var m = "POST"
         if (method) m = method
         return {
             method: m,
             headers: getHeaders(),
             body: body,
-            redirect: 'follow'
+            redirect: "follow"
         };
     }
 }
@@ -51,7 +48,7 @@ export default authentication
 
 // Login
 connection.$on(actions.Login, (user) => {
-    if (authentication.isConnected()) return log.error('User already logged in')
+    if (authentication.isConnected()) return log.error("User already logged in")
 
     log.debug("Loging in")
 
@@ -72,7 +69,7 @@ connection.$on(actions.Login, (user) => {
             })
         })
         .catch(error => {
-            log.debug('error', error)
+            log.debug("error", error)
             connection.$emit(events.Login.error, error)
         });
 })
@@ -105,7 +102,7 @@ connection.$on(actions.Register, (user) => {
 
         })
         .catch(error => {
-            log.debug('error', error)
+            log.debug("error", error)
             connection.$emit(events.Register.error, error)
         });
 })

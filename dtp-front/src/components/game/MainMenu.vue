@@ -23,15 +23,23 @@ export default {
   },
   methods: {
     create: function () {
-
-      this.$router.push("/create");
+        this.$connection.$emit(this.$network_actions.CreateRoom, {
+          name:"thisisaname"
+        });
     },
     join: function () {
 
       this.$router.push("/join");
     },
-
-  }
+  },
+  created: function() {
+    this.$connection.$on(this.$network_events.CreateRoom.success, (roomMsg) => {
+      this.$router.push({ name: 'Room', params: {id:roomMsg.id, room: roomMsg} })
+    });
+    this.$connection.$on(this.$network_events.CreateRoom.error, () => {
+     console.log("something went wrong");
+    });
+  },
 }
 </script>
 
