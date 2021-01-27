@@ -10,6 +10,7 @@ const actions = Vue.prototype.$network_actions
 
 const socketEvents = {
     chat: "chat",
+    draw: "draw",
     game: "game",
     newUserInRoom: "newUserInRoom",
     connectMeTo: "connectMeTo"
