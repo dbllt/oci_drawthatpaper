@@ -99,8 +99,9 @@ router.post('/register', async (req, res) => {
 function generateAccessToken(user) {
     log.debug('Generating an AccessToken')
     const userForToken = {
-        userId: user.id,
-        name: user.username
+        id: user.id,
+        username: user.username,
+        email: user.email
     }
     return jwt.sign(userForToken, ACCESS_TOKEN_SECRET, {
         expiresIn: ACCESS_TOKEN_EXPIRATION_TIME
@@ -109,8 +110,9 @@ function generateAccessToken(user) {
 
 function generateRefreshToken(user) {
     const userForToken = {
-        userId: user.id,
-        name: user.username
+        id: user.id,
+        username: user.username,
+        email: user.email
     }
     const refreshToken = jwt.sign(userForToken, REFRESH_TOKEN_SECRET)
     RefreshTokensDao.insert(refreshToken)

@@ -7,9 +7,9 @@
     </ul>
     <input v-model="message" />
     <button v-on:click="clickButton()">Send</button>
+    <button v-on:click="login()">login</button>
     <!-- <button v-on:click="register()">Register</button>
     <button v-on:click="register2()">Register2</button>
-    <button v-on:click="login()">login</button>
     <button v-on:click="login2()">login2</button> -->
     <button v-on:click="createRoom()">create room</button>
     <button v-on:click="joinRoom()">join room</button>
@@ -98,6 +98,18 @@ export default {
       this.msgs.push(msg);
     });
     this.$connection.$on(this.$network_events.CreateRoom.error, (msg) => {
+      this.msgs.push("error "+msg);
+    });
+    this.$connection.$on(this.$network_events.GetAllRooms.success, (msg) => {
+      this.msgs.push(msg);
+    });
+    this.$connection.$on(this.$network_events.GetAllRooms.error, (msg) => {
+      this.msgs.push("error "+msg);
+    });
+    this.$connection.$on(this.$network_events.JoinRoom.success, (msg) => {
+      this.msgs.push(msg);
+    });
+    this.$connection.$on(this.$network_events.JoinRoom.error, (msg) => {
       this.msgs.push("error "+msg);
     });
   },
