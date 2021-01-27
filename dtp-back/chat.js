@@ -3,7 +3,7 @@ const log = require('./log')
 
 // Chat
 io.on('connection', (socket) => {
-    const username = socket.decoded_token.name
+    const username = socket.decoded_token.username
     log.debug('User: ' + username + ' is connected')
     socket.on('disconnect', () => {
         log.debug('User: ' + username + ' disconnected')
@@ -12,6 +12,8 @@ io.on('connection', (socket) => {
     socket.on('connectMeTo', (chatRoom) => {
         log.debug('Connecting '+username+' to chat room '+chatRoom)
         socket.join(chatRoom)
+        io.to(chatRoom).emit('game', "newUserInRoom")
+
         socket.on('chat', (msg)=>{
             log.debug('('+chatRoom+') (' + username + ') : ' + msg)
             io.to(chatRoom).emit('chat', msg)
