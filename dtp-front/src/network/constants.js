@@ -26,6 +26,7 @@ const events = {
         success: "loginSuccess",
         error: "loginError",
     },
+    Logout: "logoutSuccess",
     CreateRoom: {
         success: "createRoomSuccess",
         error: "createRoomError",
@@ -42,7 +43,6 @@ const events = {
         success: "getOneRoomSuccess",
         error: "getOneRoomError",
     },
-    Logout: "logoutSuccess",
 }
 Vue.prototype.$network_events = events
 
