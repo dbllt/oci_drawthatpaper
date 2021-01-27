@@ -20,14 +20,28 @@ export default {
   methods: {
 
     validateId: function () {
-      this.$router.push('/game/'+this.gameId)
+      this.$connection.$emit(this.$network_actions.JoinRoom, this.gameId.toString());
     },
 
     back: function () {
 
       this.$router.push('/menu')
+    },
+
+    listRooms: function(){
+      return [];
     }
-  }
+  },
+  created: function() {
+    this.$connection.$on(this.$network_events.JoinRoom.success, (roomMsg) => {
+
+      this.$router.push({ name: 'Room', params: {id:this.gameId, room: roomMsg} })
+    }),
+        this.$connection.$on(this.$network_events.JoinRoom.error, (msg) => {
+
+      console.log(msg);
+    });
+  },
 }
 </script>
 

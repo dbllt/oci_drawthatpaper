@@ -46,11 +46,20 @@ export default {
 
       this.$connection.$on(this.$network_events.Register.success, () => {
 
-        this.$router.push('/menu');
+        this.$connection.$emit(this.$network_actions.Login, {
+          email: this.input.email,
+          password: this.input.password,
+        });
       });
       this.$connection.$on(this.$network_events.Register.error, () => {
         this.error=true;
 
+      });
+      this.$connection.$on(this.$network_events.Login.success, () => {
+        this.$router.push('/menu');
+      });
+      this.$connection.$on(this.$network_events.Login.error, () => {
+        this.error=true;
       });
     }
 

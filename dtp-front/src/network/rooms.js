@@ -26,7 +26,7 @@ connection.$on(actions.CreateRoom, (room) => {
                 if (response.status == 200) {
                     const room = JSON.parse(result)
                     connection.$emit(actions.ConnectToChat, room.chatRoom)
-                    connection.$emit(events.CreateRoom.success, "Room created")
+                    connection.$emit(events.CreateRoom.success, room)
                 } else {
                     log.error('Room not created')
                     connection.$emit(events.CreateRoom.error, result)
@@ -52,7 +52,7 @@ connection.$on(actions.JoinRoom, (roomId) => {
                 if (response.status == 200) {
                     const room = JSON.parse(result)
                     connection.$emit(actions.ConnectToChat, room.chatRoom)
-                    connection.$emit(events.JoinRoom.success, "Room joined")
+                    connection.$emit(events.JoinRoom.success, room)
                 } else {
                     log.error('Room not joined')
                     connection.$emit(events.JoinRoom.error, result)

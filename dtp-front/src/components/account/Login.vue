@@ -3,8 +3,12 @@
     <h1>Login</h1>
     <p v-if="errorEmpty">Please enter an email and a password</p>
     <p v-if="error">Invalid email or password</p>
-    <input type="text" name="username" v-model="input.email" placeholder="Email"/>
-    <input type="password" name="password" v-model="input.password" placeholder="Password"/>
+    <label>
+      <input type="text" name="username" v-model="input.email" placeholder="Email"/>
+    </label>
+    <label>
+      <input type="password" name="password" v-model="input.password" placeholder="Password"/>
+    </label>
     <button type="button" class="loginButton" v-on:click="login()">Login</button>
     <button type="button" class="loginButton" v-on:click="register()">Register</button>
   </div>
