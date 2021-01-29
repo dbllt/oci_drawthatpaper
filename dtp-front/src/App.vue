@@ -57,4 +57,15 @@ input{
   border-radius: 8px;
 
 }
+
+ .roomList{
+
+   border-style: solid;
+   border-width: 1px;
+   border-color:#fed766;
+   min-height: 200px;
+   height: 200px;
+   overflow: scroll;
+   overflow-x: hidden;
+ }
 </style>
