@@ -34,15 +34,22 @@ export default {
 
       this.$router.push("/join");
     },
+    roomCreated(roomMsg) {
+      this.$router.push({ name: 'Room', params: {id:roomMsg.id, room: roomMsg} })
+    },
+    displayError(err) {
+      console.log(err)
+    }
   },
   created: function() {
-    this.$connection.$on(this.$network_events.CreateRoom.success, (roomMsg) => {
-      this.$router.push({ name: 'Room', params: {id:roomMsg.id, room: roomMsg} })
-    });
-    this.$connection.$on(this.$network_events.CreateRoom.error, () => {
-     console.log("something went wrong");
-    });
+    this.$connection.$on(this.$network_events.CreateRoom.success, this.roomCreated)
+    this.$connection.$on(this.$network_events.CreateRoom.error, this. displayError)
   },
+  beforeDestroy(){
+    console.log("before destroy")
+    this.$connection.$off(this.$network_events.CreateRoom.success, this.roomCreated)
+    this.$connection.$off(this.$network_events.CreateRoom.error, this. displayError)
+  }
 }
 </script>
 

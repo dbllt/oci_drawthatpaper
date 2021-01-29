@@ -58,7 +58,7 @@ io.on("connection", (socket) => {
 
         RoomManager.joinRoom(chatRoom,user)
 
-        io.to(chatRoom).emit("game", "newUserInRoom")
+        io.to(chatRoom).emit("game", "participantsUpdated")
 
         socket.on("chat", (msg) => {
             log.debug("(" + chatRoom + ") (" + username + ") : " + msg)
@@ -73,8 +73,9 @@ io.on("connection", (socket) => {
         })
 
         socket.on("disconnect", () => {
-            log.debug("User: " + username + " disconnected")
+            log.debug("User: " + username + " disconnected and leaving room")
             RoomManager.leaveRoom(chatRoom, user)
+            io.to(chatRoom).emit("game","participantsUpdated")
         })
     })
 })
