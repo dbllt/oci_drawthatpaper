@@ -12,7 +12,7 @@ const socketEvents = {
     chat: "chat",
     draw: "draw",
     game: "game",
-    newUserInRoom: "newUserInRoom",
+    participantsUpdated: "participantsUpdated",
     connectMeTo: "connectMeTo"
 }
 
@@ -30,6 +30,7 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
             Authorization: `Bearer ${authentication.getAccessToken()}`
         }
     })
+    connection.$on(actions.LeaveRoom, () => socket.disconnect())
 
     socket.on("connect", () => {
         log.debug("Connected to chat")
@@ -49,9 +50,9 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
 
     socket.on(socketEvents.game, (event) => {
         switch (event) {
-            case socketEvents.newUserInRoom :
-                connection.$emit(events.NewUserInRoom)
-                log.debug("Someone just joined the room")
+            case socketEvents.participantsUpdated:
+                connection.$emit(events.ParticipantsUpdated)
+                log.debug("Someone joined or left the room")
                 break
         }
     })

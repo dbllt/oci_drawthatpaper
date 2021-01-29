@@ -2,7 +2,7 @@
   <div>
     <h1>Draw That Paper</h1>
 
-    <h2>{{this.room.id}}</h2>
+    <h2>{{ this.room.id }}</h2>
     <p>Use this code to join</p>
 
     <button type="button" class="block" v-on:click="start">Start</button>
@@ -10,70 +10,91 @@
 
     <div>
       <h4>Players :</h4>
-    <p v-for="item in this.room.participants" :key="item.id">
-      {{ item.username }}
-    </p>
+      <p v-for="item in this.room.participants" :key="item.id">
+        {{ item.username }}
+      </p>
     </div>
-    <chat :message-limit="100" :placeholder="'Enter message here'" :title="'Game Chat'" ref="chat">
+    <chat
+      :message-limit="100"
+      :placeholder="'Enter message here'"
+      :title="'Game Chat'"
+      ref="chat"
+    >
     </chat>
-
   </div>
-
 </template>
 
-
 <script>
-
 import Chat from "@/components/chat/chat";
 export default {
-  name: 'Room',
+  name: "Room",
 
   components: {
-    Chat
+    Chat,
   },
-  data(){
+  data() {
     return {
       room: this.$route.params.room,
-    }
+    };
   },
   methods: {
-    start: function () {
-
-      this.$router.push('/game/'+this.$route.params.room.id)
+    start() {
+      this.$router.push("/game/" + this.$route.params.room.id);
     },
-    back: function () {
-      this.$router.push('/menu')
+    back() {
+      this.$router.push("/menu");
+      this.$connection.$emit(this.$network_actions.LeaveRoom);
+    },
+    onParticipantsUpdated() {
+      if (this.room) {
+        this.$connection.$emit(this.$network_actions.GetOneRoom, this.room.id);
+      }
+    },
+    onReceiveMsg(packet) {
+      this.$refs.chat.addMessage(packet.username, packet.msg);
+    },
+    onGetOneRoom(data) {
+      this.room = data;
+    },
+    displayError(err) {
+      console.log(err);
     },
   },
+  created() {
+    this.$connection.$on(
+      this.$network_events.ParticipantsUpdated,
+      this.onParticipantsUpdated
+    );
+    this.$connection.$on(this.$network_events.ReceiveMsg, this.onReceiveMsg);
+    this.$connection.$on(
+      this.$network_events.GetOneRoom.success,
+      this.onGetOneRoom
+    );
+    this.$connection.$on(
+      this.$network_events.GetOneRoom.error,
+      this.displayError
+    );
+  },
+  beforeDestroy() {
+    this.$connection.$off(
+      this.$network_events.ParticipantsUpdated,
+      this.onParticipantsUpdated
+    );
+    this.$connection.$off(this.$network_events.ReceiveMsg, this.onReceiveMsg);
+    this.$connection.$off(
+      this.$network_events.GetOneRoom.success,
+      this.onGetOneRoom
+    );
+    this.$connection.$off(
+      this.$network_events.GetOneRoom.error,
+      this.displayError
+    );
+  },
   mounted() {
-   console.log("Mounting !!")
     this.$refs.chat.clientId = "A0123456";
-    this.$refs.chat.onMessageSent = (client,msg) => {
-      //send to api
-      //socket.send(client, msg);
-      this.$connection.$emit(this.$network_actions.SendMsg, msg)
-      //send directly to ui
-      //this.$refs.chat.addMessage(client,msg);
+    this.$refs.chat.onMessageSent = (client, msg) => {
+      this.$connection.$emit(this.$network_actions.SendMsg, msg);
     };
-
-    this.$connection.$on(this.$network_events.ReceiveMsg, (packet) => {
-      this.$refs.chat.addMessage(packet.username, packet.msg);
-    });
-    this.$connection.$on(this.$network_events.NewUserInRoom, () => {
-      if (this.room) {
-        this.$connection.$emit(
-            this.$network_actions.GetOneRoom,
-            this.room.id
-        );
-      }
-    });
-    this.$connection.$on(this.$network_events.GetOneRoom.success, (msg) => {
-      this.room = msg;
-    });
-    this.$connection.$on(this.$network_events.GetOneRoom.error, (msg) => {
-      console.log("error " + msg);
-    });
-  }
-}
+  },
+};
 </script>
-
