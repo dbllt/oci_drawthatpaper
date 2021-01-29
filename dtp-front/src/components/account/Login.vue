@@ -7,7 +7,7 @@
       <input type="text" name="username" v-model="input.email" placeholder="Email"/>
     </label>
     <label>
-      <input type="password" name="password" v-model="input.password" placeholder="Password"/>
+      <input type="password" name="password" v-model="input.password" placeholder="Password" v-on:keyup.enter="login()"/>
     </label>
     <button type="button" class="loginButton" v-on:click="login()">Login</button>
     <button type="button" class="loginButton" v-on:click="register()">Register</button>
@@ -73,8 +73,7 @@ export default {
   width: 500px;
   border: 1px solid #CCCCCC;
   background-color: #FFFFFF;
-  margin: auto;
-  margin-top: 200px;
+  margin: 200px auto auto;
   padding: 20px;
 }
 </style>
