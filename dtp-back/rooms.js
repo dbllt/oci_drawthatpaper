@@ -21,13 +21,14 @@ const RoomManager = {
             id: roomId,
             name: name,
             creator: creator,
-            participants: [creator]
+            participants: []
         }
         rooms.push(room)
         return room
     },
     joinRoom(roomId, user) {
         const room = this.getRoom(roomId)
+        if(!room) return log.error("Cannot join unexisting room")
         room.participants.push(user)
     },
     leaveRoom(roomId, user) {
