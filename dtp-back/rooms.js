@@ -55,6 +55,8 @@ io.on("connection", (socket) => {
         log.debug("Connecting " + username + " to chat room " + chatRoom)
         socket.join(chatRoom)
 
+        RoomManager.joinRoom(chatRoom,user)
+
         io.to(chatRoom).emit("game", "newUserInRoom")
 
         socket.on("chat", (msg) => {
