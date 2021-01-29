@@ -19,6 +19,8 @@ const GameStates = Object.freeze({
 ////TODO PAS DANS LES FONCTIONS D'ENVOI ET DE RECEPTION
 class GameObject {
     constructor(id, nbTurns, roundTimeInSeconds) {
+        io.to(this.roomId).on('selection', packet => this.receiveWord(packet.player, packet.word));
+        io.to(this.roomId).on('answering', packet => this.receiveAnswer(packet.player, packet.answer));
         this.roomId = id;
         this.roundTime = roundTimeInSeconds;
         this.turns = nbTurns;
@@ -39,6 +41,8 @@ class GameObject {
     static TURN_DURATION_IN_SEC = 100;
     _tick = setInterval(this._update, GameObject.TURN_DURATION_IN_SEC * 1000);
 
+    _points = {};
+
     _getRoom() {
         //TODO prevent calling find each time isValid() is called because it's overkill
         //TODO Checks if room exists
@@ -47,26 +51,27 @@ class GameObject {
 
     //network
     sendPlayers() {
-        io.to(this._getRoom()).send({});
+        let room = this._getRoom();
+        io.to(room.name).emit('players',{"participants": room.participants});
     }
     sendRoundTime() {
-        io.to(this._getRoom()).send({"round-time":this.roundTime});
+        io.to(this._getRoom().name).emit('round',{"round-time":this.roundTime});
     }
     sendCurrentDrawer() {
-        io.to(this._getRoom()).send({"drawer":this.currentDrawer});
+        io.to(this._getRoom().name).emit('current-drawer',{"drawer":this.currentDrawer});
     }
     sendNextWord() {
-        io.to(this._getRoom()).send({"word":this.currentWord});
+        io.to(this._getRoom().name).emit('next-word',{"word":this.currentWord});
     }
-    sendPoints() {
-        //io.to(this._getRoom()).send({"points":});
+    sendScore() {
+        io.to(this._getRoom().name).emit('score',{"points":this._points});
     }
     sendWordValidity(playerId, answer, good) {
-        //io.to(this._getRoom()).send({"word":this.currentWord});
+        io.to(this._getRoom().name).send('word-validity', {"word":answer, "validity":good});
     }
     sendState() {
         //game over or current state
-        io.to(this._getRoom()).send({"state": this.state});
+        io.to(this._getRoom().name).emit('players',{"state": this.state});
     }
 
     receiveWord(playerId, word) {
@@ -82,13 +87,17 @@ class GameObject {
         if (this.state !== GameStates.Drawing) {
             if (this.currentDrawer !== playerId) {
                 //checks validity
-                let validity = answer.toLowerCase() === this.currentWord.toLowerCase();
+                let validity = this._checksWord(answer);
                 this.sendWordValidity(playerId, answer, validity);
                 //TODO Hamming distance
             } else {
                 //error drawer can't anwser
             }
         }
+    }
+
+    _checksWord(word) {
+        return word.toLowerCase() === this.currentWord.toLowerCase()
     }
 
     // test
@@ -146,7 +155,7 @@ class GameObject {
     _starting() {
         this.sendPlayers();
         this.sendRoundTime();
-        this.sendPoints();
+        this.sendScore();
         this.state = GameStates.NextPlayer;
     }
     _clearTurn() {
@@ -188,6 +197,7 @@ class GameObject {
             this.state = GameStates.NextPlayer;
         }
     }
+
     _drawing() {
         if (this.state !== GameStates.Drawing) {
             return ; //error
@@ -205,7 +215,7 @@ class GameObject {
         }
     }
     _nextTurn() {
-        this.sendPoints();
+        this.sendScore();
 
         if (!this.isEnded()) {
             this.currentTurn = this.currentTurn + 1;
@@ -225,8 +235,17 @@ class GameObject {
         this.state = GameStates.NextPlayer;
     }
     _ended() {
+        this.sendScore();
         this.state = GameStates.Terminating;
     }
+
+    /**
+     * Makes this game unusable:
+     * - Internal state = Terminating
+     * Clean all:
+     * - Internal state
+     * - Clear all Timeouts
+     */
     terminate() {
         if (this.state === GameStates.Terminating) {
             return; //error
@@ -235,5 +254,8 @@ class GameObject {
         this.state = GameStates.Terminating;
         clearTimeout(this._tick);
         this._clearTurn();
+
+        io.to(this.roomId).off('selection');
+        io.to(this.roomId).on('answering');
     }
 }
