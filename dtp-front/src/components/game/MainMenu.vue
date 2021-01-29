@@ -3,6 +3,8 @@
     <h1>Draw That Paper</h1>
     <button type="button" class="block" v-on:click="create">Create Game</button>
     <button type="button" class="block" v-on:click="join">Join Game</button>
+    <br />
+    <button type="button" class="block" v-on:click="logout">Log Out</button>
   </div>
 </template>
 
@@ -29,6 +31,12 @@ export default {
     join() {
       this.$router.push("/join");
     },
+    logout() {
+      this.$connection.$emit(this.$network_actions.Logout);
+    },
+    onLogout() {
+      this.$router.push("/");
+    },
     roomCreated(roomMsg) {
       this.$router.push({
         name: "Room",
@@ -48,9 +56,9 @@ export default {
       this.$network_events.CreateRoom.error,
       this.displayError
     );
+    this.$connection.$on(this.$network_events.Logout, this.onLogout);
   },
   beforeDestroy() {
-    console.log("before destroy");
     this.$connection.$off(
       this.$network_events.CreateRoom.success,
       this.roomCreated
@@ -59,6 +67,7 @@ export default {
       this.$network_events.CreateRoom.error,
       this.displayError
     );
+    this.$connection.$off(this.$network_events.Logout, this.onLogout);
   },
 };
 </script>

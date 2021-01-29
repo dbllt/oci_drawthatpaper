@@ -1,6 +1,6 @@
 import Vue from "vue"
 import log from "@/log"
-import authentication from "@/network/auth"
+import authentication from "@/network/authentication"
 
 const SERVER_URL = Vue.prototype.$server_url
 const connection = Vue.prototype.$connection

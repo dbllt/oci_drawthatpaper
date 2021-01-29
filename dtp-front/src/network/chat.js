@@ -1,7 +1,7 @@
 import Vue from "vue"
 import log from "@/log"
 import io from "socket.io-client"
-import authentication from "@/network/auth"
+import authentication from "@/network/authentication"
 
 const SOCKET_URL = Vue.prototype.$socket_url
 const connection = Vue.prototype.$connection

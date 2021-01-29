@@ -1,53 +1,11 @@
 import Vue from "vue"
 import log from "@/log"
+import authentication from "@/network/authentication"
 
 const SERVER_URL = Vue.prototype.$server_url
 const connection = Vue.prototype.$connection
 const events = Vue.prototype.$network_events
 const actions = Vue.prototype.$network_actions
-
-var auth = undefined
-
-function isExpired(auth) {
-    if (auth)
-        return (Date.now() - auth.createdAt) > auth.expiresIn
-}
-
-// Headers
-function getHeaders() {
-    const myHeaders = new Headers();
-    myHeaders.append("Host", SERVER_URL);
-    myHeaders.append("Content-Type", "application/json");
-    if (auth && !isExpired(auth))
-        myHeaders.append("Authorization", "Bearer " + auth.accessToken)
-    return myHeaders
-}
-var authentication = {
-    getAccessToken() {
-        if (this.isConnected()) return auth.accessToken
-    },
-    setAuth(newAuth) {
-        auth = newAuth
-        auth.createdAt = Date.now()
-    },
-    disconnect() {
-        auth = undefined
-    },
-    isConnected() {
-        return auth && !isExpired(auth)
-    },
-    requestOptions(body, method) {
-        var m = "POST"
-        if (method) m = method
-        return {
-            method: m,
-            headers: getHeaders(),
-            body: body,
-            redirect: "follow"
-        };
-    }
-}
-export default authentication
 
 // Login
 connection.$on(actions.Login, (user) => {
@@ -84,7 +42,7 @@ connection.$on(actions.Logout, () => {
     log.debug("Loging out")
 
     var body = JSON.stringify({
-        "refreshToken": auth.refreshToken,
+        "refreshToken": authentication.getRefreshToken(),
     });
 
     fetch(SERVER_URL + "/logout", authentication.requestOptions(body, "DELETE"))
