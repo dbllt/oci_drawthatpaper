@@ -34,15 +34,12 @@ export default{
 	},
 
 	mounted() {
-		this.bindEvents();
-	},
-	methods:{
-		bindEvents: function(){
-			this.$connection.$on(this.$network_events.ReceiveGoodAnswer, (msg) => {
+		this.$connection.$on(this.$network_events.ReceiveGoodAnswer, (msg) => {
 				console.log("rcv", msg);
 				alert("mot trouvé");
 			});
-		},
+	},
+	methods:{
 		checkAnswer: function(){
 			if(this.answer !== ""){
 				this.firstAnswer = true;

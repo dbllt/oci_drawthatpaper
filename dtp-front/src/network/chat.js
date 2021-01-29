@@ -48,7 +48,7 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
             if (msg) socket.emit(socketEvents.draw, msg)
         })
         connection.$on(actions.SendGoodAnswer, (msg) => {
-            if (msg) socket.emit(socketEvents.goodAnswerGiven, msg)
+            if (msg) socket.emit(socketEvents.goodAnswerGiven, msg);
         })
     })
 
