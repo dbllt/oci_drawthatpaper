@@ -33,7 +33,16 @@ export default{
 		};
 	},
 
+	mounted() {
+		this.bindEvents();
+	},
 	methods:{
+		bindEvents: function(){
+			this.$connection.$on(this.$network_events.ReceiveGoodAnswer, (msg) => {
+				console.log("rcv", msg);
+				alert("mot trouvé");
+			});
+		},
 		checkAnswer: function(){
 			if(this.answer !== ""){
 				this.firstAnswer = true;
@@ -41,6 +50,7 @@ export default{
 					//alert("Correct!");
 					this.valid=true;
 					this.gameStarted=false;
+					this.$connection.$emit(this.$network_actions.SendGoodAnswer, this.word);
 				} else {
 					//alert("PaS cOrReCt");
 					this.attempts.push(this.answer);

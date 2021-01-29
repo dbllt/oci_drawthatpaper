@@ -11,6 +11,7 @@ const actions = {
     GetAllRooms: "getAllRooms",
     GetOneRoom: "getOneRoom",
     ConnectToChat: "connectToChat",
+    SendGoodAnswer: "sendGoodAnswer",
 }
 Vue.prototype.$network_actions = actions
 
@@ -43,6 +44,7 @@ const events = {
         error: "getOneRoomError",
     },
     Logout: "logoutSuccess",
+    ReceiveGoodAnswer: "receiveGoodAnswer",
 }
 Vue.prototype.$network_events = events
 

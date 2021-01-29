@@ -12,6 +12,7 @@ const socketEvents = {
     chat: "chat",
     draw: "draw",
     game: "game",
+    goodAnswerGiven: "goodAnswerGiven",
     newUserInRoom: "newUserInRoom",
     connectMeTo: "connectMeTo"
 }
@@ -38,12 +39,16 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
 
         socket.on(socketEvents.chat, (data) => connection.$emit(events.ReceiveMsg, data))
         socket.on(socketEvents.draw, (data) => connection.$emit(events.ReceiveDraw, data))
+        socket.on(socketEvents.goodAnswerGiven, (data) => connection.$emit(events.ReceiveGoodAnswer, data))
 
         connection.$on(actions.SendMsg, (msg) => {
             if (msg) socket.emit(socketEvents.chat, msg)
         })
         connection.$on(actions.SendDraw, (msg) => {
             if (msg) socket.emit(socketEvents.draw, msg)
+        })
+        connection.$on(actions.SendGoodAnswer, (msg) => {
+            if (msg) socket.emit(socketEvents.goodAnswerGiven, msg)
         })
     })
 
