@@ -3,7 +3,7 @@
     <h1>Draw That Paper</h1>
     <br>
     <div>
-      <CanvasDraw :width="256" :height="480" :brushSize="4" :outputName="'example'"/>
+      <CanvasDraw :width="480" :height="480" :brushSize="4" :outputName="'example'"/>
     </div>
     <carousel></carousel>
     <button  type="button" class="block" v-on:click="leave">Leave</button>
