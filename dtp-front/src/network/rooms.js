@@ -23,7 +23,7 @@ connection.$on(actions.CreateRoom, (room) => {
             response.text().then(result => {
                 if (response.status == 200) {
                     const room = JSON.parse(result)
-                    connection.$emit(actions.ConnectToChat, room.chatRoom)
+                    connection.$emit(actions.ConnectToChat, room.id)
                     connection.$emit(events.CreateRoom.success, room)
                 } else {
                     log.error("Room not created")
@@ -49,7 +49,7 @@ connection.$on(actions.JoinRoom, (roomId) => {
             response.text().then(result => {
                 if (response.status == 200) {
                     const room = JSON.parse(result)
-                    connection.$emit(actions.ConnectToChat, room.chatRoom)
+                    connection.$emit(actions.ConnectToChat, room.id)
                     connection.$emit(events.JoinRoom.success, room)
                 } else {
                     log.error("Room not joined")

@@ -46,17 +46,18 @@ export default {
     },
   },
   mounted() {
+   console.log("Mounting !!")
     this.$refs.chat.clientId = "A0123456";
     this.$refs.chat.onMessageSent = (client,msg) => {
       //send to api
       //socket.send(client, msg);
-      this.$connection.$emit(this.$network_actions.SendMsg, {"client":  client, "msg": msg})
+      this.$connection.$emit(this.$network_actions.SendMsg, msg)
       //send directly to ui
       //this.$refs.chat.addMessage(client,msg);
     };
 
     this.$connection.$on(this.$network_events.ReceiveMsg, (packet) => {
-      this.$refs.chat.addMessage(packet.client, packet.msg);
+      this.$refs.chat.addMessage(packet.username, packet.msg);
     });
     this.$connection.$on(this.$network_events.NewUserInRoom, () => {
       if (this.room) {

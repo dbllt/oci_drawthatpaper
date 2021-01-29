@@ -30,6 +30,9 @@ var authentication = {
         auth = newAuth
         auth.createdAt = Date.now()
     },
+    disconnect() {
+        auth = undefined
+    },
     isConnected() {
         return auth && !isExpired(auth)
     },
@@ -71,6 +74,33 @@ connection.$on(actions.Login, (user) => {
         .catch(error => {
             log.debug("error", error)
             connection.$emit(events.Login.error, error)
+        });
+})
+
+// Logout
+connection.$on(actions.Logout, () => {
+    if (!authentication.isConnected()) return log.error("User already logged out")
+
+    log.debug("Loging out")
+
+    var body = JSON.stringify({
+        "refreshToken": auth.refreshToken,
+    });
+
+    fetch(SERVER_URL + "/logout", authentication.requestOptions(body, "DELETE"))
+        .then(response => {
+            response.text().then(result => {
+                if (response.status == 204) {
+                    authentication.disconnect()
+                    connection.$emit(events.Logout, "Logged out")
+                } else {
+                    log.error("There was an error while logging out ", result)
+                }
+            })
+        })
+        .catch(error => {
+            log.debug("error", error)
+            connection.$emit(events.Logout.error, error)
         });
 })
 

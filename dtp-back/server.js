@@ -42,7 +42,7 @@ io.use((socket, next) => {
 })
 
 module.exports = io
-require('./chat')
+require('./rooms')
 
 // API
 app.use(express.json())
@@ -51,7 +51,7 @@ app.use(cors())
 const userRouter = require('./routes/user')
 app.use('/user', userRouter)
 
-const roomsRouter = require('./routes/rooms')
+const roomsRouter = require('./routes/roomsRouter')
 app.use('/rooms', roomsRouter)
 
 const authRouter = require('./routes/auth')
