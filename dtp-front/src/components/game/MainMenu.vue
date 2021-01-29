@@ -4,10 +4,6 @@
       <button  type="button" class="block" v-on:click="create">Create Game</button>
       <button  type="button" class="block" v-on:click="join">Join Game</button>
 
-
-
-
-
   </div>
 
 </template>
@@ -23,8 +19,15 @@ export default {
   },
   methods: {
     create: function () {
-        this.$connection.$emit(this.$network_actions.CreateRoom, {
-          name:"thisisaname"
+      let text = " "
+      let chars = "abcdefghijklmnopqrstuvwxyz"
+
+      for( let i=0; i < 5; i++ ) {
+        text += chars.charAt(Math.floor(Math.random() * chars.length))
+      }
+
+      this.$connection.$emit(this.$network_actions.CreateRoom, {
+            name:text
         });
     },
     join: function () {

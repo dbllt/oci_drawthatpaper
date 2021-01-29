@@ -2,17 +2,18 @@
   <div>
     <h1>Draw That Paper</h1>
 
-    <h2>{{this.$route.params.room.id}}</h2>
+    <h2>{{this.room.id}}</h2>
     <p>Use this code to join</p>
 
     <button type="button" class="block" v-on:click="start">Start</button>
     <button type="button" class="block" v-on:click="back">Go Back</button>
 
-    <ul>
-    <li v-for="item in this.$route.params.room.participants" :key="item.name">
-      {{ item.name }}
-    </li>
-    </ul>
+    <div>
+      <h4>Players :</h4>
+    <p v-for="item in this.room.participants" :key="item.id">
+      {{ item.username }}
+    </p>
+    </div>
     <chat :message-limit="100" :placeholder="'Enter message here'" :title="'Game Chat'" ref="chat">
     </chat>
 
@@ -32,7 +33,7 @@ export default {
   },
   data(){
     return {
-      gameId: -1,
+      room: this.$route.params.room,
     }
   },
   methods: {
@@ -41,12 +42,8 @@ export default {
       this.$router.push('/game/'+this.$route.params.room.id)
     },
     back: function () {
-    console.log(this.$route.params.room.participants);
       this.$router.push('/menu')
     },
-    participants: function(){
-
-    }
   },
   mounted() {
     this.$refs.chat.clientId = "A0123456";
@@ -60,6 +57,20 @@ export default {
 
     this.$connection.$on(this.$network_events.ReceiveMsg, (packet) => {
       this.$refs.chat.addMessage(packet.client, packet.msg);
+    });
+    this.$connection.$on(this.$network_events.NewUserInRoom, () => {
+      if (this.room) {
+        this.$connection.$emit(
+            this.$network_actions.GetOneRoom,
+            this.room.id
+        );
+      }
+    });
+    this.$connection.$on(this.$network_events.GetOneRoom.success, (msg) => {
+      this.room = msg;
+    });
+    this.$connection.$on(this.$network_events.GetOneRoom.error, (msg) => {
+      console.log("error " + msg);
     });
   }
 }
