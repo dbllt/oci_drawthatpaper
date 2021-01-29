@@ -117,10 +117,6 @@ export default {
         this.isDrawing = false;
         event.preventDefault();
       });
-      this.$connection.$on(this.$network_events.ReceiveDraw, (msg) => {
-        console.log("rcv", msg);
-        this.renderDrawCmd(msg);
-      });
     },
     changeTool(tool) {
       this.selectedToolIdx = tool;
@@ -191,6 +187,16 @@ export default {
       link.href = this.$refs.canvas.toDataURL()
       link.click();
     },
+    onReceiveDraw(msg){
+      // console.log("rcv", msg);
+      this.renderDrawCmd(msg);
+    }
+  },
+  created(){
+    this.$connection.$on(this.$network_events.ReceiveDraw, this.onReceiveDraw);
+  },
+  beforeDestroy(){
+    this.$connection.$off(this.$network_events.ReceiveDraw, this.onReceiveDraw);
   }
 }
 </script>

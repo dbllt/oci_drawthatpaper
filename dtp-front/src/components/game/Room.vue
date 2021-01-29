@@ -38,10 +38,10 @@ export default {
     };
   },
   methods: {
-    start: function() {
+    start() {
       this.$router.push("/game/" + this.$route.params.room.id);
     },
-    back: function() {
+    back() {
       this.$router.push("/menu");
       this.$connection.$emit(this.$network_actions.LeaveRoom);
     },

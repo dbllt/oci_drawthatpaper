@@ -4,28 +4,42 @@
     <p v-if="errorEmpty">Please enter an email and a password</p>
     <p v-if="error">Invalid email or password</p>
     <label>
-      <input type="text" name="username" v-model="input.email" placeholder="Email"/>
+      <input
+        type="text"
+        name="username"
+        v-model="input.email"
+        placeholder="Email"
+      />
     </label>
     <label>
-      <input type="password" name="password" v-model="input.password" placeholder="Password" v-on:keyup.enter="login()"/>
+      <input
+        type="password"
+        name="password"
+        v-model="input.password"
+        placeholder="Password"
+      />
     </label>
-    <button type="button" class="loginButton" v-on:click="login()">Login</button>
-    <button type="button" class="loginButton" v-on:click="register()">Register</button>
+    <button type="button" class="loginButton" v-on:click="login()">
+      Login
+    </button>
+    <button type="button" class="loginButton" v-on:click="register()">
+      Register
+    </button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     return {
       input: {
         email: "",
-        password: ""
+        password: "",
       },
       errorEmpty: false,
       error: false,
-    }
+    };
   },
   methods: {
     login() {
@@ -34,26 +48,32 @@ export default {
           email: this.input.email,
           password: this.input.password,
         });
-
       } else {
         this.errorEmpty = true;
       }
     },
+    logout() {
+      this.$connection.$emit(this.$network_actions.Logout);
+    },
     register() {
-      this.$router.push('/register');
+      this.$router.push("/register");
+    },
+    onLogin() {
+      this.$router.push("/menu");
+    },
+    onError() {
+      this.error = true;
     },
   },
-    created: function() {
-      this.$connection.$on(this.$network_events.Login.success, () => {
-        this.$router.push('/menu');
-      });
-      this.$connection.$on(this.$network_events.Login.error, () => {
-        this.error=true;
-      });
-    },
-
-
-}
+  created() {
+    this.$connection.$on(this.$network_events.Login.success, this.onLogin);
+    this.$connection.$on(this.$network_events.Login.error, this.onError);
+  },
+  beforeDestroy() {
+    this.$connection.$off(this.$network_events.Login.success, this.onLogin);
+    this.$connection.$off(this.$network_events.Login.error, this.onError);
+  },
+};
 </script>
 
 <style>
@@ -66,20 +86,15 @@ export default {
   margin: 5% auto;
   padding: 2% 5% 2% 5%;
   width: 30%;
-  min-width: 150px;
   border-radius: 8px;
 }
 
 #login {
-  width: 80%;
-  max-width: 500px;
-  border: 1px solid #CCCCCC;
-  background-color: #FFFFFF;
-  margin: 200px auto auto;
+  width: 500px;
+  border: 1px solid #cccccc;
+  background-color: #ffffff;
+  margin: auto;
+  margin-top: 200px;
   padding: 20px;
-}
-
-#login h1 {
-  color: inherit;
 }
 </style>
