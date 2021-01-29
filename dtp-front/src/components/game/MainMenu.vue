@@ -19,8 +19,15 @@ export default {
   },
   methods: {
     create: function () {
-        this.$connection.$emit(this.$network_actions.CreateRoom, {
-            name:crypto.randomBytes(5).toString("hex")
+      let text = " "
+      let chars = "abcdefghijklmnopqrstuvwxyz"
+
+      for( let i=0; i < 5; i++ ) {
+        text += chars.charAt(Math.floor(Math.random() * chars.length))
+      }
+
+      this.$connection.$emit(this.$network_actions.CreateRoom, {
+            name:text
         });
     },
     join: function () {
