@@ -66,14 +66,20 @@ export default {
   margin: 5% auto;
   padding: 2% 5% 2% 5%;
   width: 30%;
+  min-width: 150px;
   border-radius: 8px;
 }
 
 #login {
-  width: 500px;
+  width: 80%;
+  max-width: 500px;
   border: 1px solid #CCCCCC;
   background-color: #FFFFFF;
   margin: 200px auto auto;
   padding: 20px;
+}
+
+#login h1 {
+  color: inherit;
 }
 </style>

@@ -48,30 +48,4 @@ export default {
 
 
 <style>
-body {
-  background-color: #2ab7ca;
-}
-
-h1 {
-  color: #e6e6ea;
-}
-.block {
-  display: block;
-  text-align: center;
-  border: none;
-  background-color: #fed766;
-  font-size: 26px;
-  cursor: pointer;
-
-  margin: 5% auto;
-  padding: 2% 10% 2% 10%;
-  width: 30%;
-  border-radius: 8px;
-
-}
-
-
-.block:hover {
-  color: white;
-}
 </style>

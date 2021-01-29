@@ -67,19 +67,6 @@ export default {
 </script>
 
 <style>
-input {
-  display: block;
-  text-align: center;
-  border: none;
-  background-color: #fed766;
-  font-size: 20px;
-
-  margin: 5% auto;
-  padding: 2% 5% 2% 5%;
-  width: 30%;
-  border-radius: 8px;
-}
-
 .roomList{
 
   border-style: solid;
