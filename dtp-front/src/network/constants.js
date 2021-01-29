@@ -8,6 +8,7 @@ const actions = {
     Logout: "logout",
     CreateRoom: "createRoom",
     JoinRoom: "joinRoom",
+    LeaveRoom: "leaveRoom",
     GetAllRooms: "getAllRooms",
     GetOneRoom: "getOneRoom",
     ConnectToChat: "connectToChat",
