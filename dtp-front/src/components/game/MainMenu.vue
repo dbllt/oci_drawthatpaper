@@ -20,7 +20,7 @@ export default {
   methods: {
     create: function () {
         this.$connection.$emit(this.$network_actions.CreateRoom, {
-          name:"name"
+            name:crypto.randomBytes(5).toString("hex")
         });
     },
     join: function () {
