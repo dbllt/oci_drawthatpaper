@@ -10,6 +10,7 @@
         :outputName="'example'"
       />
     </div>
+    <br>
     <carousel></carousel>
     <button type="button" class="block" v-on:click="leave">Leave</button>
   </div>

@@ -5,6 +5,7 @@
     <h3>Game ID :</h3>
     <label>
       <input v-model="gameId" v-on:keyup.enter="joinRoom" />
+      <button type="button" class="block" v-on:click="joinRoom">Join</button>
     </label>
 
     <h3>Available rooms :</h3>
@@ -15,7 +16,11 @@
           class="block"
           v-on:click="joinSpecificRoom(item.id)"
         >
-          Join Room {{ item.id }}
+          Join
+          <br>
+          <div style="font-size: 18px;" class="text"> 
+           {{ item.name }}
+          </div>
         </button>
       </div>
     </div>

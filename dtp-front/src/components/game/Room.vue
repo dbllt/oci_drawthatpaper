@@ -2,8 +2,8 @@
   <div>
     <h1>Draw That Paper</h1>
 
-    <h2>{{ this.room.id }}</h2>
-    <p>Use this code to join</p>
+    <h2>{{ this.room.name }}</h2>
+    <p>Use this code to join : <b>{{ this.room.id }}</b></p>
 
     <button type="button" class="block" v-on:click="start">Start</button>
     <button type="button" class="block" v-on:click="back">Go Back</button>
@@ -91,7 +91,6 @@ export default {
     );
   },
   mounted() {
-    this.$refs.chat.clientId = "A0123456";
     this.$refs.chat.onMessageSent = (client, msg) => {
       this.$connection.$emit(this.$network_actions.SendMsg, msg);
     };

@@ -8,17 +8,21 @@
     </div>
     <div>
       <ul class="tools">
-        <li id="tool-pencil" :class="{ active: selectedToolIdx === 0 }" @click="changeTool(0)">
-          <img src="@/assets/edit.svg"/>
+        <li class="tooltip" id="tool-pencil" :class="{ active: selectedToolIdx === 0 }" @click="changeTool(0)">
+            <img  src="@/assets/edit.svg"/>
+            <span class="tooltiptext tooltip-bottom">Pen</span>
         </li>
-        <li id="tool-eraser" :class="{ active: selectedToolIdx === 1 }" @click="changeTool(1)">
-          <img src="@/assets/eraser.svg"/>
+        <li class="tooltip" id="tool-eraser" :class="{ active: selectedToolIdx === 1 }" @click="changeTool(1)">
+            <img src="@/assets/eraser.svg"/>
+            <span class="tooltiptext tooltip-bottom">Eraser</span>
         </li>
-        <li id="tool-color-palette" @click="showColorPalette()">
-          <img src="@/assets/color-palette.svg"/>
+        <li class="tooltip" id="tool-color-palette" @click="showColorPalette()">
+            <img src="@/assets/color-palette.svg"/>
+            <span class="tooltiptext tooltip-bottom">Change color</span>
         </li>
-        <li id="tool-download" @click="download()">
-          <img src="@/assets/download.svg"/>
+        <li class="tooltip" id="tool-download" @click="download()">
+            <img src="@/assets/download.svg"/>
+            <span class="tooltiptext tooltip-bottom">Download drawing</span>
         </li>
       </ul>
     </div>
