@@ -13,8 +13,9 @@
         <input v-model="gameName" v-on:keyup.enter="validateName" />
       </label>
       <button type="button" class="block" v-on:click="validateName">Create</button>
+
+      <button type="button" class="block" v-on:click="creatingRoom=false;">Go Back</button>
     </template>
-    <br />
     <button type="button" class="block" v-on:click="logout">Log Out</button>
   </div>
 </template>
