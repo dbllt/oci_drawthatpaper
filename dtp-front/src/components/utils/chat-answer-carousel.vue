@@ -1,5 +1,10 @@
 <template lang="html">
   <section class="chat-answer-carousel">
+    <!-- if you don't want to use the buttons Flickity provides -->
+    <button class="dir" style="float:left;" v-if="buttons" @click="previous()">←</button>
+    <button class="dir" style="float:right;" v-if="buttons" @click="next()">→</button>
+    <br/>
+    <br/>
     <flickity class="carousel" ref="flickity" :options="flickityOptions">
       <div class="carousel-cell">
         <category-selection
@@ -17,9 +22,7 @@
       </div>
     </flickity>
 
-    <!-- if you don't want to use the buttons Flickity provides -->
-    <button v-if="buttons" @click="previous()">Custom Previous Button</button>
-    <button v-if="buttons" @click="next()">Custom Next Button</button>
+
   </section>
 </template>
 
@@ -65,13 +68,22 @@ export default {
       this.$connection.$emit(this.$network_actions.SendMsg, msg);
     };
   },
+  computed: {
+    _isCurrentPage(p) {
+      if (p === this.$refs.flickity.selectedIndex) {
+        return "background-color:black;";
+      }
+      return "background-color:grey;";
+    }
+  }
 };
 </script>
 
 <style scoped lang="scss">
-// .chat-answer-carousel {
-
-// }
+.chat-answer-carousel {
+  outline: 8px ridge rgba(170, 50, 220, .2);
+  border-radius: 2rem;
+}
 .carousel {
   background: none;
   width: 100%;
@@ -93,6 +105,21 @@ export default {
   //content: counter(gallery-cell);
   line-height: 400px;
   font-size: 80px;
-  color: none;
+}
+
+.dir {
+  background-color: #6C6C6C;
+  padding: 1px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 25px;
+  border: 3px solid #00000035;
+  color: black;
+  font-weight : bolder;
+  display: inline-block;
+  font-size: 16px;
+  @media screen and (-ms-high-contrast: active) {
+    border: 2px solid currentcolor;
+  }
 }
 </style>
