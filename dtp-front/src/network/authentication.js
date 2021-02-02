@@ -45,6 +45,9 @@ var authentication = {
             body: body,
             redirect: "follow"
         };
+    },
+    isMe(id){
+        return id === auth.userId
     }
 }
 export default authentication

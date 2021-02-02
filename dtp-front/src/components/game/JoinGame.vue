@@ -33,16 +33,18 @@
 export default {
   name: "JoinGame",
   data() {
-    return { gameId: "", rooms: [] };
+    return { gameId: "", rooms: [],roomToJoin:"" };
   },
   methods: {
     joinRoom() {
+      this.roomToJoin=this.gameId
       this.$connection.$emit(
         this.$network_actions.JoinRoom,
         this.gameId.toString()
       );
     },
     joinSpecificRoom(id) {
+      this.roomToJoin=id
       this.$connection.$emit(this.$network_actions.JoinRoom, id.toString());
     },
     back() {
@@ -51,7 +53,7 @@ export default {
     onJoinRoom(roomMsg) {
       this.$router.push({
         name: "Room",
-        params: { id: this.gameId, room: roomMsg },
+        params: { id: this.roomToJoin, room: roomMsg },
       });
     },
     onGetAllRoom(rooms) {

@@ -9,7 +9,6 @@ const types = {
     players: "players",
     state: "state",
     round: "round",
-    current_drawer: "current_drawer",
     next_word: "next_word",
     score: "score",
     word_validity: "word_validity",
@@ -24,24 +23,22 @@ class Game extends GameDefault {
         super(id, nbTurns, roundTimeInSeconds);
     }
 
-    rcvWord(packet) {
-        this.receiveWord(packet.player, packet.word)
-    }
-
-    rcvAnswer(packet) {
-        this.receiveAnswer(packet.player, packet.answer)
+    processEvent(event) {
+        log.debug(event)
+        switch (event.type) {
+            case types.pick:
+                log.debug("picked " + event.data)
+                this.receiveWord(event.userId, event.data)
+                break
+        }
     }
 
     init() {
         //throw new Error("TODO");
-        io.to(this.roomId).on("selection", this.rcvWord);
-        io.to(this.roomId).on("answering", this.rcvAnswer);
     }
 
     destroy() {
         //throw new Error("TODO");
-        io.to(this.roomId).off("selection", this.rcvWord);
-        io.to(this.roomId).off("answering", this.rcvAnswer);
     }
 
     getRoom() {
@@ -72,9 +69,7 @@ class Game extends GameDefault {
         });
     }
     sendCurrentDrawer() {
-        this.sendData(types.current_drawer, {
-            "drawing_user_id": this.currentDrawer.id
-        });
+    // useless ?
     }
     sendNextWord() {
         this.sendData(types.next_word, {
@@ -101,7 +96,8 @@ class Game extends GameDefault {
     }
     sendPickingWords() {
         this.sendData(types.pick, {
-            "words": this.currentWords
+            "words": this.currentWords,
+            "drawing_user_id": this.currentDrawer.id
         });
     }
 

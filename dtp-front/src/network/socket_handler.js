@@ -12,21 +12,31 @@ const socketEvents = {
     chat: "chat",
     draw: "draw",
     game: "game",
-    participantsUpdated: "participantsUpdated",
     connectMeTo: "connectMeTo",
     start: "start",
     lobby: "lobby"
+}
+
+const lobbyEvents = {
+    participantsUpdated: "participantsUpdated",
+    startGame: "startGame",
 }
 
 const types = {
     players: "players",
     state: "state",
     round: "round",
-    current_drawer: "current_drawer",
     next_word: "next_word",
     score: "score",
     word_validity: "word_validity",
     pick: "pick"
+}
+
+let packetForServer = function(type, data){
+    return {
+        "type": type,
+        "data": data
+    }
 }
 
 // Connection to chat
@@ -59,13 +69,11 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
                     log.debug("players")
                     break
                 case types.state:
+                    connection.$emit(events.GameStateUpdate, json.data.state)
                     log.debug("state")
                     break
                 case types.round:
                     log.debug("round")
-                    break
-                case types.current_drawer:
-                    log.debug("current_drawer")
                     break
                 case types.next_word:
                     log.debug("next_word")
@@ -78,6 +86,8 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
                     break
                 case types.pick:
                     log.debug("pick")
+                    if(authentication.isMe(json.data.drawing_user_id))
+                        connection.$emit(events.PickWord, json.data.words)
                     break
             }
         })
@@ -92,13 +102,21 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
             log.debug("Starting game")
             socket.emit(socketEvents.start)
         })
+        connection.$on(actions.PickWord, (word) => {
+            log.debug("Picked a word")
+            socket.emit(socketEvents.game, packetForServer(types.pick,word))
+        })
     })
 
     socket.on(socketEvents.lobby, (event) => {
         switch (event) {
-            case socketEvents.participantsUpdated:
+            case lobbyEvents.participantsUpdated:
                 connection.$emit(events.ParticipantsUpdated)
                 log.debug("Someone joined or left the room")
+                break
+            case lobbyEvents.startGame:
+                connection.$emit(events.StartGame)
+                log.debug("Creator started the game")
                 break
         }
     })

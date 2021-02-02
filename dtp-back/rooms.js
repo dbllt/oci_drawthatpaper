@@ -36,18 +36,23 @@ const RoomManager = {
         if (!room) return log.error("Room doesn't exist")
         return room.participants.filter(u => u.id === userId).length > 0
     },
-    isValid(roomId){
+    isValid(roomId) {
         const room = this.getRoom(roomId)
         if (!room) return false
-        return room.participants !== null && room.participants.length >= 1
+        return room.participants !== null && room.participants.length >= 2
     },
     leaveRoom(roomId, user) {
         const room = this.getRoom(roomId)
-        if (!room) return log.error("Trying to leave non existing room")
+        if (!room) return log.error("Trying to leave not existing room")
         room.participants = room.participants.filter(u => u.id !== user.id)
         if (arrayIsEmpty(room.participants))
             rooms = rooms.filter(r => r.id !== roomId)
     },
+    isCreator(roomId, userId) {
+        const room = this.getRoom(roomId)
+        if (!room) return log.error("Trying to access not existing room")
+        return room.creator.id === userId
+    }
 }
 
 module.exports = RoomManager
@@ -55,6 +60,7 @@ module.exports = RoomManager
 const {
     Game
 } = require("./game")
+
 
 // Chat
 io.on("connection", (socket) => {
@@ -81,7 +87,6 @@ io.on("connection", (socket) => {
             })
         })
         socket.on("draw", (msg) => {
-            log.debug("(" + roomId + ") (" + username + ") [draw] : " + msg)
             io.to(roomId).emit("draw", msg)
         })
 
@@ -91,9 +96,20 @@ io.on("connection", (socket) => {
             io.to(roomId).emit("lobby", "participantsUpdated")
         })
 
-        socket.on("start",()=>{
-            new Game(roomId, 3, 1000)
+        var game = undefined
+        socket.on("start", () => {
+            if (RoomManager.isCreator(roomId, user.id)) {
+                game = new Game(roomId, 3, 20)
+
+                socket.on("game", (event) => {
+                    event.userId = user.id
+                    game.processEvent(event)
+                })
+
+                io.to(roomId).emit("lobby", "startGame")
+            }
         })
+
     })
 })
 

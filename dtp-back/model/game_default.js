@@ -26,7 +26,7 @@ class GameDefault {
     constructor(id, nbTurns, roundTimeInSeconds) {
         // game data
         this.roomId = id;
-        this.roundTime = roundTimeInSeconds;
+        this.roundTime = roundTimeInSeconds * 1000;
         this.turns = nbTurns;
 
         // turn data
@@ -36,9 +36,12 @@ class GameDefault {
         this.currentWord = "";
         this.currentWords = [];
         this.score = {};
-        for (var key in this.getRoom().participants) {
-            this.score[this.getRoom().participants[key]] = 0;
-        }
+        const room = this.getRoom()
+        if (room) {
+            for (var key in room.participants) {
+                this.score[room.participants[key]] = 0;
+            }
+        } else return log.error("Creating a game with not existing room")
         this.answers = {};
         // le timer du tour
         this.timer = null;
@@ -143,7 +146,7 @@ class GameDefault {
         console.log("receiveWord");
         switch (this.state) {
             case GameStates.Picking: {
-                console.log("OK	" + this.currentDrawer);
+                console.log("OK	", this.currentDrawer);
                 if (this.currentDrawer.id === playerId) {
                     console.log("receive selection");
                     this.currentWord = word;
@@ -151,6 +154,7 @@ class GameDefault {
                     //error non drawer can't select word
                 }
             }
+            break
         }
     }
 
@@ -251,8 +255,7 @@ class GameDefault {
         // on vérifie toujours en premier lieu l'état de validité
         if (!this.isValid()) {
             this._terminate();
-        } 
-        else {
+        } else {
 
             switch (this.state) {
                 case GameStates.Starting: {
@@ -386,7 +389,7 @@ class GameDefault {
      */
     _drawing() {
         //TEST only
-        this.receiveAnswer("current", "word1");
+        // this.receiveAnswer("current", "word1");
         //end test
         console.log("drawing");
         if (this.state !== GameStates.Drawing) {
@@ -399,7 +402,7 @@ class GameDefault {
                 // appelé une fois
                 this.timer = setTimeout(() => {
                     this._afterDrawing();
-                }, this.roundTime / 1000.0);
+                }, this.roundTime);
             }
         } else {
             // on change de joueur
