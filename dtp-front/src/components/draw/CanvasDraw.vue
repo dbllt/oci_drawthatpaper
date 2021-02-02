@@ -24,6 +24,10 @@
             <img src="@/assets/download.svg"/>
             <span class="tooltiptext tooltip-bottom">Download drawing</span>
         </li>
+        <li class="tooltip" id="tool-clear" @click="clear()">
+          <img src="@/assets/clear.png"/>
+          <span class="tooltiptext tooltip-bottom">Clear drawing</span>
+        </li>
       </ul>
     </div>
   </div>
@@ -190,6 +194,9 @@ export default {
       link.download = `${this.outputName}.png`;
       link.href = this.$refs.canvas.toDataURL()
       link.click();
+    },
+    clear(){
+      this.canvasContext.clearRect(0, 0, this.width, this.height);
     },
     onReceiveDraw(msg){
       // console.log("rcv", msg);
