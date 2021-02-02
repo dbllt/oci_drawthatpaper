@@ -37,6 +37,7 @@
 const DrawCmd = {
   LINE: 0,
   LINE_ERASE: 1,
+  CLEAR: 2,
 };
 export default {
   name: 'CanvasDraw',
@@ -139,6 +140,9 @@ export default {
         case DrawCmd.LINE_ERASE:
           this.canvasContext.globalCompositeOperation = 'destination-out';
           break;
+        case DrawCmd.CLEAR:
+          this.canvasContext.clearRect(0, 0, this.width, this.height);
+          break;
       }
       // actual draw
       switch (cmd[0]) {
@@ -150,6 +154,13 @@ export default {
           this.canvasContext.stroke();
           break;
       }
+    },
+    sendDrawCmd(cmd) {
+      this.$connection.$emit(this.$network_actions.SendDraw, cmd);
+    },
+    sendAndRenderDrawCmd(cmd) {
+      this.sendDrawCmd(cmd);
+      this.renderDrawCmd(cmd);
     },
     draw(x, y) {
       this.drawCursor(x, y);
@@ -163,9 +174,7 @@ export default {
         cmd = [DrawCmd.LINE, this.lastX, this.lastY, x, y, this.tools[this.selectedToolIdx].color];
       }
 
-      console.log(cmd);
-      this.renderDrawCmd(cmd);
-      this.$connection.$emit(this.$network_actions.SendDraw, cmd);
+      this.sendAndRenderDrawCmd(cmd);
       [this.lastX, this.lastY] = [x, y];
     },
     drawCursor(x, y) {
@@ -196,7 +205,7 @@ export default {
       link.click();
     },
     clear(){
-      this.canvasContext.clearRect(0, 0, this.width, this.height);
+      this.sendAndRenderDrawCmd([DrawCmd.CLEAR]);
     },
     onReceiveDraw(msg){
       // console.log("rcv", msg);
