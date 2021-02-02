@@ -56,7 +56,8 @@ router.post('/login', async (req, res) => {
             res.json({
                 accessToken: accessToken,
                 expiresIn: ACCESS_TOKEN_EXPIRATION_TIME,
-                refreshToken: refreshToken
+                refreshToken: refreshToken,
+                userId: user.id
             })
 
         } else {

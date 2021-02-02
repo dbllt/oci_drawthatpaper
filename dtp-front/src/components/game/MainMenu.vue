@@ -2,21 +2,26 @@
   <div>
     <h1>Draw That Paper</h1>
     <template v-if="!creatingRoom">
-      <button type="button" class="block" v-on:click="createRoom">
+      <button type="button" class="block" v-on:click="toggleCreateRoom">
         Create Game
       </button>
       <button type="button" class="block" v-on:click="join">Join Game</button>
+      <br />
+      <button type="button" class="block" v-on:click="logout">Log Out</button>
     </template>
     <template v-else>
       <h3>Name of your game :</h3>
       <label>
         <input v-model="gameName" v-on:keyup.enter="validateName" />
       </label>
-      <button type="button" class="block" v-on:click="validateName">Create</button>
-
-      <button type="button" class="block" v-on:click="creatingRoom=false;">Go Back</button>
+      <button type="button" class="block" v-on:click="validateName">
+        Create
+      </button>
+      <br />
+      <button type="button" class="block" v-on:click="toggleCreateRoom">
+        Go Back
+      </button>
     </template>
-    <button type="button" class="block" v-on:click="logout">Log Out</button>
   </div>
 </template>
 
@@ -31,15 +36,8 @@ export default {
     };
   },
   methods: {
-    createRoom() {
-      this.creatingRoom = true;
-
-      // let text = " ";
-      // let chars = "abcdefghijklmnopqrstuvwxyz";
-
-      // for (let i = 0; i < 5; i++) {
-      //   text += chars.charAt(Math.floor(Math.random() * chars.length));
-      // }
+    toggleCreateRoom() {
+      this.creatingRoom = !this.creatingRoom;
     },
     validateName() {
       if (this.gameName)

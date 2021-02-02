@@ -3,7 +3,9 @@
     <h1>Draw That Paper</h1>
 
     <h2>{{ this.room.name }}</h2>
-    <p>Use this code to join : <b>{{ this.room.id }}</b></p>
+    <p>
+      Use this code to join : <b>{{ this.room.id }}</b>
+    </p>
 
     <button type="button" class="block" v-on:click="start">Start</button>
     <button type="button" class="block" v-on:click="back">Go Back</button>
@@ -39,7 +41,8 @@ export default {
   },
   methods: {
     start() {
-      this.$router.push("/game/" + this.$route.params.room.id);
+      if (this.room.participants.length >= 2)
+        this.$connection.$emit(this.$network_actions.StartGame);
     },
     back() {
       this.$router.push("/menu");
@@ -59,6 +62,9 @@ export default {
     displayError(err) {
       console.log(err);
     },
+    onStartGame() {
+      this.$router.push("/game/" + this.$route.params.room.id);
+    },
   },
   created() {
     this.$connection.$on(
@@ -74,6 +80,7 @@ export default {
       this.$network_events.GetOneRoom.error,
       this.displayError
     );
+    this.$connection.$on(this.$network_events.StartGame, this.onStartGame);
   },
   beforeDestroy() {
     this.$connection.$off(
@@ -89,6 +96,7 @@ export default {
       this.$network_events.GetOneRoom.error,
       this.displayError
     );
+    this.$connection.$off(this.$network_events.StartGame, this.onStartGame);
   },
   mounted() {
     this.$refs.chat.onMessageSent = (client, msg) => {
