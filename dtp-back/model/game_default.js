@@ -412,6 +412,7 @@ class GameDefault {
             this.currentTurn = this.currentTurn + 1;
             // il n'y a plus de tour on arrête la partie
             if (this.currentTurn > this.turns) {
+                this._clearTurn();
                 this.state = GameStates.Ended;
             }
         }
@@ -440,8 +441,13 @@ class GameDefault {
      */
     _ended() {
         console.log("ended");
-        this.sendScore();
-        this.state = GameStates.Terminating;
+
+        //on patiente quelque temps avant de tuer le salon de jeu
+        if (this.timer === null) {
+            let TIME_BEFORE_SHUTDOWN_IN_MS = 10000;
+            this.timer = setTimeout(() => {this.state = GameStates.Terminating;}, TIME_BEFORE_SHUTDOWN_IN_MS);
+            this.sendScore();
+        }
     }
 
     /**
@@ -464,4 +470,4 @@ class GameDefault {
     }
 }
 
-module.exports = GameDefault;
+module.exports.GameDefault = GameDefault;

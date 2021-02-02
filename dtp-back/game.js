@@ -26,7 +26,8 @@ class Game extends GameDefault {
         //throw new Error('TODO');
         //TODO prevent calling find each time isValid() is called because it's overkill
         //TODO Checks if room exists
-        return rooms.rooms.find(r => this.roomId === r.id);
+        //return rooms.rooms.find(r => this.roomId === r.id);
+        return {"id":0, "participants": ["p1", "p2", "p3"]};
     }
 
     //network
@@ -44,7 +45,7 @@ class Game extends GameDefault {
         io.to(this.getRoom().name).emit('next-word',{"word":this.currentWord});
     }
     sendScore() {
-        io.to(this.getRoom().name).emit('score',{"points":this._points});
+        io.to(this.getRoom().name).emit('score',{"points":this.points});
     }
     sendWordValidity(playerId, answer, good) {
         io.to(this.getRoom().name).send('word-validity', {"word":answer, "validity":good});
@@ -81,5 +82,4 @@ class Game extends GameDefault {
     }
 }
 
-new Game(0, 6, 100);
-
+module.exports.Game = Game;
