@@ -1,77 +1,107 @@
 <template>
   <div>
     <h1>Draw That Paper</h1>
-    <br>
+    <br />
     <h3>Game ID :</h3>
-    <input v-model="gameId" v-on:keyup.enter="joinRoom">
-    <button  type="button" class="block" v-on:click="back">Go Back</button>
+    <label>
+      <input v-model="gameId" v-on:keyup.enter="joinRoom" />
+      <button type="button" class="block" v-on:click="joinRoom">Join</button>
+    </label>
 
+    <h3>Available rooms :</h3>
+    <div class="roomList">
       <div v-for="item in this.rooms" :key="item.name">
-        <button  type="button" class="block" v-on:click=joinSpecificRoom(item.id)>Join Room {{ item.name }}</button>
+        <button
+          type="button"
+          class="block"
+          v-on:click="joinSpecificRoom(item.id)"
+        >
+          Join
+          <br>
+          <div style="font-size: 18px;" class="text"> 
+           {{ item.name }}
+          </div>
+        </button>
       </div>
+    </div>
+
+    <button type="button" class="block" v-on:click="back">Go Back</button>
   </div>
-
 </template>
-
 
 <script>
 export default {
-  name: 'JoinGame',
-  data : function(){
-    return {gameId:"",rooms:[]}
+  name: "JoinGame",
+  data() {
+    return { gameId: "", rooms: [] };
   },
   methods: {
-
-    joinRoom: function () {
-      this.$connection.$emit(this.$network_actions.JoinRoom, this.gameId.toString());
+    joinRoom() {
+      this.$connection.$emit(
+        this.$network_actions.JoinRoom,
+        this.gameId.toString()
+      );
     },
-
-    joinSpecificRoom: function (id) {
+    joinSpecificRoom(id) {
       this.$connection.$emit(this.$network_actions.JoinRoom, id.toString());
     },
-
-    back: function () {
-
-      this.$router.push('/menu')
+    back() {
+      this.$router.push("/menu");
     },
-
-    listRooms: function(){
-      this.$connection.$emit(this.$network_actions.GetAllRooms);
-    }
+    onJoinRoom(roomMsg) {
+      this.$router.push({
+        name: "Room",
+        params: { id: this.gameId, room: roomMsg },
+      });
+    },
+    onGetAllRoom(rooms) {
+      this.rooms = rooms;
+    },
+    displayError(err) {
+      console.log(err);
+    },
   },
-  created: function() {
-    this.$connection.$on(this.$network_events.JoinRoom.success, (roomMsg) => {
+  created() {
+    this.$connection.$on(
+      this.$network_events.JoinRoom.success,
+      this.onJoinRoom
+    );
+    this.$connection.$on(
+      this.$network_events.JoinRoom.error,
+      this.displayError
+    );
 
-      this.$router.push({ name: 'Room', params: {id:this.gameId, room: roomMsg} })
-    }),
-        this.$connection.$on(this.$network_events.JoinRoom.error, (msg) => {
+    // Emit get all rooms to get information for the component
+    this.$connection.$emit(this.$network_actions.GetAllRooms);
+    this.$connection.$on(
+      this.$network_events.GetAllRooms.success,
+      this.onGetAllRoom
+    );
 
-      console.log(msg);
-    });
-    this.listRooms();
-
-    this.$connection.$on(this.$network_events.GetAllRooms.success, (rooms) => {
-      this.rooms=rooms;
-    });
-    this.$connection.$on(this.$network_events.GetAllRooms.error, () => {
-      console.log("something went wrong");
-    });
+    this.$connection.$on(
+      this.$network_events.GetAllRooms.error,
+      this.displayError
+    );
   },
-}
+  beforeDestroy() {
+    this.$connection.$off(
+      this.$network_events.JoinRoom.success,
+      this.onJoinRoom
+    );
+    this.$connection.$off(
+      this.$network_events.JoinRoom.error,
+      this.displayError
+    );
+
+    this.$connection.$off(
+      this.$network_events.GetAllRooms.success,
+      this.onGetAllRoom
+    );
+
+    this.$connection.$off(
+      this.$network_events.GetAllRooms.error,
+      this.displayError
+    );
+  },
+};
 </script>
-
-<style>
-input{
-  display: block;
-  text-align: center;
-  border: none;
-  background-color: #fed766;
-  font-size: 20px;
-
-  margin: 5% auto;
-  padding: 2% 5% 2% 5%;
-  width: 30%;
-  border-radius: 8px;
-
-}
-</style>

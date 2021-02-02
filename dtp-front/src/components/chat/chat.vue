@@ -1,26 +1,38 @@
 <template lang="html">
-
   <div class="chat">
-    <h1>{{title}}</h1>
+    <h1>{{ title }}</h1>
     <div>
       <ul ref="box">
-        <chat-msg v-for="(m, idx) in this.messages" :key="idx" :client="m.client" :msg="m.msg"/>
-        <br>
+        <chat-msg
+          v-for="(m, idx) in this.messages"
+          :key="idx"
+          :client="m.client"
+          :msg="m.msg"
+        />
+        <br />
       </ul>
       <div style="float:left;">
-        <p style="font-size:10px;">{{inputMessage.length}} / 512</p>
+        <p style="font-size:10px;">{{ inputMessage.length }} / 512</p>
       </div>
       <div style="float:right;">
         <button v-on:click="scrollToBottom()">\/</button>
       </div>
     </div>
-    <section>
-      <input type="text" maxlength="512" v-model="inputMessage" @keydown.enter="_submit()"/>
-      <button v-on:click="_submit()">Send</button>
-    </section>
-    <br/>
-  </div>
+    <br />
+    <input
+    placeholder="Send a message to the room"
+      class="big"
+      type="text"
+      maxlength="512"
+      v-model="inputMessage"
+      @keydown.enter="_submit()"
+    />
 
+    <button type="button" class="block small" v-on:click="_submit()">
+      Send
+    </button>
+    <br />
+  </div>
 </template>
 
 <script lang="js">
@@ -103,29 +115,26 @@ export default  {
 
   }
 }
-
-
 </script>
 
 <style scoped lang="scss">
 .chat {
-
 }
 ul {
   margin: 0;
   padding: 0;
   text-align: left;
-  height:200px;
-  width:99%;
+  height: 200px;
+  width: 99%;
   border: 1px solid #ccc;
   background-color: #00000012;
-  font:16px/26px Georgia, Garamond, Serif;
-  overflow:auto;
-  overflow-y:scroll;
+  font: 16px/26px Georgia, Garamond, Serif;
+  overflow: auto;
+  overflow-y: scroll;
   scroll-behavior: smooth;
   list-style: none;
 }
 .login {
-  display:inline-block;
+  display: inline-block;
 }
 </style>
