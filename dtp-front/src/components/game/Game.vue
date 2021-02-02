@@ -13,6 +13,7 @@
             </h2>
           </template>
           <br />
+          <h3><Timer ref="timer"/></h3>
         </div>
       </div>
       <CanvasDraw
@@ -49,12 +50,13 @@
 
 <script>
 import CanvasDraw from "@/components/draw/CanvasDraw";
+import Timer from "@/components/game/Timer";
 import carousel from "@/components/utils/chat-answer-carousel";
 import authentication from "@/network/authentication";
 
 export default {
   name: "Game",
-  components: { CanvasDraw, carousel },
+  components: { CanvasDraw, Timer, carousel },
   data: function() {
     return {
       currentWords: [],
