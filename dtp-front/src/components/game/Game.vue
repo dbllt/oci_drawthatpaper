@@ -10,7 +10,7 @@
         <h2><b>pouet</b></h2>
       </div>
         </div>
-      <CanvasDraw class="canvas"
+      <CanvasDraw v-bind:class="{ disabled: isDisabled }" class="canvas"
         :width="480"
         :height="480"
         :brushSize="4"
@@ -41,6 +41,8 @@ export default {
   components: { CanvasDraw, carousel },
   data: function() {
     return {
+
+      isDisabled: false,
       participants:[
 
         { id: '1',
@@ -55,6 +57,16 @@ export default {
       this.$router.push("/menu");
       this.$connection.$emit(this.$network_actions.LeaveRoom);
     },
+    switchCanDraw(){
+      this.isDisabled = !this.isDisabled;
+    }
   },
 };
 </script>
+
+
+<style>
+.disabled{
+  pointer-events: none;
+}
+</style>
