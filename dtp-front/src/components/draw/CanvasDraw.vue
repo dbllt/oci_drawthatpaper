@@ -25,7 +25,7 @@
             <span class="tooltiptext tooltip-bottom">Download drawing</span>
         </li>
         <li class="tooltip" id="tool-clear" @click="clear()">
-          <img src="@/assets/clear.png"/>
+          <img src="@/assets/clear.svg"/>
           <span class="tooltiptext tooltip-bottom">Clear drawing</span>
         </li>
       </ul>
@@ -248,9 +248,10 @@ export default {
   padding: 4px;
   background-color: #c8c8c8;
   border-left: 1px solid #abaaaa;
-}
-.tools li:not(:last-child) {
   border-bottom: 1px solid #abaaaa;
+}
+.tools img {
+  width: 32px;
 }
 .draw-area canvas {
   vertical-align: top;
