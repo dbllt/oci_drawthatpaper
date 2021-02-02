@@ -1,6 +1,3 @@
-const rooms = require("./routes/rooms")
-const io = require("./server")
-
 /*jshint esversion: 6 */
 function sleep(milliseconds) {
     const date = Date.now();
@@ -10,14 +7,14 @@ function sleep(milliseconds) {
     } while (currentDate - date < milliseconds);
 }
 const GameStates = Object.freeze({
-    Starting:1, // S
-    NextPlayer:2, // Select player then player send word
+    Starting: 1, // S
+    NextPlayer: 2, // Select player then player send word
 
-    Picking:3,
-    Drawing:4,
+    Picking: 3,
+    Drawing: 4,
 
-    Ended:5,
-    Terminating:6
+    Ended: 5,
+    Terminating: 6
 });
 // Init        New turn       Current    Over     Clean
 // Starting => NextPlayer <=> Drawing => Ended => Terminated
@@ -34,12 +31,12 @@ class GameDefault {
 
         // turn data
         this.currentTurn = 0;
-        this.currentDrawerId = 0;
-        this.currentDrawer = "";
-        this.currentWord="";
-        this.currentWords=[];
+        this.currentDrawerTurn = 0;
+        this.currentDrawer = {};
+        this.currentWord = "";
+        this.currentWords = [];
         this.score = {};
-        for(var key in this.getRoom().participants) {
+        for (var key in this.getRoom().participants) {
             this.score[this.getRoom().participants[key]] = 0;
         }
         this.answers = {};
@@ -49,7 +46,9 @@ class GameDefault {
         // attributs machine à état
         this.state = GameStates.Starting;
         let UPDATEPERIODINMS = 500;
-        this.tick = setInterval(() => {this._update();}, UPDATEPERIODINMS);
+        this.tick = setInterval(() => {
+            this._update();
+        }, UPDATEPERIODINMS);
         this.init();
     }
 
@@ -69,7 +68,7 @@ class GameDefault {
     }
 
     /**
-     * Retrieve room information of this game from '@./routes/rooms.js'
+     * Retrieve room information of this game from '@./rooms.js'
      * @private only used internally
      * @return {json}
      */
@@ -145,7 +144,7 @@ class GameDefault {
         switch (this.state) {
             case GameStates.Picking: {
                 console.log("OK	" + this.currentDrawer);
-                if (this.currentDrawer === playerId) {
+                if (this.currentDrawer.id === playerId) {
                     console.log("receive selection");
                     this.currentWord = word;
                 } else {
@@ -165,7 +164,7 @@ class GameDefault {
         console.log("receive answer");
         if (this.state === GameStates.Drawing) {
             console.log("receive answer 2");
-            if (this.currentDrawer !== playerId) {
+            if (this.currentDrawer.id !== playerId) {
                 console.log("receive answer 3");
                 //checks validity
                 let order = Date.now();
@@ -189,7 +188,7 @@ class GameDefault {
      */
     _computeScore() {
         console.log("computescore");
-        for(var key in this.answers) {
+        for (var key in this.answers) {
             let value = 100;
             this.score[key] = this.score[key] + value;
             // do something with "key" and "value" variables
@@ -248,36 +247,45 @@ class GameDefault {
      * @private only used internally
      */
     _update() {
-        console.log("UPDATE:"+this.currentTurn);
+        console.log("UPDATE:" + this.currentTurn);
         // on vérifie toujours en premier lieu l'état de validité
         if (!this.isValid()) {
             this._terminate();
-        }
+        } 
+        else {
 
-        switch (this.state) {
-            case GameStates.Starting: {
-                this._starting();
-            } break;
+            switch (this.state) {
+                case GameStates.Starting: {
+                    this._starting();
+                }
+                break;
 
             case GameStates.NextPlayer: {
                 this._nextPlayer();
-            } break;
+            }
+            break;
 
             case GameStates.Picking: {
                 this._picking();
-            } break;
+            }
+            break;
 
             case GameStates.Drawing: {
                 this._drawing();
-            } break;
+            }
+            break;
 
             case GameStates.Ended: {
                 this._ended();
-            } break;
+            }
+            break;
 
             case GameStates.Terminating: {
                 this._terminate();
-            } break;
+            }
+            break;
+            }
+
         }
         this.sendState();
     }
@@ -322,15 +330,15 @@ class GameDefault {
     _nextPlayer() {
         console.log("nextPlayer");
         if (this.state !== GameStates.NextPlayer) {
-            return ; //error
+            return; //error
         }
         this._clearTurn();
         this.generateWords();
 
         //joueur suivant
-        this.currentDrawerId = this.currentDrawerId + 1;
+        this.currentDrawerTurn = this.currentDrawerTurn + 1;
         const room = this.getRoom();
-        this.currentDrawer = room.participants[this.currentDrawerId % room.participants.length];
+        this.currentDrawer = room.participants[this.currentDrawerTurn % room.participants.length];
 
         //on met à jour le joueur suivant
         this.sendCurrentDrawer();
@@ -348,11 +356,11 @@ class GameDefault {
      */
     _picking() {
         // TEST ONLY
-        this.receiveWord(this.currentDrawer, "current");
+        // this.receiveWord(this.currentDrawer.id, "current");
         // end test
 
         if (this.state !== GameStates.Picking) {
-            return ; // error
+            return; // error
         }
         console.log("picking");
 
@@ -382,14 +390,16 @@ class GameDefault {
         //end test
         console.log("drawing");
         if (this.state !== GameStates.Drawing) {
-            return ; //error
+            return; //error
         }
 
         // on vérifie que le joueur courrant est connecté sinon on attend pour rien
         if (this.isCurrentPlayerConnected()) {
             if (this.timer === null) {
                 // appelé une fois
-                this.timer = setTimeout(() => {this._afterDrawing();}, this.roundTime / 1000.0);
+                this.timer = setTimeout(() => {
+                    this._afterDrawing();
+                }, this.roundTime / 1000.0);
             }
         } else {
             // on change de joueur
@@ -427,7 +437,7 @@ class GameDefault {
         console.log("afterDrawing");
 
         if (this.state !== GameStates.Drawing) {
-            return ; //error
+            return; //error
         }
 
         this.state = GameStates.NextPlayer;
@@ -445,7 +455,9 @@ class GameDefault {
         //on patiente quelque temps avant de tuer le salon de jeu
         if (this.timer === null) {
             let TIME_BEFORE_SHUTDOWN_IN_MS = 10000;
-            this.timer = setTimeout(() => {this.state = GameStates.Terminating;}, TIME_BEFORE_SHUTDOWN_IN_MS);
+            this.timer = setTimeout(() => {
+                this.state = GameStates.Terminating;
+            }, TIME_BEFORE_SHUTDOWN_IN_MS);
             this.sendScore();
         }
     }

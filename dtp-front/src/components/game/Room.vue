@@ -40,6 +40,7 @@ export default {
   methods: {
     start() {
       this.$router.push("/game/" + this.$route.params.room.id);
+      this.$connection.$emit(this.$network_actions.StartGame);
     },
     back() {
       this.$router.push("/menu");

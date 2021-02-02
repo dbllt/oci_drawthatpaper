@@ -6,6 +6,7 @@ const router = express.Router()
 
 const RoomManager = require("../rooms")
 
+
 // Get all rooms
 router.get("/", authenticationToken, (req, res) => {
     res.json(RoomManager.getRooms())
@@ -22,7 +23,8 @@ router.get("/:id", authenticationToken, (req, res) => {
 router.post("/", authenticationToken, (req, res) => {
     const roomName = req.body.name
     if (!roomName) return res.status(400).send("No name specified")
-    res.json(RoomManager.createRoom(roomName, req.user))
+    const room = RoomManager.createRoom(roomName, req.user)
+    res.json(room)
 })
 
 // Join a room

@@ -12,6 +12,7 @@ const actions = {
     GetAllRooms: "getAllRooms",
     GetOneRoom: "getOneRoom",
     ConnectToChat: "connectToChat",
+    StartGame: "startGame",
 }
 Vue.prototype.$network_actions = actions
 
