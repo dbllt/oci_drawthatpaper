@@ -16,7 +16,7 @@ const RoomManager = {
         return rooms.find(r => id == r.id)
     },
     createRoom(name, creator) {
-        const roomId = crypto.randomBytes(5).toString("hex") + nextId()
+        const roomId = crypto.randomBytes(3).toString("hex") + nextId()
         const room = {
             id: roomId,
             name: name,
@@ -57,6 +57,16 @@ const RoomManager = {
 
 module.exports = RoomManager
 
+var game = undefined
+const GameManager = {
+    createGame(roomId) {
+        game = new Game(roomId, 3, 20)
+    },
+    processEvent(event) {
+        game.processEvent(event)
+    }
+}
+
 const {
     Game
 } = require("./game")
@@ -96,19 +106,21 @@ io.on("connection", (socket) => {
             io.to(roomId).emit("lobby", "participantsUpdated")
         })
 
-        var game = undefined
         socket.on("start", () => {
             if (RoomManager.isCreator(roomId, user.id)) {
-                game = new Game(roomId, 3, 20)
-
-                socket.on("game", (event) => {
-                    event.userId = user.id
-                    game.processEvent(event)
-                })
-
+                log.debug("creating game")
+                GameManager.createGame(roomId)
                 io.to(roomId).emit("lobby", "startGame")
             }
         })
+        
+        socket.on("game", (event) => {
+            log.error(event)
+            event.userId = user.id
+            GameManager.processEvent(event)
+        })
+
+
 
     })
 })

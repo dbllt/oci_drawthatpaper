@@ -32,7 +32,7 @@ const types = {
     pick: "pick"
 }
 
-let packetForServer = function(type, data){
+let packetForServer = function (type, data) {
     return {
         "type": type,
         "data": data
@@ -67,18 +67,21 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
             switch (json.type) {
                 case types.players:
                     log.debug("players")
+                    connection.$emit(events.Participants, json.data.participants)
                     break
                 case types.state:
-                    connection.$emit(events.GameStateUpdate, json.data.state)
+                    connection.$emit(events.GameStateUpdate, json.data)
                     log.debug("state")
                     break
                 case types.round:
+                    connection.$emit(events.RoundTime, json.data.round_time)
                     log.debug("round")
                     break
                 case types.next_word:
                     log.debug("next_word")
                     break
                 case types.score:
+                    // old
                     log.debug("score")
                     break
                 case types.word_validity:
@@ -86,7 +89,7 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
                     break
                 case types.pick:
                     log.debug("pick")
-                    if(authentication.isMe(json.data.drawing_user_id))
+                    if (authentication.isMe(json.data.drawing_user_id))
                         connection.$emit(events.PickWord, json.data.words)
                     break
             }
@@ -104,7 +107,7 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
         })
         connection.$on(actions.PickWord, (word) => {
             log.debug("Picked a word")
-            socket.emit(socketEvents.game, packetForServer(types.pick,word))
+            socket.emit(socketEvents.game, packetForServer(types.pick, word))
         })
     })
 

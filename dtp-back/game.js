@@ -59,13 +59,19 @@ class Game extends GameDefault {
     //network
     sendPlayers() {
         let room = this.getRoom();
+
+        room.participants.forEach(p => {
+            p.score = this.score[p]
+        })
+
         this.sendData(types.players, {
             "participants": room.participants
         })
     }
+
     sendRoundTime() {
         this.sendData(types.round, {
-            "round-time": this.roundTime
+            "round_time": this.roundTime
         });
     }
     sendCurrentDrawer() {
@@ -77,9 +83,7 @@ class Game extends GameDefault {
         });
     }
     sendScore() {
-        this.sendData(types.score, {
-            "points": this.points
-        });
+        this.sendPlayers();
     }
     sendWordValidity(playerId, answer, good) {
         this.sendData(types.word_validity, {
@@ -91,7 +95,8 @@ class Game extends GameDefault {
     sendState() {
         //game over or current state
         this.sendData(types.state, {
-            "state": this.state
+            "state": this.state,
+            "drawing_user_id": this.currentDrawer.id
         });
     }
     sendPickingWords() {
