@@ -17,6 +17,7 @@
         name="password"
         v-model="input.password"
         placeholder="Password"
+        v-on:keyup.enter="login()"
       />
     </label>
     <button type="button" class="loginButton" v-on:click="login()">

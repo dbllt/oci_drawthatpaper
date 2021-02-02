@@ -3,12 +3,28 @@
     <h1>Draw That Paper</h1>
     <br />
     <div>
-      <CanvasDraw
+      <div class="wordToDraw">
+        <div class="vertical-center">
+        <h3>Your word :</h3>
+        <br>
+        <h2><b>pouet</b></h2>
+      </div>
+        </div>
+      <CanvasDraw class="canvas"
         :width="480"
         :height="480"
         :brushSize="4"
         :outputName="'example'"
       />
+      <div class="scores">
+        <h4>Scores :</h4>
+        <table>
+        <tr v-for="item in this.participants" :key="item.id">
+          <th> {{ item.username }} </th>  <th>-1 </th>
+        </tr>
+      </table>
+      </div>
+      <div class="clearfix"></div>
     </div>
     <br>
     <carousel></carousel>
@@ -24,7 +40,15 @@ export default {
   name: "Game",
   components: { CanvasDraw, carousel },
   data: function() {
-    return {};
+    return {
+      participants:[
+
+        { id: '1',
+          username:'dorian'},
+        { id: '2',
+          username:'allo'},
+      ]
+    };
   },
   methods: {
     leave() {
