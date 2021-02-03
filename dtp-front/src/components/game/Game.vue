@@ -18,6 +18,7 @@
       </div>
       <CanvasDraw
         v-bind:class="{ disabled: this.canvaDisabled }"
+        ref="canva"
         class="canvas"
         :width="480"
         :height="480"
@@ -43,9 +44,9 @@
         PickWord
       </button>
     </div>
-    <br>
+    <br />
     <carousel ref="carousel" :buttons="true"></carousel>
-    <button  type="button" class="block" v-on:click="leave">Leave</button>
+    <button type="button" class="block" v-on:click="leave">Leave</button>
   </div>
 </template>
 
@@ -86,6 +87,7 @@ export default {
         this.startedOnce = true;
         this.$refs.timer.time = timeInMiliSec / 1000;
         this.$refs.timer.start();
+        this.$refs.canva.clear();
       }
     },
     stopTimer() {
