@@ -108,9 +108,6 @@ export default {
   background-color: white;
 }
 
-.attempts-list-item {
-}
-
 .answer-bad {
   color: red;
 }

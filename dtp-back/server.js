@@ -6,7 +6,7 @@ const app = express()
 var cors = require('cors')
 
 const {
-    PORT = 3000,  ACCESS_TOKEN_SECRET
+    PORT = 3000, ACCESS_TOKEN_SECRET
 } = process.env
 
 // Chat
@@ -16,7 +16,9 @@ const io = require('socket.io')(http, {
         origin: "*",
         methods: ["GET", "POST"],
         credentials: true
-    }
+    },
+    pingTimeout: 6000000,
+    pingInterval: 30000
 })
 const socketioJwt = require('socketio-jwt');
 

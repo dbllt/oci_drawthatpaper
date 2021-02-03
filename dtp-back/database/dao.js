@@ -6,7 +6,7 @@ class UsersDao {
     static insert(user) {
         var sql = "INSERT INTO " + this.TABLE_NAME + " (`id`, `username`, `email`, `password`) VALUES (NULL, ?, ?, ?)"
 
-        connection.query(sql, [user.username, user.email, user.password], function (err, result) {
+        connection.query(sql, [user.username, user.email, user.password], function (err) {
             if (err) throw err;
             log.debug("user inserted")
         })
@@ -14,9 +14,25 @@ class UsersDao {
     static async getAll() {
         var ret
         const query = new Promise((resolve, reject) => {
-            connection.query("SELECT * FROM " + this.TABLE_NAME + " ", function (err, result, fields) {
+            connection.query("SELECT * FROM " + this.TABLE_NAME + " ", function (err, result) {
                 if (err) reject("db", err);
                 ret = result
+                resolve()
+            });
+        })
+        await query
+        return ret
+    }
+    static async getOneByEmail(email) {
+        var ret
+        const query = new Promise((resolve, reject) => {
+            let sql = "SELECT * FROM " + this.TABLE_NAME + " AS t " +
+                "WHERE t.email = ?" +
+                "LIMIT 1"
+
+            connection.query(sql, email, function (err, result) {
+                if (err) reject("db", err);
+                ret = result[0]
                 resolve()
             });
         })
@@ -35,13 +51,14 @@ class RefreshTokensDao {
         })
     }
     static remove(tokenId) {
-        var sql = "DELETE FROM " + this.TABLE_NAME +" AS t "
-        + "WHERE t.id = ?"
+        var sql = "DELETE FROM " + this.TABLE_NAME + " AS t " +
+            "WHERE t.id = ?"
 
         connection.query(sql, tokenId, function (err, result) {
             if (err) throw err;
         })
     }
+
     static async getAll() {
         var ret
         const query = new Promise((resolve, reject) => {

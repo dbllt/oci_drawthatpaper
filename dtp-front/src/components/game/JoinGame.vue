@@ -8,20 +8,23 @@
       <button type="button" class="block" v-on:click="joinRoom">Join</button>
     </label>
 
-    <h3>Available rooms :</h3>
+    <h3>Available rooms : <a href="#" v-on:click="getRooms">refresh</a></h3>
+    <b v-if="error" class="error">{{ error }}</b>
     <div class="roomList">
       <div v-for="item in this.rooms" :key="item.name">
-        <button
-          type="button"
-          class="block"
-          v-on:click="joinSpecificRoom(item.id)"
-        >
-          Join
-          <br>
-          <div style="font-size: 18px;" class="text"> 
-           {{ item.name }}
-          </div>
-        </button>
+        <template v-if="!item.started">
+          <button
+            type="button"
+            class="block"
+            v-on:click="joinSpecificRoom(item.id)"
+          >
+            Join
+            <br />
+            <div style="font-size: 18px;" class="text">
+              {{ item.name }}
+            </div>
+          </button>
+        </template>
       </div>
     </div>
 
@@ -33,18 +36,19 @@
 export default {
   name: "JoinGame",
   data() {
-    return { gameId: "", rooms: [],roomToJoin:"" };
+    return { gameId: "", rooms: [], roomToJoin: "", error: "" };
   },
   methods: {
     joinRoom() {
-      this.roomToJoin=this.gameId
+      this.roomToJoin = this.gameId;
       this.$connection.$emit(
         this.$network_actions.JoinRoom,
         this.gameId.toString()
       );
+      this.err = "";
     },
     joinSpecificRoom(id) {
-      this.roomToJoin=id
+      this.roomToJoin = id;
       this.$connection.$emit(this.$network_actions.JoinRoom, id.toString());
     },
     back() {
@@ -59,8 +63,17 @@ export default {
     onGetAllRoom(rooms) {
       this.rooms = rooms;
     },
+    getRooms() {
+      this.$connection.$emit(this.$network_actions.GetAllRooms);
+    },
+    onJoinRoomError(err) {
+      this.displayError(err);
+      this.error = err;
+      this.getRooms();
+    },
     displayError(err) {
       console.log(err);
+      this.error = err;
     },
   },
   created() {
@@ -70,7 +83,7 @@ export default {
     );
     this.$connection.$on(
       this.$network_events.JoinRoom.error,
-      this.displayError
+      this.onJoinRoomError
     );
 
     // Emit get all rooms to get information for the component
@@ -92,7 +105,7 @@ export default {
     );
     this.$connection.$off(
       this.$network_events.JoinRoom.error,
-      this.displayError
+      this.onJoinRoomError
     );
 
     this.$connection.$off(

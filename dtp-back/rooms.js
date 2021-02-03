@@ -20,6 +20,7 @@ const RoomManager = {
         const room = {
             id: roomId,
             name: name,
+            started: false,
             creator: creator,
             participants: []
         }
@@ -28,12 +29,17 @@ const RoomManager = {
     },
     joinRoom(roomId, user) {
         const room = this.getRoom(roomId)
-        if (!room) return log.error("Cannot join unexisting room")
+        if (!room) return log.error("joinRoom: Room doesn't exist")
+        if (room.started) {
+            log.debug("joinRoom: Game already started")
+            return false
+        }
         room.participants.push(user)
+        return true
     },
     isInRoom(roomId, userId) {
         const room = this.getRoom(roomId)
-        if (!room) return log.error("Room doesn't exist")
+        if (!room) return log.error("isInRoom: Room doesn't exist")
         return room.participants.filter(u => u.id === userId).length > 0
     },
     isValid(roomId) {
@@ -44,15 +50,21 @@ const RoomManager = {
     },
     leaveRoom(roomId, user) {
         const room = this.getRoom(roomId)
-        if (!room) return log.error("Trying to leave not existing room")
+        if (!room) return log.error("leaveRoom: Room doesn't exist")
         room.participants = room.participants.filter(u => u.id !== user.id)
         if (arrayIsEmpty(room.participants))
             rooms = rooms.filter(r => r.id !== roomId)
     },
     isCreator(roomId, userId) {
         const room = this.getRoom(roomId)
-        if (!room) return log.error("Trying to access not existing room")
+        if (!room) return log.error("isCreator: Room doesn't exist")
         return room.creator.id === userId
+    },
+    startGame(roomId) {
+        const room = this.getRoom(roomId)
+        if (!room) return log.error("startGame: Room doesn't exist")
+        room.started = true
+        GameManager.createGame(roomId)
     }
 }
 
@@ -85,45 +97,46 @@ io.on("connection", (socket) => {
     socket.on("connectMeTo", (roomId) => {
         log.debug("Connecting " + username + " to chat room " + roomId)
 
-        socket.join(roomId)
-        socket.join(user.id)
-
-        RoomManager.joinRoom(roomId, user)
-
-        io.to(roomId).emit("lobby", "participantsUpdated")
-
-        socket.on("chat", (msg) => {
-            log.debug("(" + roomId + ") (" + username + ") : " + msg)
-            io.to(roomId).emit("chat", {
-                username: username,
-                msg: msg
-            })
-        })
-        socket.on("draw", (msg) => {
-            io.to(roomId).emit("draw", msg)
-        })
-
-        socket.on("disconnect", () => {
-            log.debug("User: " + username + " disconnected and leaving room")
-            RoomManager.leaveRoom(roomId, user)
-            io.to(roomId).emit("lobby", "participantsUpdated")
-        })
-
-        socket.on("start", () => {
-            if (RoomManager.isCreator(roomId, user.id)) {
-                log.debug("creating game")
-                GameManager.createGame(roomId)
-                io.to(roomId).emit("lobby", "startGame")
-            }
-        })
+        let joined = RoomManager.joinRoom(roomId, user)
         
-        socket.on("game", (event) => {
-            log.error(event)
-            event.userId = user.id
-            GameManager.processEvent(event, roomId)
-        })
+        if (joined) {
+            socket.join(roomId)
+            socket.join(user.id)
 
+            io.to(roomId).emit("lobby", "participantsUpdated")
 
+            socket.on("chat", (msg) => {
+                log.debug("(" + roomId + ") (" + username + ") : " + msg)
+                io.to(roomId).emit("chat", {
+                    username: username,
+                    msg: msg
+                })
+            })
+            socket.on("draw", (msg) => {
+                io.to(roomId).emit("draw", msg)
+            })
+
+            socket.on("disconnect", () => {
+                log.debug("User: " + username + " disconnected and leaving room")
+                RoomManager.leaveRoom(roomId, user)
+                io.to(roomId).emit("lobby", "participantsUpdated")
+            })
+
+            socket.on("start", () => {
+                if (RoomManager.isCreator(roomId, user.id)) {
+                    log.debug("creating game")
+                    RoomManager.startGame(roomId)
+                    io.to(roomId).emit("lobby", "startGame")
+                }
+            })
+
+            socket.on("game", (event) => {
+                log.error(event)
+                event.userId = user.id
+                GameManager.processEvent(event, roomId)
+            })
+
+        }
 
     })
 })
