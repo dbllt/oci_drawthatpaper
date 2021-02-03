@@ -15,17 +15,5 @@ class RandLine {
         }
     }
 }
-//throw new Error("TODO");
-let generator = new RandLine('wordbank/français.txt');
-currentWords = [];
 
-let callback = (word) => {
-    if (word.length < 2) {
-        generator.lines(callback, 1);
-        return ;
-    }
-    currentWords.push(word);
-};
-generator.lines(callback, 3);
-console.log("", currentWords)
 module.exports = RandLine;
