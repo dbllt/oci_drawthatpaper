@@ -7,7 +7,7 @@
       Use this code to join : <b>{{ this.room.id }}</b>
     </p>
 
-    <button type="button" class="block" v-on:click="start">Start</button>
+    <button  v-if="amICreator" type="button" class="block" v-on:click="start">Start</button>
     <button type="button" class="block" v-on:click="back">Go Back</button>
 
     <div>
@@ -28,6 +28,7 @@
 
 <script>
 import Chat from "@/components/chat/chat";
+import authentication from "@/network/authentication"
 export default {
   name: "Room",
 
@@ -37,6 +38,7 @@ export default {
   data() {
     return {
       room: this.$route.params.room,
+      amICreator: false,
     };
   },
   methods: {
@@ -58,6 +60,8 @@ export default {
     },
     onGetOneRoom(data) {
       this.room = data;
+      console.log(data);
+      this.amICreator = authentication.isMe(data.creator.id);
     },
     displayError(err) {
       console.log(err);
