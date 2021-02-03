@@ -27,7 +27,6 @@ h1 {
   background-color: #fed766;
   font-size: 26px;
   cursor: pointer;
-
   margin: 5% auto;
   padding: 2% 2% 2% 2%;
   width: 30%;
@@ -146,4 +145,32 @@ table{
 table, th, td {
   border: 1px solid black;
 }
+
+.disabled {
+  pointer-events: none;
+}
+
+.wordButton{
+  float: left;
+  width: 10%;
+  padding: 1%;
+  margin: 2%;
+  display: block;
+  text-align: center;
+  border: none;
+  background-color: #fed766;
+  font-size: 26px;
+  cursor: pointer;
+  min-width: 200px;
+  border-radius: 8px;
+}
+.wordButton:hover {
+  color: white;
+}
+
+.wordList{
+  margin-left: 30%;
+  margin-right: auto
+}
+
 </style>

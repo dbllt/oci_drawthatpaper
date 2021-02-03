@@ -38,12 +38,13 @@
       <div class="clearfix"></div>
     </div>
     <br />
-    <div v-for="item in currentWords" :key="item">
-      <h1>{{ item }}</h1>
-      <button type="button" class="block" v-on:click="pickWord(item)">
-        PickWord
+    <h4 v-if="currentWords.length">Pick a word:</h4>
+    <div class="wordList" v-for="item in currentWords" :key="item">
+      <button type="button"  class="wordButton" v-on:click="pickWord(item)">
+        {{ item }}
       </button>
     </div>
+    <div class="clearfix"></div>
     <br />
     <carousel ref="carousel" :buttons="true"></carousel>
     <button type="button" class="block" v-on:click="leave">Leave</button>
@@ -167,8 +168,3 @@ export default {
 };
 </script>
 
-<style>
-.disabled {
-  pointer-events: none;
-}
-</style>
