@@ -1,7 +1,7 @@
 import Vue from "vue"
 import log from "@/log"
 import io from "socket.io-client"
-import authentication from "@/network/auth"
+import authentication from "@/network/authentication"
 
 const SOCKET_URL = Vue.prototype.$socket_url
 const connection = Vue.prototype.$connection
@@ -14,6 +14,7 @@ const socketEvents = {
     game: "game",
     goodAnswerGiven: "goodAnswerGiven",
     newUserInRoom: "newUserInRoom",
+    participantsUpdated: "participantsUpdated",
     connectMeTo: "connectMeTo"
 }
 
@@ -31,6 +32,7 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
             Authorization: `Bearer ${authentication.getAccessToken()}`
         }
     })
+    connection.$on(actions.LeaveRoom, () => socket.disconnect())
 
     socket.on("connect", () => {
         log.debug("Connected to chat")
@@ -54,15 +56,15 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
 
     socket.on(socketEvents.game, (event) => {
         switch (event) {
-            case socketEvents.newUserInRoom :
-                connection.$emit(events.NewUserInRoom)
-                log.debug("Someone just joined the room")
+            case socketEvents.participantsUpdated:
+                connection.$emit(events.ParticipantsUpdated)
+                log.debug("Someone joined or left the room")
                 break
         }
     })
 
     socket.on("unauthorized", (error) => {
-        if (error.data.type == "UnauthorizedError" || error.data.code == "invalid_token") {
+        if (error.data.type === "UnauthorizedError" || error.data.code === "invalid_token") {
             // redirect user to login page perhaps?
             log.debug("User token has expired");
         }

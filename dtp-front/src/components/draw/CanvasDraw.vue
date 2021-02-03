@@ -1,23 +1,31 @@
 <template>
-  <div class="canvas-wrapper" ref="canvasWrapper">
-    <div class="draw-area">
-      <canvas id="canvas" ref="canvas" :width="width" :height="height"></canvas>
-      <canvas id="cursor" ref="cursor" :width="width" :height="height"></canvas>
+  <div class="canvas-draw">
+    <div class="canvas-wrapper" ref="canvasWrapper">
+      <div class="draw-area">
+        <canvas id="canvas" ref="canvas" :width="width" :height="height"></canvas>
+        <canvas id="cursor" ref="cursor" :width="width" :height="height"></canvas>
+      </div>
     </div>
-    <ul class="tools">
-      <li id="tool-pencil" :class="{ active: selectedToolIdx === 0 }" @click="changeTool(0)">
-        <img src="@/assets/edit.svg"/>
-      </li>
-      <li id="tool-eraser" :class="{ active: selectedToolIdx === 1 }" @click="changeTool(1)">
-        <img src="@/assets/eraser.svg"/>
-      </li>
-      <li id="tool-color-palette" @click="showColorPalette()">
-        <img src="@/assets/color-palette.svg"/>
-      </li>
-      <li id="tool-download" @click="download()">
-        <img src="@/assets/download.svg"/>
-      </li>
-    </ul>
+    <div>
+      <ul class="tools">
+        <li class="tooltip" id="tool-pencil" :class="{ active: selectedToolIdx === 0 }" @click="changeTool(0)">
+            <img  src="@/assets/edit.svg"/>
+            <span class="tooltiptext tooltip-bottom">Pen</span>
+        </li>
+        <li class="tooltip" id="tool-eraser" :class="{ active: selectedToolIdx === 1 }" @click="changeTool(1)">
+            <img src="@/assets/eraser.svg"/>
+            <span class="tooltiptext tooltip-bottom">Eraser</span>
+        </li>
+        <li class="tooltip" id="tool-color-palette" @click="showColorPalette()">
+            <img src="@/assets/color-palette.svg"/>
+            <span class="tooltiptext tooltip-bottom">Change color</span>
+        </li>
+        <li class="tooltip" id="tool-download" @click="download()">
+            <img src="@/assets/download.svg"/>
+            <span class="tooltiptext tooltip-bottom">Download drawing</span>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -71,10 +79,6 @@ export default {
   },
   methods: {
     setCanvas() {
-      this.$refs.canvasWrapper.style.gridTemplateColumns = `${this.width}px 30px`;
-      this.$refs.canvasWrapper.style.width = `${this.width + 30}px`;
-      this.$refs.canvasWrapper.style.height = `${this.height}px`;
-
       this.canvasContext = this.$refs.canvas.getContext('2d');
       this.canvasContext.lineJoin = 'round';
       this.canvasContext.lineCap = 'round';
@@ -86,8 +90,9 @@ export default {
     bindEvents() {
       // TODO maybe move these functions elsewhere
       let transformOffset = (x, y) => {
-        let transform = this.$refs.canvas.getContext("2d").getTransform();
-        let point = transform.inverse().transformPoint(new DOMPoint(x, y));
+        x = x * this.$refs.canvas.width / this.$refs.canvas.offsetWidth;
+        y = y * this.$refs.canvas.height / this.$refs.canvas.offsetHeight;
+        let point = this.canvasContext.getTransform().inverse().transformPoint(new DOMPoint(x, y));
         return [point.x, point.y];
       }
       let offsetFromTouch = (touch) => {
@@ -115,10 +120,6 @@ export default {
       this.$refs.canvas.addEventListener('touchend', (event) => {
         this.isDrawing = false;
         event.preventDefault();
-      });
-      this.$connection.$on(this.$network_events.ReceiveDraw, (msg) => {
-        console.log("rcv", msg);
-        this.renderDrawCmd(msg);
       });
     },
     changeTool(tool) {
@@ -190,13 +191,25 @@ export default {
       link.href = this.$refs.canvas.toDataURL()
       link.click();
     },
+    onReceiveDraw(msg){
+      // console.log("rcv", msg);
+      this.renderDrawCmd(msg);
+    }
+  },
+  created(){
+    this.$connection.$on(this.$network_events.ReceiveDraw, this.onReceiveDraw);
+  },
+  beforeDestroy(){
+    this.$connection.$off(this.$network_events.ReceiveDraw, this.onReceiveDraw);
   }
 }
 </script>
 <style scoped>
 .canvas-wrapper {
-  display: grid;
+  display: inline-block;
   position: relative;
+  width: 100%;
+  max-width: 512px;
 }
 #canvas {
   background-color: #f9f9f9;
@@ -214,6 +227,8 @@ export default {
   padding: 0;
 }
 .tools li{
+  width: 32px;
+  display: inline-block;
   padding: 4px;
   background-color: #c8c8c8;
   border-left: 1px solid #abaaaa;
@@ -222,10 +237,14 @@ export default {
   border-bottom: 1px solid #abaaaa;
 }
 .draw-area canvas {
+  vertical-align: top;
+  margin-left: -2px;
+  border: 2px solid black;
+  width: 100%;
+}
+.draw-area canvas#cursor {
   position: absolute;
   left: 0;
   top: 0;
-  border: 2px solid #c8c8c8;
-  border-radius: 10px 0 10px 10px;
 }
 </style>

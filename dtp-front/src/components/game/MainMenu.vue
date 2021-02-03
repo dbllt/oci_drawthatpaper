@@ -1,74 +1,93 @@
 <template>
   <div>
     <h1>Draw That Paper</h1>
-      <button  type="button" class="block" v-on:click="create">Create Game</button>
-      <button  type="button" class="block" v-on:click="join">Join Game</button>
-
-
-
-
-
+    <template v-if="!creatingRoom">
+      <button type="button" class="block" v-on:click="createRoom">
+        Create Game
+      </button>
+      <button type="button" class="block" v-on:click="join">Join Game</button>
+    </template>
+    <template v-else>
+      <h3>Name of your game :</h3>
+      <label>
+        <input v-model="gameName" v-on:keyup.enter="validateName" />
+      </label>
+      <button type="button" class="block" v-on:click="validateName">Create</button>
+    </template>
+    <br />
+    <button type="button" class="block" v-on:click="logout">Log Out</button>
   </div>
-
 </template>
-
 
 <script>
 export default {
-  name: 'MainMenu',
+  name: "MainMenu",
 
-  data(){
+  data() {
     return {
-    }
+      creatingRoom: false,
+      gameName: "",
+    };
   },
   methods: {
-    create: function () {
+    createRoom() {
+      this.creatingRoom = true;
+
+      // let text = " ";
+      // let chars = "abcdefghijklmnopqrstuvwxyz";
+
+      // for (let i = 0; i < 5; i++) {
+      //   text += chars.charAt(Math.floor(Math.random() * chars.length));
+      // }
+    },
+    validateName() {
+      if (this.gameName)
         this.$connection.$emit(this.$network_actions.CreateRoom, {
-          name:"thisisaname"
+          name: this.gameName,
         });
     },
-    join: function () {
-
+    join() {
       this.$router.push("/join");
     },
+    logout() {
+      this.$connection.$emit(this.$network_actions.Logout);
+    },
+    onLogout() {
+      this.$router.push("/");
+    },
+    roomCreated(roomMsg) {
+      this.$router.push({
+        name: "Room",
+        params: { id: roomMsg.id, room: roomMsg },
+      });
+    },
+    displayError(err) {
+      console.log(err);
+    },
   },
-  created: function() {
-    this.$connection.$on(this.$network_events.CreateRoom.success, (roomMsg) => {
-      this.$router.push({ name: 'Room', params: {id:roomMsg.id, room: roomMsg} })
-    });
-    this.$connection.$on(this.$network_events.CreateRoom.error, () => {
-     console.log("something went wrong");
-    });
+  created() {
+    this.$connection.$on(
+      this.$network_events.CreateRoom.success,
+      this.roomCreated
+    );
+    this.$connection.$on(
+      this.$network_events.CreateRoom.error,
+      this.displayError
+    );
+    this.$connection.$on(this.$network_events.Logout, this.onLogout);
   },
-}
+  beforeDestroy() {
+    this.$connection.$off(
+      this.$network_events.CreateRoom.success,
+      this.roomCreated
+    );
+    this.$connection.$off(
+      this.$network_events.CreateRoom.error,
+      this.displayError
+    );
+    this.$connection.$off(this.$network_events.Logout, this.onLogout);
+  },
+};
 </script>
 
-
-<style>
-body {
-  background-color: #2ab7ca;
-}
-
-h1 {
-  color: #e6e6ea;
-}
-.block {
-  display: block;
-  text-align: center;
-  border: none;
-  background-color: #fed766;
-  font-size: 26px;
-  cursor: pointer;
-
-  margin: 5% auto;
-  padding: 2% 10% 2% 10%;
-  width: 30%;
-  border-radius: 8px;
-
-}
-
-
-.block:hover {
-  color: white;
-}
-</style>
+<style></style>

@@ -34,6 +34,14 @@ class RefreshTokensDao {
             if (err) throw err;
         })
     }
+    static remove(tokenId) {
+        var sql = "DELETE FROM " + this.TABLE_NAME +" AS t "
+        + "WHERE t.id = ?"
+
+        connection.query(sql, tokenId, function (err, result) {
+            if (err) throw err;
+        })
+    }
     static async getAll() {
         var ret
         const query = new Promise((resolve, reject) => {

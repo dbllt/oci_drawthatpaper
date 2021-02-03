@@ -1,17 +1,21 @@
 <template>
   <div>
     <h1>Draw That Paper</h1>
-    <br>
+    <br />
     <div>
-      <CanvasDraw :width="256" :height="480" :brushSize="4" :outputName="'example'"/>
+      <CanvasDraw
+        :width="480"
+        :height="480"
+        :brushSize="4"
+        :outputName="'example'"
+      />
     </div>
+    <br>
     <carousel></carousel>
     <Answer></Answer>
     <button  type="button" class="block" v-on:click="leave">Leave</button>
   </div>
-
 </template>
-
 
 <script>
 import CanvasDraw from "@/components/draw/CanvasDraw";
@@ -20,15 +24,13 @@ import Answer from "@/components/game/answer";
 
 export default {
   name: 'Game',
-  components: {CanvasDraw,carousel,Answer},
-  data : function(){
-    return {}
-  },
+  components: {CanvasDraw,carousel,Ansgit wer},
+  data(){return {name: "Game"};},
   methods: {
-
-    leave: function () {
-      this.$router.push('/menu')
-    }
-  }
-}
+    leave() {
+      this.$router.push("/menu");
+      this.$connection.$emit(this.$network_actions.LeaveRoom);
+    },
+  },
+};
 </script>

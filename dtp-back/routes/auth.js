@@ -27,8 +27,13 @@ router.post('/token', async (req, res) => {
     })
 })
 
-router.delete('/logout', (req, res) => {
-    refreshTokens = refreshTokens.filter(token => token !== req.body.refreshToken)
+router.delete('/logout', async (req, res) => {
+    const refreshToken = req.body.refreshToken
+    if (refreshToken == null) return res.sendStatus(401)
+    const refreshTokens = await RefreshTokensDao.getAll()
+    const token = refreshTokens.find(token => token.tokenValue == refreshToken)
+    if (!token) return res.sendStatus(403)
+    RefreshTokensDao.remove(token.id)
     res.sendStatus(204)
 })
 
