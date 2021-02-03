@@ -1,31 +1,38 @@
 <template>
-  <div id="login">
-    <h1>Login</h1>
+  <div class="w3-container  w3-margin-top" >
+    <h1 class="w3-center">Login</h1>
     <p v-if="errorEmpty">Please enter an email and a password</p>
     <p v-if="error">Invalid email or password</p>
+    <div class="w3-center">
     <label>
       <input
-        type="text"
-        name="username"
-        v-model="input.email"
-        placeholder="Email"
+          class="w3-input w3-margin-bottom w3-round-large w3-border"
+          type="text"
+          name="username"
+          v-model="input.email"
+          placeholder="Email"
       />
     </label>
     <label>
       <input
-        type="password"
-        name="password"
-        v-model="input.password"
-        placeholder="Password"
-        v-on:keyup.enter="login()"
+          class="w3-input w3-round-large w3-border"
+          type="password"
+          name="password"
+          placeholder="Password"
+          v-model="input.password"
+          v-on:keyup.enter="login()"
       />
     </label>
-    <button type="button" class="loginButton" v-on:click="login()">
-      Login
-    </button>
-    <button type="button" class="loginButton" v-on:click="register()">
-      Register
-    </button>
+    </div>
+    <div class="w3-container w3-center">
+      <div class="w3-button w3-margin myButton  w3-large w3-theme-yellow " v-on:click="login()">
+        Login
+      </div>
+      <br>
+      <div class="w3-button w3-margin myButton w3-large w3-theme-yellow" v-on:click="register()">
+        Register
+      </div>
+    </div>
   </div>
 </template>
 
@@ -76,26 +83,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.loginButton {
-  display: block;
-  text-align: center;
-  border: none;
-  background-color: #fed766;
-  font-size: 20px;
-  margin: 5% auto;
-  padding: 2% 5% 2% 5%;
-  width: 30%;
-  border-radius: 8px;
-}
-
-#login {
-  width: 500px;
-  border: 1px solid #cccccc;
-  background-color: #ffffff;
-  margin: auto;
-  margin-top: 200px;
-  padding: 20px;
-}
-</style>

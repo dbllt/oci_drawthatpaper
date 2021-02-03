@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="w3-content ">
     <router-view />
   </div>
 </template>
@@ -9,77 +9,27 @@
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-body {
-  background-color: #2ab7ca;
 }
 
-h1 {
-  color: #e6e6ea;
-}
-.block {
-  display: block;
-  text-align: center;
-  border: none;
-  background-color: #fed766;
-  font-size: 26px;
-  cursor: pointer;
-  margin: 5% auto;
-  padding: 2% 2% 2% 2%;
-  width: 30%;
-  min-width: 200px;
-  border-radius: 8px;
-}
-
-.block.small {
-  min-width: 50px;
-  font-size: 20px;
-}
-
-.block:hover {
-  color: white;
-}
-
-input {
-  display: block;
-  text-align: center;
-  border: none;
-  background-color: #fed766;
-  font-size: 20px;
-
-  margin: 5% auto;
-  padding: 2% 5% 2% 5%;
-  width: 30%;
-  min-width: 150px;
-  border-radius: 8px;
-}
-
-input.big {
-  min-width: 300px;
+body{
+  background-color:#2ab7ca
 }
 
 .error {
   color:red
 }
 
-.roomList {
-  border-style: solid;
-  border-width: 1px;
-  border-color: #fed766;
-  min-height: 200px;
-  height: 400px;
-  overflow: scroll;
-  overflow-x: hidden;
+
+.myButton{
+  min-width: 200px;
+  border-radius: 8px;
 }
+
 
 /* Tooltip container */
 .tooltip {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
 /* Tooltip text */
@@ -128,53 +78,32 @@ input.big {
 }
 
 @media ( min-width: 1024px ) {
-.wordToDraw {
-  float: left; width: 33%;
-}
-.canvas{
-  float: left; width: 33%;
-}
-.scores {
-  float: left; width: 33%;
-}
-.clearfix{
-  clear:left;
-}
-}
-table{
-  width:100%;
-  margin-left: auto;
-  margin-right: auto;
-}
-table, th, td {
-  border: 1px solid black;
+  .wordToDraw {
+    float: left;
+    width: 33%;
+  }
+
+  .canvas {
+    float: left;
+    width: 33%;
+  }
+
+  .scores {
+    float: left;
+    width: 33%;
+  }
+
+  .clearfix {
+    clear: left;
+  }
 }
 
 .disabled {
   pointer-events: none;
 }
 
-.wordButton{
-  float: left;
-  width: 10%;
-  padding: 1%;
-  margin: 2%;
-  display: block;
-  text-align: center;
-  border: none;
-  background-color: #fed766;
-  font-size: 26px;
-  cursor: pointer;
-  min-width: 200px;
-  border-radius: 8px;
-}
-.wordButton:hover {
-  color: white;
-}
 
-.wordList{
-  margin-left: 30%;
-  margin-right: auto
-}
 
+@import './assets/styles/w3.css';
+@import 'assets/styles/w3-theme.css';
 </style>

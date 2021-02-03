@@ -1,5 +1,6 @@
 <template>
-  <div>
+
+  <div class="w3-container w3-center">
     <h1>Draw That Paper</h1>
 
     <h2>{{ this.room.name }}</h2>
@@ -7,8 +8,7 @@
       Use this code to join : <b>{{ this.room.id }}</b>
     </p>
 
-    <button  v-if="amICreator" type="button" class="block" v-on:click="start">Start</button>
-    <button type="button" class="block" v-on:click="back">Go Back</button>
+    <div v-if="amICreator" class="w3-button w3-margin myButton w3-large w3-theme-yellow" v-on:click="start">Start</div>
 
     <div>
       <h4>Players :</h4>
@@ -24,7 +24,7 @@
     >
     </chat>
 
-    <button type="button" class="block" v-on:click="back">Go Back</button>
+    <div class="w3-button w3-margin myButton w3-large w3-theme-red" v-on:click="back">Go Back</div>
   </div>
 </template>
 

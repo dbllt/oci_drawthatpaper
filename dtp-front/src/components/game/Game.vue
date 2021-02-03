@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w3-container w3-center">
     <h1>Draw That Paper</h1>
     <h2>{{ this.gameState }}</h2>
     <div>
@@ -40,14 +40,14 @@
     <br />
     <h4 v-if="currentWords.length">Pick a word:</h4>
     <div class="wordList" v-for="item in currentWords" :key="item">
-      <button type="button"  class="wordButton" v-on:click="pickWord(item)">
+      <div class="w3-button myButton w3-margin  w3-large w3-theme-yellow" v-on:click="pickWord(item)">
         {{ item }}
-      </button>
+      </div>
     </div>
     <div class="clearfix"></div>
     <br />
     <carousel ref="carousel" :buttons="true"></carousel>
-    <button type="button" class="block" v-on:click="leave">Leave</button>
+    <div class="w3-button myButton w3-margin  w3-large w3-theme-red" v-on:click="leave">Leave</div>
   </div>
 </template>
 

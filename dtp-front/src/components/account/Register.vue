@@ -1,12 +1,13 @@
 <template>
-  <div id="login">
-    <h1>Register</h1>
+  <div id="w3-container w3-margin-top">
+    <h1 class="w3-center">Register</h1>
     <p v-if="errorEmail">Invalid email</p>
     <p v-if="errorUsername">Invalid username</p>
     <p v-if="errorPassword">Invalid password</p>
     <p v-if="errorPasswordMatch">The passwords do not match</p>
     <label>
       <input
+          class="w3-input w3-margin w3-round-large w3-border"
           type="text"
           name="username"
           v-model="input.username"
@@ -15,6 +16,7 @@
     </label>
     <label>
       <input
+          class="w3-input w3-margin w3-round-large w3-border"
           type="text"
           name="email"
           v-model="input.email"
@@ -23,6 +25,7 @@
     </label>
     <label>
       <input
+          class="w3-input w3-margin w3-round-large w3-border"
           type="password"
           name="password"
           v-model="input.password"
@@ -31,6 +34,7 @@
     </label>
     <label>
       <input
+          class="w3-input w3-margin w3-round-large w3-border"
           type="password"
           name="passwordAgain"
           v-model="input.passwordAgain"
@@ -38,10 +42,13 @@
           v-on:keyup.enter="register()"
       />
     </label>
-    <button type="button" class="loginButton" v-on:click="register()">
+    <div class="w3-center">
+    <div class="w3-button myButton w3-margin w3-theme-yellow  w3-large" v-on:click="register()">
       Register
-    </button>
-    <button type="button" class="loginButton" v-on:click="back">Go Back</button>
+    </div>
+    <br>
+    <div class="w3-button myButton w3-margin w3-theme-red   w3-large" v-on:click="back">Go Back</div>
+  </div>
   </div>
 </template>
 
@@ -115,14 +122,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-#login {
-  width: 80%;
-  max-width: 500px;
-  border: 1px solid #cccccc;
-  background-color: #ffffff;
-  margin: 200px auto auto;
-  padding: 20px;
-}
-</style>
