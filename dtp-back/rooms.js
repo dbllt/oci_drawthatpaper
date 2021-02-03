@@ -58,13 +58,13 @@ const RoomManager = {
 
 module.exports = RoomManager
 
-var game = undefined
+var game = {}
 const GameManager = {
     createGame(roomId) {
-        game = new Game(roomId, 3, 20)
+        game[roomId] = new Game(roomId, 3, 20)
     },
-    processEvent(event) {
-        game.processEvent(event)
+    processEvent(event, roomId) {
+        game[roomId].processEvent(event)
     }
 }
 
@@ -120,7 +120,7 @@ io.on("connection", (socket) => {
         socket.on("game", (event) => {
             log.error(event)
             event.userId = user.id
-            GameManager.processEvent(event)
+            GameManager.processEvent(event, roomId)
         })
 
 
