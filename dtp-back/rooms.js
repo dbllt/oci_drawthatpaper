@@ -39,6 +39,7 @@ const RoomManager = {
     isValid(roomId) {
         const room = this.getRoom(roomId)
         if (!room) return false
+        if (!this.isInRoom(roomId, room.creator.id)) return false
         return room.participants !== null && room.participants.length >= 2
     },
     leaveRoom(roomId, user) {
