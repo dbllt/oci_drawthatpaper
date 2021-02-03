@@ -37,19 +37,4 @@ class RandLine {
     }
 }
 
-let generator = new RandLine('wordbank/français.txt')
-
-let callback = (word) => {
-    if (word.length === 0) {
-        //console.error("empty")
-        generator.lines(callback);
-        return ;
-    }
-    console.debug(word);
-};
-let i = 3;
-while (i-- > 0) {
-    generator.lines(callback)
-}
-
 module.exports = RandLine;
