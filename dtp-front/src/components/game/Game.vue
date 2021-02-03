@@ -13,7 +13,7 @@
             </h2>
           </template>
           <br />
-          <h3><Timer ref="timer"/></h3>
+          <h3><Timer ref="timer" /></h3>
         </div>
       </div>
       <CanvasDraw
@@ -67,6 +67,8 @@ export default {
       gameState: "",
       participants: [],
       canvaDisabled: false,
+      startedOnce: false,
+      roundTime: 0,
     };
   },
   methods: {
@@ -79,11 +81,23 @@ export default {
       this.currentWord = word;
       this.currentWords = [];
     },
+    startTimer(timeInMiliSec) {
+      if (!this.startedOnce) {
+        console.log("START TIMER");
+        console.log("starting timer with ", this.roundTime);
+        this.startedOnce = true;
+        this.$refs.timer.time = timeInMiliSec / 1000;
+        this.$refs.timer.start();
+      }
+    },
+    stopTimer() {
+      this.startedOnce = false;
+      this.$refs.timer.stop();
+    },
     onPickWord(words) {
       this.currentWords = words;
     },
     onGameStateUpdate(data) {
-      console.log(data);
       switch (data.state) {
         case this.$gameStates.Starting:
           this.gameState = "Starting";
@@ -94,16 +108,19 @@ export default {
         case this.$gameStates.Picking:
           this.canvaDisabled = true;
           this.currentWord = "";
+          this.stopTimer();
           this.gameState = "Picking";
           break;
         case this.$gameStates.Drawing:
           if (authentication.isMe(data.drawing_user_id))
             this.canvaDisabled = false;
+
+          this.startTimer(this.roundTime);
           this.gameState = "Drawing";
           break;
         case this.$gameStates.Ended:
           this.gameState = "Ended";
-
+          this.stopTimer();
           break;
         case this.$gameStates.Terminating:
           this.gameState = "Terminating";
@@ -112,11 +129,10 @@ export default {
       }
     },
     onParticipants(participants) {
-      console.log("onParticipants", participants);
       this.participants = participants;
     },
     onRoundTime(roundTime) {
-      console.log(roundTime);
+      this.roundTime = roundTime;
     },
   },
   created() {
@@ -142,6 +158,7 @@ export default {
       this.$network_events.Participants,
       this.onParticipants
     );
+    this.$connection.$off(this.$network_events.GameScore, this.onGameScore);
     this.$connection.$off(this.$network_events.RoundTime, this.onRoundTime);
   },
 };
