@@ -56,6 +56,11 @@ const events = {
 }
 Vue.prototype.$network_events = events
 
+const ui_events = {
+    BackButtonPressed: "backButtonPressed",
+}
+Vue.prototype.$ui_events = ui_events
+
 const GameStates = Object.freeze({
     Starting: 1, // S
     NextPlayer: 2, // Select player then player send word
@@ -68,9 +73,15 @@ const GameStates = Object.freeze({
 });
 Vue.prototype.$gameStates = GameStates
 
-Vue.prototype.$connection = new Vue()
+Vue.prototype.$connection = new Vue({
+    created() {
+        window.onpopstate = () => {
+            this.$emit(ui_events.BackButtonPressed)
+        };
+    }
+})
 
-Vue.prototype.$server_url = "https://drawthatpaper.istic.univ-rennes1.fr/api"
-Vue.prototype.$socket_url = "https://drawthatpaper.istic.univ-rennes1.fr"
-//Vue.prototype.$server_url = "http://localhost:3000"
-//Vue.prototype.$socket_url = "http://localhost:3000"
+// Vue.prototype.$server_url = "https://drawthatpaper.istic.univ-rennes1.fr/api"
+// Vue.prototype.$socket_url = "https://drawthatpaper.istic.univ-rennes1.fr"
+Vue.prototype.$server_url = "http://localhost:3000"
+Vue.prototype.$socket_url = "http://localhost:3000"

@@ -61,6 +61,10 @@ input.big {
   min-width: 300px;
 }
 
+.error {
+  color:red
+}
+
 .roomList {
   border-style: solid;
   border-width: 1px;

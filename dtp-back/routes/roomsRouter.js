@@ -31,6 +31,7 @@ router.post("/", authenticationToken, (req, res) => {
 router.put("/:id", authenticationToken, (req, res) => {
     const room = RoomManager.getRoom(req.params.id)
     if (!room) return res.status(404).send("Room not found")
+    if (room.started) return res.status(400).send("Game already started")
     const alreadyInRoom = room.participants.find(p => p.id == req.user.id)
     if (alreadyInRoom) return res.status(400).send("User already in the room")
     res.json(room)
