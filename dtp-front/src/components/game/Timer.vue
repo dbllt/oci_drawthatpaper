@@ -12,6 +12,9 @@ export default {
       interval: null,
     };
   },
+  unmounted() {
+    this.stop();
+  },
   methods: {
     formatTime() {
       function str_pad_left(string, pad, length) {
@@ -22,13 +25,16 @@ export default {
       return str_pad_left(min, "0", 2) + ":" + str_pad_left(sec, "0", 2);
     },
     start() {
+      this.stop();
       this.interval = window.setInterval(() => {
         this.time--;
       }, 1000);
     },
     stop() {
-      window.clearInterval(this.interval);
-      this.interval = null;
+      if (this.interval != null) {
+        window.clearInterval(this.interval);
+        this.interval = null;
+      }
     },
   },
 };

@@ -4,6 +4,7 @@ const {
 } = require("./model/game_default");
 const RoomManager = require("./rooms");
 const log = require("./log")
+const RandLine = require("./model/wordpicker");
 
 const types = {
     players: "players",
@@ -123,7 +124,18 @@ class Game extends GameDefault {
 
     generateWords() {
         //throw new Error("TODO");
-        this.currentWords = ["Pikachu", "Dog", "Pond"];
+        let generator = new RandLine('wordbank/français.txt');
+        this.currentWords = [];
+
+        let callback = (word) => {
+            if (word.length < 2) {
+                generator.lines(callback, 1);
+                return ;
+            }
+            this.currentWords.push(word);
+        };
+        generator.lines(callback, 3);
+        //this.currentWords = ["Pikachu", "Dog", "Pond"];
     }
 
     // test

@@ -43,9 +43,8 @@ router.post('/login', async (req, res) => {
         password
     } = req.body
 
-    const users = await UsersDao.getAll();
-    const user = users.find(user => user.email == email)
-
+    const user = await UsersDao.getOneByEmail(email);
+    
     if (user == null) return res.status(400).send('User not found')
 
     try {

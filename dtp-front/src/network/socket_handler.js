@@ -139,5 +139,6 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
     socket.on("disconnect", () => {
         log.debug("Disconnected from chat")
         connectedToChat = false
+        socket.close()
     })
 })

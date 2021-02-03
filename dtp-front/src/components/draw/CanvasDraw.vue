@@ -29,6 +29,7 @@
           <span class="tooltiptext tooltip-bottom">Clear drawing</span>
         </li>
       </ul>
+      <input type="range" min="1" max="16" v-model.number="brushSize" />
     </div>
   </div>
 </template>
@@ -148,6 +149,7 @@ export default {
       switch (cmd[0]) {
         case DrawCmd.LINE:
         case DrawCmd.LINE_ERASE:
+          this.canvasContext.lineWidth = cmd[6];
           this.canvasContext.beginPath();
           this.canvasContext.moveTo(cmd[1], cmd[2]);
           this.canvasContext.lineTo(cmd[3], cmd[4]);
@@ -169,15 +171,16 @@ export default {
       let cmd;
 
       if (this.tools[this.selectedToolIdx].name === 'Eraser') {
-        cmd = [DrawCmd.LINE_ERASE, this.lastX, this.lastY, x, y];
+        cmd = [DrawCmd.LINE_ERASE, this.lastX, this.lastY, x, y, null, this.brushSize*2];
       } else {
-        cmd = [DrawCmd.LINE, this.lastX, this.lastY, x, y, this.tools[this.selectedToolIdx].color];
+        cmd = [DrawCmd.LINE, this.lastX, this.lastY, x, y, this.tools[this.selectedToolIdx].color, this.brushSize];
       }
 
       this.sendAndRenderDrawCmd(cmd);
       [this.lastX, this.lastY] = [x, y];
     },
     drawCursor(x, y) {
+      this.cursorContext.clearRect(0, 0, this.width, this.height);
       this.cursorContext.beginPath();
       this.cursorContext.ellipse(
         x, y,
@@ -185,9 +188,6 @@ export default {
         Math.PI / 4, 0, 2 * Math.PI
       );
       this.cursorContext.stroke();
-      setTimeout(() => {
-        this.cursorContext.clearRect(0, 0, this.width, this.height);
-      }, 100);
     },
     showColorPalette() {
       const colorPalette = document.createElement('input');
@@ -252,6 +252,7 @@ export default {
 }
 .tools img {
   width: 32px;
+  user-select: none;
 }
 .draw-area canvas {
   vertical-align: top;
