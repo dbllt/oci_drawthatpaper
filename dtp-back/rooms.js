@@ -83,7 +83,9 @@ io.on("connection", (socket) => {
 
     socket.on("connectMeTo", (roomId) => {
         log.debug("Connecting " + username + " to chat room " + roomId)
+
         socket.join(roomId)
+        socket.join(user.id)
 
         RoomManager.joinRoom(roomId, user)
 

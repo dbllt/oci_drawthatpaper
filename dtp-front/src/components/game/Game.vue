@@ -44,8 +44,7 @@
       </button>
     </div>
     <br>
-    <carousel :buttons="true"></carousel>
-    <Answer></Answer>
+    <carousel ref="carousel" :buttons="true"></carousel>
     <button  type="button" class="block" v-on:click="leave">Leave</button>
   </div>
 </template>
@@ -54,12 +53,11 @@
 import CanvasDraw from "@/components/draw/CanvasDraw";
 import Timer from "@/components/game/Timer";
 import carousel from "@/components/utils/chat-answer-carousel";
-import Answer from "@/components/game/answer";
 import authentication from "@/network/authentication";
 
 export default {
   name: "Game",
-  components: { CanvasDraw, Timer, carousel,Answer },
+  components: { CanvasDraw, Timer, carousel },
   data: function() {
     return {
       currentWords: [],
@@ -109,6 +107,7 @@ export default {
           this.canvaDisabled = true;
           this.currentWord = "";
           this.stopTimer();
+          this.$refs.carousel.stopAnswer();
           this.gameState = "Picking";
           break;
         case this.$gameStates.Drawing:
@@ -116,11 +115,13 @@ export default {
             this.canvaDisabled = false;
 
           this.startTimer(this.roundTime);
+          this.$refs.carousel.startAnswer();
           this.gameState = "Drawing";
           break;
         case this.$gameStates.Ended:
           this.gameState = "Ended";
           this.stopTimer();
+          this.$refs.carousel.stopAnswer();
           break;
         case this.$gameStates.Terminating:
           this.gameState = "Terminating";

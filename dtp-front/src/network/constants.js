@@ -12,7 +12,7 @@ const actions = {
     GetAllRooms: "getAllRooms",
     GetOneRoom: "getOneRoom",
     ConnectToChat: "connectToChat",
-    SendGoodAnswer: "sendGoodAnswer",
+    SendWordForValidation: "sendWordForValidation",
     StartGame: "startGame",
     PickWord: "pickWord",
 }

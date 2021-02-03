@@ -86,6 +86,7 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
                     break
                 case types.word_validity:
                     log.debug("word_validity")
+                    connection.$emit(events.ReceiveGoodAnswer, json.data)
                     break
                 case types.pick:
                     log.debug("pick")
@@ -108,6 +109,10 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
         connection.$on(actions.PickWord, (word) => {
             log.debug("Picked a word")
             socket.emit(socketEvents.game, packetForServer(types.pick, word))
+        })
+        connection.$on(actions.SendWordForValidation, (word) => {
+            log.debug("Send word for validation")
+            if (word) socket.emit(socketEvents.game, packetForServer(types.word_validity,word));
         })
     })
 
