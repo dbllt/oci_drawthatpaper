@@ -24,6 +24,10 @@
             <img src="@/assets/download.svg"/>
             <span class="tooltiptext tooltip-bottom">Download drawing</span>
         </li>
+        <li class="tooltip" id="tool-clear" @click="clear()">
+          <img src="@/assets/clear.svg"/>
+          <span class="tooltiptext tooltip-bottom">Clear drawing</span>
+        </li>
       </ul>
     </div>
   </div>
@@ -33,6 +37,7 @@
 const DrawCmd = {
   LINE: 0,
   LINE_ERASE: 1,
+  CLEAR: 2,
 };
 export default {
   name: 'CanvasDraw',
@@ -135,6 +140,9 @@ export default {
         case DrawCmd.LINE_ERASE:
           this.canvasContext.globalCompositeOperation = 'destination-out';
           break;
+        case DrawCmd.CLEAR:
+          this.canvasContext.clearRect(0, 0, this.width, this.height);
+          break;
       }
       // actual draw
       switch (cmd[0]) {
@@ -146,6 +154,13 @@ export default {
           this.canvasContext.stroke();
           break;
       }
+    },
+    sendDrawCmd(cmd) {
+      this.$connection.$emit(this.$network_actions.SendDraw, cmd);
+    },
+    sendAndRenderDrawCmd(cmd) {
+      this.sendDrawCmd(cmd);
+      this.renderDrawCmd(cmd);
     },
     draw(x, y) {
       this.drawCursor(x, y);
@@ -159,9 +174,7 @@ export default {
         cmd = [DrawCmd.LINE, this.lastX, this.lastY, x, y, this.tools[this.selectedToolIdx].color];
       }
 
-      console.log(cmd);
-      this.renderDrawCmd(cmd);
-      this.$connection.$emit(this.$network_actions.SendDraw, cmd);
+      this.sendAndRenderDrawCmd(cmd);
       [this.lastX, this.lastY] = [x, y];
     },
     drawCursor(x, y) {
@@ -190,6 +203,9 @@ export default {
       link.download = `${this.outputName}.png`;
       link.href = this.$refs.canvas.toDataURL()
       link.click();
+    },
+    clear(){
+      this.sendAndRenderDrawCmd([DrawCmd.CLEAR]);
     },
     onReceiveDraw(msg){
       // console.log("rcv", msg);
@@ -232,9 +248,10 @@ export default {
   padding: 4px;
   background-color: #c8c8c8;
   border-left: 1px solid #abaaaa;
-}
-.tools li:not(:last-child) {
   border-bottom: 1px solid #abaaaa;
+}
+.tools img {
+  width: 32px;
 }
 .draw-area canvas {
   vertical-align: top;

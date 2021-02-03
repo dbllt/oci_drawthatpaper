@@ -13,6 +13,8 @@ const actions = {
     GetOneRoom: "getOneRoom",
     ConnectToChat: "connectToChat",
     SendGoodAnswer: "sendGoodAnswer",
+    StartGame: "startGame",
+    PickWord: "pickWord",
 }
 Vue.prototype.$network_actions = actions
 
@@ -46,8 +48,25 @@ const events = {
         error: "getOneRoomError",
     },
     ReceiveGoodAnswer: "receiveGoodAnswer",
+    PickWord: "pickWordSuccess",
+    StartGame: "startingGame",
+    GameStateUpdate: "sameStateUpdate",
+    Participants: "participants",
+    RoundTime: "roundTime",
 }
 Vue.prototype.$network_events = events
+
+const GameStates = Object.freeze({
+    Starting: 1, // S
+    NextPlayer: 2, // Select player then player send word
+
+    Picking: 3,
+    Drawing: 4,
+
+    Ended: 5,
+    Terminating: 6
+});
+Vue.prototype.$gameStates = GameStates
 
 Vue.prototype.$connection = new Vue()
 

@@ -1,38 +1,41 @@
 <template>
   <div id="login">
     <h1>Register</h1>
-    <p v-if="error">Invalid something</p>
+    <p v-if="errorEmail">Invalid email</p>
+    <p v-if="errorUsername">Invalid username</p>
+    <p v-if="errorPassword">Invalid password</p>
+    <p v-if="errorPasswordMatch">The passwords do not match</p>
     <label>
       <input
-        type="text"
-        name="username"
-        v-model="input.username"
-        placeholder="Username"
+          type="text"
+          name="username"
+          v-model="input.username"
+          placeholder="Username"
       />
     </label>
     <label>
       <input
-        type="text"
-        name="email"
-        v-model="input.email"
-        placeholder="Email"
+          type="text"
+          name="email"
+          v-model="input.email"
+          placeholder="Email"
       />
     </label>
     <label>
       <input
-        type="password"
-        name="password"
-        v-model="input.password"
-        placeholder="Password"
+          type="password"
+          name="password"
+          v-model="input.password"
+          placeholder="Password"
       />
     </label>
     <label>
       <input
-        type="password"
-        name="passwordAgain"
-        v-model="input.passwordAgain"
-        placeholder="Password Again"
-        v-on:keyup.enter="register()"
+          type="password"
+          name="passwordAgain"
+          v-model="input.passwordAgain"
+          placeholder="Password Again"
+          v-on:keyup.enter="register()"
       />
     </label>
     <button type="button" class="loginButton" v-on:click="register()">
@@ -53,27 +56,28 @@ export default {
         password: "",
         passwordAgain: "",
       },
-      error: false,
+      errorEmail: false,
+      errorUsername: false,
+      errorPassword: false,
+      errorPasswordMatch: false,
     };
   },
   methods: {
     register() {
-      if (
-        this.input.email !== "" &&
-        this.input.username !== "" &&
-        this.input.password !== "" &&
-        this.input.password === this.input.passwordAgain
-      ) {
+      this.errorUsername = this.input.username === "";
+      this.errorEmail = this.input.email === "";
+      this.errorPassword = this.input.password === "";
+      this.errorPasswordMatch = this.input.password !== this.input.passwordAgain;
+
+      if(!(this.errorUsername || this.errorEmail || this.errorPassword || this.errorPasswordMatch)) {
         this.$connection.$emit(this.$network_actions.Register, {
           username: this.input.username,
           email: this.input.email,
           password: this.input.password,
         });
-      } else {
-        this.error = true;
       }
     },
-    back: function() {
+    back: function () {
       this.$router.push("/");
     },
     onRegister() {
@@ -91,8 +95,8 @@ export default {
   },
   created() {
     this.$connection.$on(
-      this.$network_events.Register.success,
-      this.onRegister
+        this.$network_events.Register.success,
+        this.onRegister
     );
     this.$connection.$on(this.$network_events.Register.error, this.onError);
 
@@ -101,8 +105,8 @@ export default {
   },
   beforeDestroy() {
     this.$connection.$off(
-      this.$network_events.Register.success,
-      this.onRegister
+        this.$network_events.Register.success,
+        this.onRegister
     );
     this.$connection.$off(this.$network_events.Register.error, this.onError);
 

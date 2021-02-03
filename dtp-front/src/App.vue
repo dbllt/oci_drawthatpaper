@@ -124,4 +124,26 @@ input.big {
     border-color: transparent transparent #555 transparent;
 }
 
+@media ( min-width: 1024px ) {
+.wordToDraw {
+  float: left; width: 33%;
+}
+.canvas{
+  float: left; width: 33%;
+}
+.scores {
+  float: left; width: 33%;
+}
+.clearfix{
+  clear:left;
+}
+}
+table{
+  width:100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+table, th, td {
+  border: 1px solid black;
+}
 </style>

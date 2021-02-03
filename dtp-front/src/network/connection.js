@@ -1,4 +1,4 @@
-require("@/network/constants.js")
-require("@/network/auth.js")
+require("@/network/constants")
+require("@/network/auth")
 require("@/network/rooms")
-require("@/network/chat")
+require("@/network/socket_handler")
