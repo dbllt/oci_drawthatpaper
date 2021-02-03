@@ -38,9 +38,9 @@ class GameDefault {
         this.score = {};
         const room = this.getRoom()
         if (room) {
-            for (var key in room.participants) {
-                this.score[room.participants[key]] = 0;
-            }
+            room.participants.forEach(p => {
+                this.score[p.id] = 0;
+            });
         } else return log.error("Creating a game with not existing room")
         this.answers = {};
         // le timer du tour
@@ -197,7 +197,7 @@ class GameDefault {
             this.score[key] = this.score[key] + value;
             // do something with "key" and "value" variables
         }
-        console.log(this.score);
+        console.log("score : ", this.score);
     }
 
     /**

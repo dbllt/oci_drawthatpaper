@@ -1,40 +1,34 @@
 <template lang="html">
   <section class="chat-answer-carousel">
     <!-- if you don't want to use the buttons Flickity provides -->
-    <button class="dir" style="float:left;" v-if="buttons" @click="previous()">←</button>
-    <button class="dir" style="float:right;" v-if="buttons" @click="next()">→</button>
-    <br/>
-    <br/>
+    <button class="dir" style="float:left;" v-if="buttons" @click="previous()">
+      ←
+    </button>
+    <button class="dir" style="float:right;" v-if="buttons" @click="next()">
+      →
+    </button>
+    <br />
+    <br />
     <flickity class="carousel" ref="flickity" :options="flickityOptions">
       <div class="carousel-cell">
-        <category-selection
-          :default-tags="[]"
-          :board-color="'#777777'"
-          :input-color="'#999999'"
-          :creation="true"
-          :limit="6"
-          :input-limit="20"
-          :placeholder="'Give an answer!'"
-        ></category-selection>
+        <Answer ref="answer"></Answer>
       </div>
       <div class="carousel-cell">
         <chat :message-limit="100" :title="'Game Chat'" ref="chat"></chat>
       </div>
     </flickity>
-
-
   </section>
 </template>
 
 <script>
-import CategorySelection from "@/components/config/category-selection";
 import Flickity from "vue-flickity";
 import Chat from "@/components/chat/chat";
+import Answer from "@/components/game/answer";
 
 export default {
   name: "chat-answer-carousel",
   props: ["buttons"],
-  components: { Flickity, Chat, CategorySelection },
+  components: { Flickity, Chat, Answer },
   data() {
     return {
       flickityOptions: {
@@ -52,7 +46,12 @@ export default {
     previous() {
       this.$refs.flickity.previous();
     },
-
+    startAnswer(){
+      this.$refs.answer.start();
+    },
+    stopAnswer(){
+      this.$refs.answer.stop();
+    },
     onReceiveMsg(packet) {
       this.$refs.chat.addMessage(packet.username, packet.msg);
     },
@@ -74,14 +73,14 @@ export default {
         return "background-color:black;";
       }
       return "background-color:grey;";
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped lang="scss">
 .chat-answer-carousel {
-  outline: 8px ridge rgba(170, 50, 220, .2);
+  outline: 8px ridge rgba(170, 50, 220, 0.2);
   border-radius: 2rem;
 }
 .carousel {
@@ -108,14 +107,14 @@ export default {
 }
 
 .dir {
-  background-color: #6C6C6C;
+  background-color: #6c6c6c;
   padding: 1px;
   text-align: center;
   text-decoration: none;
   border-radius: 25px;
   border: 3px solid #00000035;
   color: black;
-  font-weight : bolder;
+  font-weight: bolder;
   display: inline-block;
   font-size: 16px;
   @media screen and (-ms-high-contrast: active) {

@@ -12,6 +12,7 @@ const actions = {
     GetAllRooms: "getAllRooms",
     GetOneRoom: "getOneRoom",
     ConnectToChat: "connectToChat",
+    SendWordForValidation: "sendWordForValidation",
     StartGame: "startGame",
     PickWord: "pickWord",
 }
@@ -46,6 +47,7 @@ const events = {
         success: "getOneRoomSuccess",
         error: "getOneRoomError",
     },
+    ReceiveGoodAnswer: "receiveGoodAnswer",
     PickWord: "pickWordSuccess",
     StartGame: "startingGame",
     GameStateUpdate: "sameStateUpdate",

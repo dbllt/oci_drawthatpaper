@@ -30,6 +30,10 @@ class Game extends GameDefault {
                 log.debug("picked " + event.data)
                 this.receiveWord(event.userId, event.data)
                 break
+            case types.word_validity:
+                log.debug("checking word validity " + event.data)
+                this.receiveAnswer(event.userId, event.data)
+                break
         }
     }
 
@@ -48,12 +52,19 @@ class Game extends GameDefault {
         return RoomManager.getRoom(this.roomId)
     }
 
-    sendData(dataType, data) {
-        var data = JSON.stringify({
+    formatData(dataType, data) {
+        return JSON.stringify({
             "type": dataType,
             "data": data
         });
-        io.to(this.roomId).emit("game", data)
+    }
+
+    sendData(dataType, data) {
+        io.to(this.roomId).emit("game", this.formatData(dataType, data))
+    }
+
+    sendDataToUser(dataType, data, userId) {
+        io.to(userId).emit("game", this.formatData(dataType, data))
     }
 
     //network
@@ -61,7 +72,7 @@ class Game extends GameDefault {
         let room = this.getRoom();
 
         room.participants.forEach(p => {
-            p.score = this.score[p]
+            p.score = this.score[p.id]
         })
 
         this.sendData(types.players, {
@@ -75,7 +86,7 @@ class Game extends GameDefault {
         });
     }
     sendCurrentDrawer() {
-    // useless ?
+        // useless ?
     }
     sendNextWord() {
         this.sendData(types.next_word, {
@@ -86,11 +97,10 @@ class Game extends GameDefault {
         this.sendPlayers();
     }
     sendWordValidity(playerId, answer, good) {
-        this.sendData(types.word_validity, {
+        this.sendDataToUser(types.word_validity, {
             "word": answer,
-            "playerId": playerId,
             "validity": good
-        });
+        }, playerId);
     }
     sendState() {
         //game over or current state
