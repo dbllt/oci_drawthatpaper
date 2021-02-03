@@ -8,7 +8,6 @@
     </p>
 
     <button type="button" class="block" v-on:click="start">Start</button>
-    <button type="button" class="block" v-on:click="back">Go Back</button>
 
     <div>
       <h4>Players :</h4>
@@ -23,6 +22,8 @@
       ref="chat"
     >
     </chat>
+
+    <button type="button" class="block" v-on:click="back">Go Back</button>
   </div>
 </template>
 
@@ -45,6 +46,7 @@ export default {
         this.$connection.$emit(this.$network_actions.StartGame);
     },
     back() {
+      console.log("going back");
       this.$router.push("/menu");
       this.$connection.$emit(this.$network_actions.LeaveRoom);
     },
@@ -81,6 +83,7 @@ export default {
       this.displayError
     );
     this.$connection.$on(this.$network_events.StartGame, this.onStartGame);
+    this.$connection.$on(this.$ui_events.BackButtonPressed, this.back);
   },
   beforeDestroy() {
     this.$connection.$off(
@@ -97,6 +100,7 @@ export default {
       this.displayError
     );
     this.$connection.$off(this.$network_events.StartGame, this.onStartGame);
+    this.$connection.$off(this.$ui_events.BackButtonPressed, this.back);
   },
   mounted() {
     this.$refs.chat.onMessageSent = (client, msg) => {
