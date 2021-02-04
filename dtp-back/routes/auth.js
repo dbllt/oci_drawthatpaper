@@ -12,6 +12,10 @@ const {
     REFRESH_TOKEN_SECRET
 } = process.env
 
+/**
+ * Route to refresh access token
+ * @returns {json} jwt access token
+ */
 router.post('/token', async (req, res) => {
     const refreshToken = req.body.refreshToken
     if (refreshToken == null) return res.sendStatus(401)
@@ -27,16 +31,24 @@ router.post('/token', async (req, res) => {
     })
 })
 
+/**
+ * Logs out the user, actually deletes the ability to use the refresh token given at login to user
+ */
 router.delete('/logout', async (req, res) => {
     const refreshToken = req.body.refreshToken
     if (refreshToken == null) return res.sendStatus(401)
     const refreshTokens = await RefreshTokensDao.getAll()
     const token = refreshTokens.find(token => token.tokenValue == refreshToken)
     if (!token) return res.sendStatus(403)
+    log.debug("Someone logged out")
     RefreshTokensDao.remove(token.id)
     res.sendStatus(204)
 })
 
+/**
+ * Route to login, compares the password from the coresponding user in the database and sends back a response with an access token
+ * @returns {json} 
+ */
 router.post('/login', async (req, res) => {
     const {
         email,
@@ -68,6 +80,11 @@ router.post('/login', async (req, res) => {
     }
 })
 
+
+/**
+ * Route to register, checks if the user is already in db then hashes the password and adds the user to db
+ * @returns {json} 
+ */
 router.post('/register', async (req, res) => {
 
     const {
@@ -98,18 +115,28 @@ router.post('/register', async (req, res) => {
 
 })
 
+/**
+ * Generates an access token for the specified user
+ * @param {*} user 
+ * @returns {string} jwt access token
+ */
 function generateAccessToken(user) {
     log.debug('Generating an AccessToken')
     const userForToken = {
         id: user.id,
         username: user.username,
-        email: user.email
+        // email: user.email
     }
     return jwt.sign(userForToken, ACCESS_TOKEN_SECRET, {
         expiresIn: ACCESS_TOKEN_EXPIRATION_TIME
     })
 }
 
+/**
+ * Generates a refresh token for the specified user and adds the refresh token to db for later usage
+ * @param {*} user 
+ * @returns {string} jwt refresh token
+ */
 function generateRefreshToken(user) {
     const userForToken = {
         id: user.id,
