@@ -39,7 +39,11 @@ connection.$on(actions.CreateRoom, (room) => {
 
 // Join room
 connection.$on(actions.JoinRoom, (roomId) => {
-    if (!roomId) return log.error("No room specified")
+    if (!roomId) {
+        let err = "No room specified"
+        connection.$emit(events.JoinRoom.error, err)
+        return log.error(err)
+    } 
     if (!authentication.isConnected()) return log.error("User not logged in")
 
     log.debug("Joining room : " + roomId)
