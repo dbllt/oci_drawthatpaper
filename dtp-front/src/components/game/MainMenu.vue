@@ -1,27 +1,67 @@
 <template>
-  <div>
-    <h1>Draw That Paper</h1>
-    <template v-if="!creatingRoom">
-      <button type="button" class="block" v-on:click="toggleCreateRoom">
-        Create Game
-      </button>
-      <button type="button" class="block" v-on:click="join">Join Game</button>
-      <br />
-      <button type="button" class="block" v-on:click="logout">Log Out</button>
-    </template>
-    <template v-else>
-      <h3>Name of your game :</h3>
-      <label>
-        <input v-model="gameName" v-on:keyup.enter="validateName" />
-      </label>
-      <button type="button" class="block" v-on:click="validateName">
-        Create
-      </button>
-      <br />
-      <button type="button" class="block" v-on:click="toggleCreateRoom">
+  <div style="height:100%">
+    <div class="w3-container w3-margin-top content">
+      <div class="w3-center">
+        <h1>Draw That Paper</h1>
+        <!-- When creating a game -->
+        <template v-if="creatingRoom">
+          <h3>Name of your game :</h3>
+          <div class="w3-content" style="width:75%">
+            <label>
+              <input
+                class="w3-input w3-round-large w3-border w3-margin-bottom"
+                placeholder="Enter a name"
+                v-model="gameName"
+                v-on:keyup.enter="validateName"
+              />
+            </label>
+          </div>
+          <br />
+          <div
+            class="w3-button w3-margin myButton w3-large w3-theme-yellow "
+            v-on:click="validateName"
+          >
+            Create
+          </div>
+        </template>
+
+        <!-- Menu -->
+        <template v-else>
+          <br />
+          <div
+            class="w3-button w3-margin-bottom myButton big w3-large w3-theme-yellow"
+            v-on:click="toggleCreateRoom"
+          >
+            Create Game
+          </div>
+          <br />
+          <br />
+          <div
+            class="w3-button w3-margin-bottom myButton big w3-large w3-theme-yellow "
+            v-on:click="join"
+          >
+            Join Game
+          </div>
+        </template>
+      </div>
+    </div>
+    <!-- Back button part -->
+    <div class="w3-center">
+      <div
+        v-if="creatingRoom"
+        class="w3-button myButton w3-margin-bottom w3-theme-red w3-large"
+        v-on:click="toggleCreateRoom"
+      >
         Go Back
-      </button>
-    </template>
+      </div>
+      <div
+        v-else
+        class="w3-button myButton w3-margin-bottom w3-theme-red w3-large"
+        v-on:click="logout"
+      >
+        Log Out
+      </div>
+    </div>
   </div>
 </template>
 
@@ -88,5 +128,3 @@ export default {
   },
 };
 </script>
-
-<style></style>

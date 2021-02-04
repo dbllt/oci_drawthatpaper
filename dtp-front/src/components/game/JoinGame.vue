@@ -1,34 +1,57 @@
 <template>
-  <div>
-    <h1>Draw That Paper</h1>
-    <br />
-    <h3>Game ID :</h3>
-    <label>
-      <input v-model="gameId" v-on:keyup.enter="joinRoom" />
-      <button type="button" class="block" v-on:click="joinRoom">Join</button>
-    </label>
+  <div style="height:100%">
+    <div class="w3-container w3-margin-top content">
+      <div class="w3-center">
+        <h1>Draw That Paper</h1>
 
-    <h3>Available rooms : <a href="#" v-on:click="getRooms">refresh</a></h3>
-    <b v-if="error" class="error">{{ error }}</b>
-    <div class="roomList">
-      <div v-for="item in this.rooms" :key="item.name">
-        <template v-if="!item.started">
-          <button
-            type="button"
-            class="block"
-            v-on:click="joinSpecificRoom(item.id)"
-          >
-            Join
-            <br />
-            <div style="font-size: 18px;" class="text">
-              {{ item.name }}
-            </div>
-          </button>
-        </template>
+        <h3>Game ID :</h3>
+        <div class="w3-content" style="width:75%">
+          <label>
+            <input
+              class="w3-input w3-round-large w3-border w3-margin-bottom"
+              placeholder="Enter a game ID"
+              v-model="gameId"
+              v-on:keyup.enter="joinRoom"
+            />
+          </label>
+        </div>
+        <div
+          class="w3-button w3-margin myButton w3-large w3-theme-yellow"
+          v-on:click="joinRoom"
+        >
+          Join
+        </div>
+
+        <h3>Available rooms : <a href="#" v-on:click="getRooms">refresh</a></h3>
+        <b v-if="error" class="error">{{ error }}</b>
+          <div v-if="roomsAvailable()">No room available at the moment</div>
+        <div v-else class="roomList">
+          <div v-for="item in this.rooms" :key="item.name">
+            <template v-if="!item.started">
+              <div
+                class="w3-button w3-margin myButton w3-large w3-theme-yellow"
+                v-on:click="joinSpecificRoom(item.id)"
+              >
+                Join
+                <br />
+                <div style="font-size: 18px;" class="text">
+                  {{ item.name }}
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
       </div>
     </div>
-
-    <button type="button" class="block" v-on:click="back">Go Back</button>
+    <!-- Back button part -->
+    <div class="w3-center">
+      <div
+        class="w3-button myButton w3-margin-bottom w3-theme-red w3-large"
+        v-on:click="back"
+      >
+        Go Back
+      </div>
+    </div>
   </div>
 </template>
 
@@ -46,6 +69,9 @@ export default {
         this.gameId.toString()
       );
       this.err = "";
+    },
+    roomsAvailable() {
+      return this.rooms.filter((r) => !r.started).length == 0;
     },
     joinSpecificRoom(id) {
       this.roomToJoin = id;
