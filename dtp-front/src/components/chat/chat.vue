@@ -19,18 +19,22 @@
       </div>
     </div>
     <br />
-    <input
-    placeholder="Send a message to the room"
-      class="big"
-      type="text"
-      maxlength="512"
-      v-model="inputMessage"
-      @keydown.enter="_submit()"
-    />
-
-    <button type="button" class="block small" v-on:click="_submit()">
+    <div class="w3-content" style="width:75%">
+      <input
+        placeholder="Send a message to the room"
+        class="w3-input w3-round-large w3-border w3-margin-bottom"
+        type="text"
+        maxlength="512"
+        v-model="inputMessage"
+        @keydown.enter="_submit()"
+      />
+    </div>
+    <div
+      class="w3-button w3-margin-bottom myButton w3-large w3-theme-yellow"
+      v-on:click="_submit()"
+    >
       Send
-    </button>
+    </div>
     <br />
   </div>
 </template>
@@ -118,8 +122,6 @@ export default  {
 </script>
 
 <style scoped lang="scss">
-.chat {
-}
 ul {
   margin: 0;
   padding: 0;

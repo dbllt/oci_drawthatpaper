@@ -1,46 +1,74 @@
 <template>
-
-  <div class="w3-container w3-center">
-    <h1>Draw That Paper</h1>
-
-    <h2>{{ this.room.name }}</h2>
-    <p>
-      Use this code to join : <b>{{ this.room.id }}</b>
-    </p>
-
-    <div v-if="amICreator" class="w3-button w3-margin myButton w3-large w3-theme-yellow" v-on:click="start">Start</div>
-
-    <div>
-      <h4>Players :</h4>
-      <p v-for="item in this.room.participants" :key="item.id">
-        {{ item.username }}
-      </p>
+  <div style="height:100%">
+    <div class="w3-container w3-margin-top content">
+      <div class="w3-center" style="height:100%">
+        <h1>{{ this.room.name | capitalize }}</h1>
+        <p>
+          Use this code to join : <b>{{ this.room.id }}</b>
+        </p>
+        <div>
+          <b> Players : </b>
+          <span
+            v-for="item in this.room.participants.slice(0, 3)"
+            :key="item.id"
+          >
+            {{ item.username }},
+          </span>
+          <span
+            v-if="this.room.participants.length > 3"
+            v-on:mouseover="toggleParticipants"
+            v-on:mouseleave="toggleParticipants"
+          >
+            ...
+            <div v-if="showParticipants" class="over">
+              <p v-for="item in this.room.participants" :key="item.id">
+                {{ item.username }}
+              </p>
+            </div>
+          </span>
+        </div>
+        <chat
+          :message-limit="100"
+          :placeholder="'Enter message here'"
+          ref="chat"
+        >
+        </chat>
+        <div
+          v-if="amICreator"
+          class="w3-button w3-margin myButton w3-large w3-theme-yellow"
+          v-on:click="start"
+        >
+          Start
+        </div>
+      </div>
     </div>
-    <chat
-      :message-limit="100"
-      :placeholder="'Enter message here'"
-      :title="'Game Chat'"
-      ref="chat"
-    >
-    </chat>
-
-    <div class="w3-button w3-margin myButton w3-large w3-theme-red" v-on:click="back">Go Back</div>
+    <!-- Back button part -->
+    <div class="w3-center">
+      <div
+        class="w3-button myButton w3-margin-bottom w3-theme-red w3-large"
+        v-on:click="back"
+      >
+        Go Back
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import Chat from "@/components/chat/chat";
-import authentication from "@/network/authentication"
+
+import authentication from "@/network/authentication";
 export default {
   name: "Room",
 
   components: {
-    Chat,
+    Chat
   },
   data() {
     return {
       room: this.$route.params.room,
       amICreator: false,
+      showParticipants: false,
     };
   },
   methods: {
@@ -52,6 +80,10 @@ export default {
       console.log("going back");
       this.$router.push("/menu");
       this.$connection.$emit(this.$network_actions.LeaveRoom);
+    },
+    toggleParticipants() {
+      console.log("toggling");
+      this.showParticipants = !this.showParticipants;
     },
     onParticipantsUpdated() {
       if (this.room) {
