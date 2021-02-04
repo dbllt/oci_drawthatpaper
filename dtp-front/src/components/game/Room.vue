@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%">
     <div class="w3-container w3-margin-top content">
-      <div class="w3-center" style="height:100%">
+      <div v-show="connected" class="w3-center" style="height:100%">
         <h1>{{ this.room.name | capitalize }}</h1>
         <p>
           Use this code to join : <b>{{ this.room.id }}</b>
@@ -41,6 +41,9 @@
           Start
         </div>
       </div>
+      <div v-show="!connected" class="w3-center">
+        <spinner></spinner>
+      </div>
     </div>
     <!-- Back button part -->
     <div class="w3-center">
@@ -56,18 +59,20 @@
 
 <script>
 import Chat from "@/components/chat/chat";
+import spinner from "@/components/utils/spinner";
 
 import authentication from "@/network/authentication";
 export default {
   name: "Room",
 
   components: {
-    Chat
+    Chat,spinner
   },
   data() {
     return {
       room: this.$route.params.room,
       amICreator: false,
+      connected: false,
       showParticipants: false,
     };
   },
@@ -104,6 +109,9 @@ export default {
     onStartGame() {
       this.$router.push("/game/" + this.$route.params.room.id);
     },
+    onConnectedToRoom(){
+      this.connected = true
+    }
   },
   created() {
     this.$connection.$on(
@@ -120,6 +128,7 @@ export default {
       this.displayError
     );
     this.$connection.$on(this.$network_events.StartGame, this.onStartGame);
+    this.$connection.$on(this.$network_events.ConnectedToRoom, this.onConnectedToRoom);
     this.$connection.$on(this.$ui_events.BackButtonPressed, this.back);
   },
   beforeDestroy() {
@@ -137,6 +146,7 @@ export default {
       this.displayError
     );
     this.$connection.$off(this.$network_events.StartGame, this.onStartGame);
+    this.$connection.$off(this.$network_events.ConnectedToRoom, this.onConnectedToRoom);
     this.$connection.$off(this.$ui_events.BackButtonPressed, this.back);
   },
   mounted() {

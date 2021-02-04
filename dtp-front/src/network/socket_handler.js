@@ -20,6 +20,7 @@ const socketEvents = {
 const lobbyEvents = {
     participantsUpdated: "participantsUpdated",
     startGame: "startGame",
+    connected: "connected",
 }
 
 const types = {
@@ -131,6 +132,10 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
             case lobbyEvents.startGame:
                 connection.$emit(events.StartGame)
                 log.debug("Creator started the game")
+                break
+            case lobbyEvents.connected:
+                connection.$emit(events.ConnectedToRoom)
+                log.debug("User connected to the room")
                 break
         }
     })
