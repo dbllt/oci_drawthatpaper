@@ -1,54 +1,71 @@
 <template>
-  <div id="w3-container w3-margin-top">
-    <h1 class="w3-center">Register</h1>
-    <p v-if="errorEmail">Invalid email</p>
-    <p v-if="errorUsername">Invalid username</p>
-    <p v-if="errorPassword">Invalid password</p>
-    <p v-if="errorPasswordMatch">The passwords do not match</p>
-    <label>
-      <input
-          class="w3-input w3-margin w3-round-large w3-border"
-          type="text"
-          name="username"
-          v-model="input.username"
-          placeholder="Username"
-      />
-    </label>
-    <label>
-      <input
-          class="w3-input w3-margin w3-round-large w3-border"
-          type="text"
-          name="email"
-          v-model="input.email"
-          placeholder="Email"
-      />
-    </label>
-    <label>
-      <input
-          class="w3-input w3-margin w3-round-large w3-border"
-          type="password"
-          name="password"
-          v-model="input.password"
-          placeholder="Password"
-      />
-    </label>
-    <label>
-      <input
-          class="w3-input w3-margin w3-round-large w3-border"
-          type="password"
-          name="passwordAgain"
-          v-model="input.passwordAgain"
-          placeholder="Password Again"
-          v-on:keyup.enter="register()"
-      />
-    </label>
-    <div class="w3-center">
-    <div class="w3-button myButton w3-margin w3-theme-yellow  w3-large" v-on:click="register()">
-      Register
+  <div style="height:100%">
+    <div class="w3-container w3-margin-top content">
+      <div class="w3-center">
+        <h1>Register</h1>
+
+        <div class="w3-margin">
+          <b class="w3-text-theme-red" v-if="error">
+            {{ errorMsg }}
+          </b>
+        </div>
+
+        <div class="w3-content" style="width:75%">
+          <label>
+            <input
+              class="w3-input w3-round-large w3-border w3-margin-bottom"
+              type="text"
+              name="username"
+              v-model="input.username"
+              placeholder="Username"
+            />
+          </label>
+          <label>
+            <input
+              class="w3-input w3-round-large w3-border w3-margin-bottom"
+              type="text"
+              name="email"
+              v-model="input.email"
+              placeholder="Email"
+            />
+          </label>
+          <label>
+            <input
+              class="w3-input w3-round-large w3-border w3-margin-bottom"
+              type="password"
+              name="password"
+              v-model="input.password"
+              placeholder="Password"
+            />
+          </label>
+          <label>
+            <input
+              class="w3-input w3-round-large w3-border w3-margin-bottom"
+              type="password"
+              name="passwordAgain"
+              v-model="input.passwordAgain"
+              placeholder="Password Again"
+              v-on:keyup.enter="register()"
+            />
+          </label>
+        </div>
+
+        <div
+          class="w3-button w3-margin myButton w3-theme-yellow w3-large"
+          v-on:click="register()"
+        >
+          Register
+        </div>
+      </div>
     </div>
-    <br>
-    <div class="w3-button myButton w3-margin w3-theme-red   w3-large" v-on:click="back">Go Back</div>
-  </div>
+    <div class="w3-center">
+      <div
+        class="w3-button myButton w3-margin-bottom w3-theme-red w3-large"
+        v-on:click="back"
+      >
+        Go Back
+      </div>
+    </div>
   </div>
 </template>
 
@@ -63,29 +80,37 @@ export default {
         password: "",
         passwordAgain: "",
       },
-      errorEmail: false,
-      errorUsername: false,
-      errorPassword: false,
-      errorPasswordMatch: false,
+      error: false,
     };
   },
   methods: {
     register() {
-      this.errorUsername = this.input.username === "";
-      this.errorEmail = this.input.email === "";
-      this.errorPassword = this.input.password === "";
-      this.errorPasswordMatch = this.input.password !== this.input.passwordAgain;
-
-      if(!(this.errorUsername || this.errorEmail || this.errorPassword || this.errorPasswordMatch)) {
-        this.$connection.$emit(this.$network_actions.Register, {
-          username: this.input.username,
-          email: this.input.email,
-          password: this.input.password,
-        });
+      if (
+        this.input.username === "" ||
+        this.input.email === "" ||
+        this.input.password === "" ||
+        this.input.passwordAgain === ""
+      )
+        this.displayError("Please fill all the fields");
+      else {
+        if (this.input.password !== this.input.passwordAgain)
+          this.displayError("The passwords don't match");
+        else {
+          this.$connection.$emit(this.$network_actions.Register, {
+            username: this.input.username,
+            email: this.input.email,
+            password: this.input.password,
+          });
+        }
       }
     },
-    back: function () {
+    back: function() {
       this.$router.push("/");
+    },
+    displayError(errorMsg) {
+      this.error = false;
+      this.errorMsg = errorMsg;
+      this.error = true;
     },
     onRegister() {
       this.$connection.$emit(this.$network_actions.Login, {
@@ -102,8 +127,8 @@ export default {
   },
   created() {
     this.$connection.$on(
-        this.$network_events.Register.success,
-        this.onRegister
+      this.$network_events.Register.success,
+      this.onRegister
     );
     this.$connection.$on(this.$network_events.Register.error, this.onError);
 
@@ -112,8 +137,8 @@ export default {
   },
   beforeDestroy() {
     this.$connection.$off(
-        this.$network_events.Register.success,
-        this.onRegister
+      this.$network_events.Register.success,
+      this.onRegister
     );
     this.$connection.$off(this.$network_events.Register.error, this.onError);
 
