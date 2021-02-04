@@ -14,7 +14,7 @@
         <Answer ref="answer"></Answer>
       </div>
       <div class="carousel-cell">
-        <chat :message-limit="100" :title="'Game Chat'" ref="chat"></chat>
+        <chat :message-limit="100" ref="chat"></chat>
       </div>
     </flickity>
   </section>
