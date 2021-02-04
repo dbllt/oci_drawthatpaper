@@ -17,6 +17,7 @@ html,
 body {
   background-color: #2ab7ca;
   height: 100%;
+  overflow: hidden;
 }
 
 .error {
@@ -33,6 +34,18 @@ body {
   min-height: 150px;
   border-radius: 8px;
   line-height: 150px;
+}
+
+.over {
+  overflow: auto;
+  position: absolute;
+  left: 50%;
+  background-color: grey;
+  min-width: 150px;
+  max-height: 300px;
+  border-radius: 8px;
+  opacity: 0.7;
+  z-index: 10;
 }
 
 .content {

@@ -3,7 +3,6 @@
     <div class="w3-container w3-margin-top content">
       <div class="w3-center">
         <h1>Draw That Paper</h1>
-
         <h3>Game ID :</h3>
         <div class="w3-content" style="width:75%">
           <label>
@@ -21,10 +20,14 @@
         >
           Join
         </div>
-
+        <div v-if="loading">
+          <spinner></spinner>
+        </div>
+        <div>
+          <b v-if="error" class="error">{{ error }}</b>
+        </div>
         <h3>Available rooms : <a href="#" v-on:click="getRooms">refresh</a></h3>
-        <b v-if="error" class="error">{{ error }}</b>
-          <div v-if="roomsAvailable()">No room available at the moment</div>
+        <div v-if="roomsAvailable()">No room available at the moment</div>
         <div v-else class="roomList">
           <div v-for="item in this.rooms" :key="item.name">
             <template v-if="!item.started">
@@ -56,13 +59,25 @@
 </template>
 
 <script>
+import spinner from "@/components/utils/spinner";
+
 export default {
   name: "JoinGame",
+  components: {
+    spinner,
+  },
   data() {
-    return { gameId: "", rooms: [], roomToJoin: "", error: "" };
+    return {
+      gameId: "",
+      rooms: [],
+      roomToJoin: "",
+      error: "",
+      loading: false,
+    };
   },
   methods: {
     joinRoom() {
+      this.loading = true;
       this.roomToJoin = this.gameId;
       this.$connection.$emit(
         this.$network_actions.JoinRoom,
@@ -80,7 +95,8 @@ export default {
     back() {
       this.$router.push("/menu");
     },
-    onJoinRoom(roomMsg) {
+    onJoinRoomSuccess(roomMsg) {
+      this.loading = false;
       this.$router.push({
         name: "Room",
         params: { id: this.roomToJoin, room: roomMsg },
@@ -93,6 +109,7 @@ export default {
       this.$connection.$emit(this.$network_actions.GetAllRooms);
     },
     onJoinRoomError(err) {
+      this.loading = false;
       this.displayError(err);
       this.error = err;
       this.getRooms();
@@ -105,7 +122,7 @@ export default {
   created() {
     this.$connection.$on(
       this.$network_events.JoinRoom.success,
-      this.onJoinRoom
+      this.onJoinRoomSuccess
     );
     this.$connection.$on(
       this.$network_events.JoinRoom.error,
@@ -127,7 +144,7 @@ export default {
   beforeDestroy() {
     this.$connection.$off(
       this.$network_events.JoinRoom.success,
-      this.onJoinRoom
+      this.onJoinRoomSuccess
     );
     this.$connection.$off(
       this.$network_events.JoinRoom.error,
