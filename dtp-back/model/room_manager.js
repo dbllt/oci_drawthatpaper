@@ -3,6 +3,7 @@ const {
     GameManager
 } = require("./game_manager")
 const game_manager = new GameManager()
+const log = require('../log')
 
 class RoomManager {
     constructor() {
@@ -53,7 +54,7 @@ class RoomManager {
             name: roomName,
             started: false,
             creator: creator,
-            participants: []
+            participants: [creator]
         }
         this._rooms.push(room)
         return room

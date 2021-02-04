@@ -23,7 +23,10 @@ io.on("connection", (socket) => {
     socket.on("connectMeTo", (roomId) => {
         log.debug("Connecting " + username + " to chat room " + roomId)
 
-        let joined = room_manager.joinRoom(roomId, user)
+        let joined
+        if (!room_manager.isCreator(roomId, user.id))
+            joined = room_manager.joinRoom(roomId, user)
+        else joined = true
 
         if (joined) {
             socket.join(roomId)
@@ -61,7 +64,8 @@ io.on("connection", (socket) => {
                 event.userId = user.id
                 game_manager.processEvent(event, roomId)
             })
-
+            
+            io.to(user.id).emit("lobby", "connected")
         }
 
     })

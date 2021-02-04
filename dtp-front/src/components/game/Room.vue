@@ -41,6 +41,7 @@ export default {
     return {
       room: this.$route.params.room,
       amICreator: false,
+      connected: false,
     };
   },
   methods: {
@@ -72,6 +73,9 @@ export default {
     onStartGame() {
       this.$router.push("/game/" + this.$route.params.room.id);
     },
+    onConnectedToRoom(){
+      this.connected = true
+    }
   },
   created() {
     this.$connection.$on(
@@ -88,6 +92,7 @@ export default {
       this.displayError
     );
     this.$connection.$on(this.$network_events.StartGame, this.onStartGame);
+    this.$connection.$on(this.$network_events.ConnectedToRoom, this.onConnectedToRoom);
     this.$connection.$on(this.$ui_events.BackButtonPressed, this.back);
   },
   beforeDestroy() {
@@ -105,6 +110,7 @@ export default {
       this.displayError
     );
     this.$connection.$off(this.$network_events.StartGame, this.onStartGame);
+    this.$connection.$off(this.$network_events.ConnectedToRoom, this.onConnectedToRoom);
     this.$connection.$off(this.$ui_events.BackButtonPressed, this.back);
   },
   mounted() {
