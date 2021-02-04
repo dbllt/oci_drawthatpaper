@@ -43,8 +43,8 @@ router.post('/login', async (req, res) => {
         password
     } = req.body
 
-    const user = await UsersDao.getOneByEmail(email);
-    
+    const user = await UsersDao.getOneByEmail(email.toLowerCase());
+
     if (user == null) return res.status(400).send('User not found')
 
     try {
@@ -76,8 +76,7 @@ router.post('/register', async (req, res) => {
         password
     } = req.body
 
-    const users = await UsersDao.getAll();
-    const user = users.find(user => user.email == email)
+    const user = await UsersDao.getOneByEmail(email.toLowerCase());
     if (user != null) return res.status(409).send('Email adress already in use')
 
     try {
@@ -89,8 +88,6 @@ router.post('/register', async (req, res) => {
             password: hashedPassword
         }
         UsersDao.insert(user)
-
-
 
         res.status(201).send("You have been registered")
 
