@@ -1,53 +1,85 @@
 <template>
-  <div class="w3-container w3-center">
-    <h1>Draw That Paper</h1>
-    <h2>{{ this.gameState }}</h2>
-    <div>
-      <div class="wordToDraw">
-        <div class="vertical-center">
-          <template v-if="currentWord">
-            <h3>Your word :</h3>
-            <br />
-            <h2>
-              <b>{{ currentWord }}</b>
-            </h2>
-          </template>
-          <br />
-          <h3><Timer ref="timer" /></h3>
+  <div class="w3-container w3-center vertical-center fit" :style="fitMiddle">
+    <div >
+      <!--h1>Draw That Paper</h1-->
+      <!--h2>{{ this.gameState }}</h2-->
+      <div>
+        <div>
+          <div class="vertical-center">
+            <p v-if="currentWord.length !== 0">
+              Your word : <b>{{ currentWord }}</b>
+              <button class="w3-theme-red floating" v-on:click="leave">Exit</button>
+            </p>
+            <div v-else>
+              <button class="w3-theme-red floating" v-on:click="leave">Exit</button>
+              <br>
+            </div>
+          </div>
+        </div>
+        <div class="parent">
+          <CanvasDraw
+              v-on:mouseenter="changeOpacity(0.5)"
+              v-on:mouseleave="changeOpacity(1)"
+            v-bind:class="{ disabled: this.canvaDisabled }"
+            ref="canva"
+            class="canvas vertical-center"
+            :width="480"
+            :height="480"
+            :brushSize="4"
+            :outputName="'example'"
+          />
+          <h3 class="childright invert"><Timer ref="timer" /></h3>
+
+          <div class="scores child invert">
+            <table>
+              <tr>
+                <th>
+                  <h3>Scores:</h3>
+                </th>
+              </tr>
+              <tr v-for="item in this.participants" :key="item.id">
+                <th><p>{{ item.username }}</p></th>
+                <th><p>{{ item.score }}</p></th>
+              </tr>
+            </table>
+          </div>
+          <div class="clearfix"></div>
         </div>
       </div>
-      <CanvasDraw
-        v-bind:class="{ disabled: this.canvaDisabled }"
-        ref="canva"
-        class="canvas"
-        :width="480"
-        :height="480"
-        :brushSize="4"
-        :outputName="'example'"
-      />
-      <div class="scores">
-        <h4>Scores :</h4>
 
-        <table>
-          <tr v-for="item in this.participants" :key="item.id">
-            <th>{{ item.username }}</th>
-            <th>{{ item.score }}</th>
-          </tr>
-        </table>
+      <div class="overlay" v-if="currentWords.length === 0 && this.gameState === 'Picking'">
+        <h2 class="overlay-title">Wait picker...</h2>
+        <div class="w3-button myButton w3-margin  w3-large w3-theme-red" v-on:click="leave">Leave</div>
       </div>
-      <div class="clearfix"></div>
-    </div>
-    <br />
-    <h4 v-if="currentWords.length">Pick a word:</h4>
-    <div class="wordList" v-for="item in currentWords" :key="item">
-      <div class="w3-button myButton w3-margin  w3-large w3-theme-yellow" v-on:click="pickWord(item)">
-        {{ item }}
+
+      <div class="overlay" v-if="currentWords.length !== 0 && this.gameState === 'Picking'">
+        <div class="centered">
+          <h4 v-if="currentWords.length" class="overlay-title">Pick a word:</h4>
+          <div class="wordList" v-for="item in currentWords" :key="item">
+            <div class="w3-button myButton w3-margin  w3-large w3-theme-yellow" v-on:click="pickWord(item)">
+              {{ item }}
+            </div>
+          </div>
+          <div class="w3-button myButton w3-margin  w3-large w3-theme-red" v-on:click="leave">Leave</div>
+        </div>
+      </div>
+
+      <div class="overlay" v-if="this.gameState === 'Ended'">
+        <div class="centered">
+          <h2 class="overlay-title">Game is over :)</h2>
+          <div class="scores centered">
+              <ul v-for="item in this.participants" :key="item.id">
+                <li>{{ item.username }}: {{ item.score }}</li>
+              </ul>
+          </div>
+          <div class="w3-button myButton w3-margin  w3-large w3-theme-red" v-on:click="leave">Leave</div>
+        </div>
+      </div>
+
+      <div>
+        <carousel ref="carousel" :buttons="false"></carousel>
       </div>
     </div>
-    <div class="clearfix"></div>
-    <br />
-    <carousel ref="carousel" :buttons="true"></carousel>
-    <div class="w3-button myButton w3-margin  w3-large w3-theme-red" v-on:click="leave">Leave</div>
   </div>
 </template>
 
@@ -62,6 +94,7 @@ export default {
   components: { CanvasDraw, Timer, carousel },
   data: function() {
     return {
+      activeModal: true,
       currentWords: [],
       currentWord: "",
       gameState: "",
@@ -69,6 +102,8 @@ export default {
       canvaDisabled: false,
       startedOnce: false,
       roundTime: 0,
+
+      opacity: 1.0
     };
   },
   methods: {
@@ -107,6 +142,9 @@ export default {
           this.gameState = "NextPlayer";
           break;
         case this.$gameStates.Picking:
+          if (this.gameState === 'Picking') {
+            break;
+          }
           this.canvaDisabled = true;
           this.currentWord = "";
           this.stopTimer();
@@ -138,7 +176,11 @@ export default {
     onRoundTime(roundTime) {
       this.roundTime = roundTime;
     },
-  },
+    changeOpacity(opacity) {
+      console.log("OPACITY CHANGED");
+      this.opacity = opacity;
+    }
+},
   created() {
     this.$connection.$on(this.$network_events.PickWord, this.onPickWord);
     this.$connection.$on(
@@ -165,6 +207,104 @@ export default {
     this.$connection.$off(this.$network_events.GameScore, this.onGameScore);
     this.$connection.$off(this.$network_events.RoundTime, this.onRoundTime);
   },
+  computed: {
+    fitMiddle() {
+      let ratio = 100.0 * Math.min(window.width, window.innerHeight / 2) / window.width;
+      return "width: " + (ratio) + "%;"
+    }
+  }
 };
 </script>
 
+<style scoped>
+.fit {
+  width:50%;
+}
+.overlay {
+  position: fixed; /* Sit on top of the page content */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.6); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
+}
+.overlay-title {
+  color: aliceblue;
+}
+.invert {
+  font-size: 20px;
+  -webkit-text-stroke: 1px #EEFFFFFF;
+}
+
+p,
+h3 {
+  font-weight: bolder;
+  margin: 0;
+}
+p {
+  font-weight: bolder;
+  font-style: oblique;
+  font-size:15px;
+}
+html {
+  background: #fff;
+}
+/*
+.opacityOnHover {
+  opacity: 1;
+}
+
+.opacityOnHover:hover {
+  opacity: 0.5;
+}
+*/
+.child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-left: 10px;
+  pointer-events: none;
+}
+
+.childright {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding-right:10px;
+  pointer-events: none;
+}
+.centered {
+  width:100%;
+  margin: auto;
+}
+.parent {
+  position: relative;
+  height: 50%;
+}
+.parent:hover > div.child {
+  opacity: 0.6;
+}
+.parent:hover > div.childright {
+  opacity: 0.6;
+}
+.scores {
+  font-size: 10px;
+  background-color: #55000000;
+}
+
+.vertical-center {
+  width:100%;
+  /*margin-left:auto;
+  margin-right:auto;*/
+}
+
+.floating {
+  width: fit-content;
+  float: right;
+}
+
+</style>
