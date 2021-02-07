@@ -2,7 +2,6 @@ const io = require("./server")
 const {
     GameDefault
 } = require("./model/game_default");
-const RoomManager = require("./rooms");
 const log = require("./log")
 const RandLine = require("./model/wordpicker");
 
@@ -50,7 +49,7 @@ class Game extends GameDefault {
         //throw new Error("TODO");
         //TODO prevent calling find each time isValid() is called because it"s overkill
         //TODO Checks if room exists
-        return RoomManager.getRoom(this.roomId)
+        return this.room_manager.getRoom(this.roomId)
     }
 
     formatData(dataType, data) {
@@ -141,13 +140,14 @@ class Game extends GameDefault {
     // test
     isCurrentPlayerConnected() {
         //throw new Error("TODO");
-        return RoomManager.isInRoom(this.roomId, this.currentDrawer.id);
+        return this.room_manager.isInRoom(this.roomId, this.currentDrawer.id);
     }
 
     isValid() {
-        //throw new Error("TODO");
-        // return true;
-        return RoomManager.isValid(this.roomId);
+        const room = this.room_manager.getRoom(this.roomId)
+        if (!room) return false
+        if (!this.room_manager.isInRoom(this.roomId, room.creator.id)) return false
+        return room.participants !== null && room.participants.length >= 2
     }
 }
 

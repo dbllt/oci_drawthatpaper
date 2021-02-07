@@ -24,6 +24,12 @@ const GameStates = Object.freeze({
 class GameDefault {
 
     constructor(id, nbTurns, roundTimeInSeconds) {
+        // room manager init to avoid circular dependency
+        const {
+            RoomManager
+        } = require("./room_manager")
+        this.room_manager = new RoomManager()
+
         // game data
         this.roomId = id;
         this.roundTime = roundTimeInSeconds * 1000;

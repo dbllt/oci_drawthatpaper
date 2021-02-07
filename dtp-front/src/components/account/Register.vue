@@ -81,6 +81,7 @@ export default {
         passwordAgain: "",
       },
       error: false,
+      errorMsg: "",
     };
   },
   methods: {
@@ -121,8 +122,8 @@ export default {
     onLogin() {
       this.$router.push("/menu");
     },
-    onError() {
-      this.error = true;
+    onError(err) {
+      this.displayError(err)
     },
   },
   created() {

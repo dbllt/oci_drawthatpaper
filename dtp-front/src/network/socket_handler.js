@@ -20,6 +20,7 @@ const socketEvents = {
 const lobbyEvents = {
     participantsUpdated: "participantsUpdated",
     startGame: "startGame",
+    connected: "connected",
 }
 
 const types = {
@@ -60,42 +61,6 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
         connectedToChat = true
         socket.emit(socketEvents.connectMeTo, chatRoom)
 
-        socket.on(socketEvents.chat, (data) => connection.$emit(events.ReceiveMsg, data))
-        socket.on(socketEvents.draw, (data) => connection.$emit(events.ReceiveDraw, data))
-        socket.on(socketEvents.game, (data) => {
-            var json = JSON.parse(data)
-            switch (json.type) {
-                case types.players:
-                    log.debug("players")
-                    connection.$emit(events.Participants, json.data.participants)
-                    break
-                case types.state:
-                    connection.$emit(events.GameStateUpdate, json.data)
-                    log.debug("state")
-                    break
-                case types.round:
-                    connection.$emit(events.RoundTime, json.data.round_time)
-                    log.debug("round")
-                    break
-                case types.next_word:
-                    log.debug("next_word")
-                    break
-                case types.score:
-                    // old
-                    log.debug("score")
-                    break
-                case types.word_validity:
-                    log.debug("word_validity")
-                    connection.$emit(events.ReceiveGoodAnswer, json.data)
-                    break
-                case types.pick:
-                    log.debug("pick")
-                    if (authentication.isMe(json.data.drawing_user_id))
-                        connection.$emit(events.PickWord, json.data.words)
-                    break
-            }
-        })
-
         connection.$on(actions.SendMsg, (msg) => {
             if (msg) socket.emit(socketEvents.chat, msg)
         })
@@ -112,8 +77,50 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
         })
         connection.$on(actions.SendWordForValidation, (word) => {
             log.debug("Send word for validation")
-            if (word) socket.emit(socketEvents.game, packetForServer(types.word_validity,word));
+            if (word) socket.emit(socketEvents.game, packetForServer(types.word_validity, word));
         })
+    })
+
+    socket.on(socketEvents.chat, (data) => {
+        if (connectedToChat) connection.$emit(events.ReceiveMsg, data)
+    })
+    socket.on(socketEvents.draw, (data) => {
+        if (connectedToChat) connection.$emit(events.ReceiveDraw, data)
+    })
+    socket.on(socketEvents.game, (data) => {
+        if (!connectedToChat) return
+        
+        var json = JSON.parse(data)
+        switch (json.type) {
+            case types.players:
+                log.debug("players")
+                connection.$emit(events.Participants, json.data.participants)
+                break
+            case types.state:
+                connection.$emit(events.GameStateUpdate, json.data)
+                log.debug("state")
+                break
+            case types.round:
+                connection.$emit(events.RoundTime, json.data.round_time)
+                log.debug("round")
+                break
+            case types.next_word:
+                log.debug("next_word")
+                break
+            case types.score:
+                // old
+                log.debug("score")
+                break
+            case types.word_validity:
+                log.debug("word_validity")
+                connection.$emit(events.ReceiveGoodAnswer, json.data)
+                break
+            case types.pick:
+                log.debug("pick")
+                if (authentication.isMe(json.data.drawing_user_id))
+                    connection.$emit(events.PickWord, json.data.words)
+                break
+        }
     })
 
     socket.on(socketEvents.lobby, (event) => {
@@ -125,6 +132,10 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
             case lobbyEvents.startGame:
                 connection.$emit(events.StartGame)
                 log.debug("Creator started the game")
+                break
+            case lobbyEvents.connected:
+                connection.$emit(events.ConnectedToRoom)
+                log.debug("User connected to the room")
                 break
         }
     })
@@ -139,6 +150,5 @@ connection.$on(actions.ConnectToChat, (chatRoom) => {
     socket.on("disconnect", () => {
         log.debug("Disconnected from chat")
         connectedToChat = false
-        socket.close()
     })
 })

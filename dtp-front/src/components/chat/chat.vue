@@ -82,7 +82,7 @@ export default  {
       if (this.messages.length >= this.messageLimit && this.messages.length !== 0) {
         this.messages.shift();
       }
-
+      //if position at bottom
       this.scrollToBottom();
     },
     /**
