@@ -8,10 +8,12 @@
           <div class="vertical-center">
             <p v-if="currentWord.length !== 0">
               Your word : <b>{{ currentWord }}</b>
-              <button class="w3-theme-red floating" v-on:click="leave">Exit</button>
+              <button class="w3-theme-red w3-button myButton small floating" v-on:click="leave">Exit</button>
             </p>
             <div v-else>
-              <button class="w3-theme-red floating" v-on:click="leave">Exit</button>
+              <p>
+                <button class="w3-theme-red w3-button myButton small floating" v-on:click="leave">Exit</button>
+              </p>
               <br>
             </div>
           </div>
@@ -246,8 +248,6 @@ h3 {
   margin: 0;
 }
 p {
-  font-weight: bolder;
-  font-style: oblique;
   font-size:15px;
 }
 html {

@@ -29,6 +29,12 @@ body {
   border-radius: 8px;
 }
 
+.small {
+  min-width: 75px;
+  border-radius: 8px;
+  line-height: 10px;
+}
+
 .big {
   min-width: 300px;
   min-height: 150px;

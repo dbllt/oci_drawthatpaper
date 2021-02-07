@@ -243,12 +243,15 @@ export default {
   padding: 0;
 }
 .tools li{
-  width: 32px;
+  width: 50px;
   display: inline-block;
   padding: 4px;
+  margin: 2px;
   background-color: #c8c8c8;
-  border-left: 1px solid #abaaaa;
-  border-bottom: 1px solid #abaaaa;
+  border-left: 1px solid #1a1a1a;
+  border-right: 1px solid #1a1a1a;
+  border-bottom: 1px solid #1a1a1a;
+  border-top: 1px solid #1a1a1a;
 }
 .tools img {
   width: 32px;
