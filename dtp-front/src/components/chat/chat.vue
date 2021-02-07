@@ -82,6 +82,8 @@ export default  {
       if (this.messages.length >= this.messageLimit && this.messages.length !== 0) {
         this.messages.shift();
       }
+
+      this.scrollToBottom();
     },
     /**
      * Try to sent a message to an handler by using
