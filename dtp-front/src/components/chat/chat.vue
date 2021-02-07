@@ -1,6 +1,5 @@
 <template lang="html">
   <div class="chat">
-    <h1>{{ title }}</h1>
     <div>
       <ul ref="box">
         <chat-msg
@@ -11,30 +10,31 @@
         />
         <br />
       </ul>
-      <div style="float:left;">
+      <!--div style="float:left;">
         <p style="font-size:10px;">{{ inputMessage.length }} / 512</p>
       </div>
       <div style="float:right;">
-        <button v-on:click="scrollToBottom()">\/</button>
-      </div>
+        <button v-on:click="scrollToBottom()">☟</button>
+      </div-->
     </div>
     <br />
     <div class="w3-content" style="width:75%">
       <input
         placeholder="Send a message to the room"
-        class="w3-input w3-round-large w3-border w3-margin-bottom"
+        class="myInput"
         type="text"
         maxlength="512"
         v-model="inputMessage"
         @keydown.enter="_submit()"
       />
+      <button
+          type="button"
+          v-on:click="_submit()"
+      >
+        Ok
+      </button>
     </div>
-    <div
-      class="w3-button w3-margin-bottom myButton w3-large w3-theme-yellow"
-      v-on:click="_submit()"
-    >
-      Send
-    </div>
+
     <br />
   </div>
 </template>
@@ -137,6 +137,20 @@ ul {
   overflow-y: scroll;
   scroll-behavior: smooth;
   list-style: none;
+}
+@media (min-width: 150px) {
+  @media (max-width: 400px) {
+    ul {
+      height: 100px;
+    }
+  }
+}
+.myButton {
+  display: inline-block;
+  width: 5%;
+}
+.myInput {
+  width: 70%;
 }
 .login {
   display: inline-block;

@@ -21,7 +21,7 @@ class GameManager {
      * @param {*} roomId 
      */
     createGame(roomId) {
-        this._games[roomId] = new Game(roomId, 3, 20)
+        this._games[roomId] = new Game(roomId, 5, 60)
     }
 
     /**

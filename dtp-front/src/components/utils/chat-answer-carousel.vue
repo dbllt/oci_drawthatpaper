@@ -1,22 +1,25 @@
 <template lang="html">
   <section class="chat-answer-carousel">
     <!-- if you don't want to use the buttons Flickity provides -->
-    <button class="dir" style="float:left;" v-if="buttons" @click="previous()">
-      ←
-    </button>
-    <button class="dir" style="float:right;" v-if="buttons" @click="next()">
-      →
-    </button>
-    <br />
-    <br />
-    <flickity class="carousel" ref="flickity" :options="flickityOptions">
-      <div class="carousel-cell">
-        <Answer ref="answer"></Answer>
-      </div>
-      <div class="carousel-cell">
-        <chat :message-limit="100" ref="chat"></chat>
-      </div>
-    </flickity>
+    <div>
+
+    </div>
+    <div>
+      <flickity class="carousel" ref="flickity" :options="flickityOptions">
+        <div class="carousel-cell">
+          <button class="dir" style="float:left;" v-if="buttons" @click="previous()">
+            ←
+          </button>
+          <Answer ref="answer"></Answer>
+        </div>
+        <div class="carousel-cell">
+          <button class="dir" style="float:right;" v-if="buttons" @click="next()">
+            →
+          </button>
+          <chat :message-limit="100" :title="'Game Chat'" ref="chat"></chat>
+        </div>
+      </flickity>
+    </div>
   </section>
 </template>
 
@@ -79,12 +82,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.chat-answer-carousel {
+/*.chat-answer-carousel {
   outline: 8px ridge rgba(170, 50, 220, 0.2);
   border-radius: 2rem;
-}
+}*/
 .carousel {
   background: none;
+  margin:0;
   width: 100%;
 }
 
@@ -107,6 +111,7 @@ export default {
 }
 
 .dir {
+  z-index: 10;
   background-color: #6c6c6c;
   padding: 1px;
   text-align: center;
