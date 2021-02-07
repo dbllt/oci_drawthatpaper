@@ -36,7 +36,7 @@ export default {
     return {
       flickityOptions: {
         initialIndex: 0,
-        prevNextButtons: false,
+        prevNextButtons: true,
         pageDots: true,
         wrapAround: true,
       },
