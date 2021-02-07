@@ -7,6 +7,7 @@
       placeholder="Answer here!"
       v-on:keyup.enter="checkAnswer"
       :disabled="!gameStarted"
+      maxlength="32"
     />
     <button type="button" v-on:click="checkAnswer">OK</button>
     <p v-if="firstAnswer" style="font-size: 10px; margin: 0;">
@@ -19,13 +20,16 @@
     <p v-else style="font-size: 10px; margin: 0;">
         Envoyez vos réponses ;)
     </p>
-    <ul id="attemptsList" class="attempts-list">
+    <ul id="attemptsList" class="attempts-list container">
       <li
         v-for="item in attempts.slice().reverse()"
         v-bind:key="item"
-        class="attempts-list-item"
+        class="attempts-list-item container2"
+
       >
+        <b class="button">
         {{ item }}
+        </b>
       </li>
     </ul>
   </section>
@@ -107,7 +111,8 @@ export default {
   border: 2px solid #dce4ec;
   border-radius: 5px;
   list-style-type: none;
-  background-color: white;
+  display: inline-block;
+  background-color: transparent;
 }
 
 @media (min-width: 0px) {
@@ -116,6 +121,36 @@ export default {
       height: 100px;
     }
   }
+}
+.container {
+  width: 70%;
+  display: inline-block;
+  background-color: aliceblue; /* Green */
+  padding: 3px 5px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 10px;
+  border: 3px solid #00000045;
+}
+
+.container2 {
+  display: inline-block;
+  background-color: transparent; /* Green */
+  padding: 3px 5px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.button {
+  display: inline-block;
+  background-color: #4CAF50; /* Green */
+  color: white;
+  padding: 3px 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 3px solid #00000045;
 }
 
 .answer-bad {
