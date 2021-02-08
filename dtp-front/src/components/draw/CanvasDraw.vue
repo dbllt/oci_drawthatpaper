@@ -20,10 +20,6 @@
             <img src="@/assets/color-palette.svg"/>
             <span class="tooltiptext tooltip-bottom">Change color</span>
         </li>
-        <li class="tooltip" id="tool-download" @click="download()">
-            <img src="@/assets/download.svg"/>
-            <span class="tooltiptext tooltip-bottom">Download drawing</span>
-        </li>
         <li class="tooltip" id="tool-clear" @click="clear()">
           <img src="@/assets/clear.svg"/>
           <span class="tooltiptext tooltip-bottom">Clear drawing</span>
