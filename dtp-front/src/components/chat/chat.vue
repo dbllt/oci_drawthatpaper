@@ -31,7 +31,7 @@
           type="button"
           v-on:click="_submit()"
       >
-        Ok
+        Send
       </button>
     </div>
 

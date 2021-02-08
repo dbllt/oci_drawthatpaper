@@ -143,7 +143,7 @@ export default {
 
 .button {
   display: inline-block;
-  background-color: #4CAF50; /* Green */
+  background-color: #EF5558;
   color: white;
   padding: 3px 5px;
   text-align: center;

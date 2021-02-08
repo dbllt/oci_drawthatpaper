@@ -41,7 +41,7 @@
               </tr>
               <tr v-for="item in this.participants" :key="item.id">
                 <th><p>{{ item.username }}</p></th>
-                <th><p>{{ item.score }}</p></th>
+                <th><p>{{ item.score }} <b v-if="isWinner(item.score)">🏆</b></p></th>
               </tr>
             </table>
           </div>
@@ -69,12 +69,12 @@
       <div class="overlay" v-if="this.gameState === 'Ended'">
         <div class="centered">
           <h2 class="overlay-title">Game is over :)</h2>
-          <div class="scores centered">
-              <ul v-for="item in this.participants" :key="item.id">
-                <li>{{ item.username }}: {{ item.score }}</li>
+          <div class="centered">
+              <ul v-for="item in this.participants" :key="item.id" class="score-list">
+                <li>{{ item.username }}: {{ item.score }} <b v-if="isWinner(item.score)">🏆</b></li>
               </ul>
           </div>
-          <div class="w3-button myButton w3-margin  w3-large w3-theme-red" v-on:click="leave">Leave</div>
+          <div class="w3-button myButton w3-margin w3-large w3-theme-red" v-on:click="leave">Leave</div>
         </div>
       </div>
 
@@ -181,8 +181,15 @@ export default {
     changeOpacity(opacity) {
       console.log("OPACITY CHANGED");
       this.opacity = opacity;
+    },
+    isWinner(score) {
+      let tmp = 0.0;
+      for (let p in this.participants) {
+        tmp = Math.max(tmp, this.participants[p].score);
+      }
+      return score >= tmp;
     }
-},
+  },
   created() {
     this.$connection.$on(this.$network_events.PickWord, this.onPickWord);
     this.$connection.$on(
@@ -253,15 +260,7 @@ p {
 html {
   background: #fff;
 }
-/*
-.opacityOnHover {
-  opacity: 1;
-}
 
-.opacityOnHover:hover {
-  opacity: 0.5;
-}
-*/
 .child {
   position: absolute;
   top: 0;
@@ -293,7 +292,13 @@ html {
 }
 .scores {
   font-size: 10px;
+  margin:0;
   background-color: #55000000;
+}
+
+.score-list {
+  list-style: none;
+  color: white;
 }
 
 .vertical-center {
@@ -306,5 +311,6 @@ html {
   width: fit-content;
   float: right;
 }
+
 
 </style>
