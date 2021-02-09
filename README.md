@@ -53,7 +53,7 @@ ACCESS_TOKEN_SECRET=
 REFRESH_TOKEN_SECRET=
 ```
 
-Complete the missing variables. Both TOKEN_SECRET should be random strings that you keep secret.
+Complete the missing variables. Both `TOKEN_SECRET`s should be random strings that you keep secret.
 
 Now install the dependencies using `npm install` and you should be good to go.
 
