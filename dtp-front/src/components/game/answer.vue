@@ -12,13 +12,13 @@
     <button type="button" v-on:click="checkAnswer">OK</button>
     <p v-if="firstAnswer" style="font-size: 10px; margin: 0;">
       <b class="answer-good" v-if="valid"
-      >Vous avez trouvé le mot ! Le mot était {{ word }}</b
+      >You found the word ! It was {{ word }}</b
       >
-      <b class="answer-bad" v-if="!valid">Mauvaise Réponse !</b>
+      <b class="answer-bad" v-if="!valid">Wrong Answer !</b>
 
     </p>
     <p v-else style="font-size: 10px; margin: 0;">
-        Envoyez vos réponses ;)
+        Enter your answers :
     </p>
     <ul id="attemptsList" class="attempts-list container">
       <li
