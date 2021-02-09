@@ -36,8 +36,28 @@ the field "Local:". It should look like this : ```http://localhost:XXXX```.
 
 ### Installing (backend)
 
-In order to run the back, inside `dtp-back` use `npm install` to fetch the dependencies, then run `node server.js`.
-The server should be running on `http://localhost:3000`, you can then configure the frontend to use this.
+First, you have to install MySQL and create a user and database for the service.
+
+Then, import `dtp-back/database/database_schema.sql` into the database you just created.
+
+Inside `dtp-back`, create a file called `.env` with the following lines:
+```
+PORT=3000
+DATABASE_URL=localhost
+DATABASE_USER=
+DATABASE_PASSWORD=
+DATABASE_NAME=
+NODE_ENV=development
+ACCESS_TOKEN_EXPIRATION_TIME=3600000
+ACCESS_TOKEN_SECRET=
+REFRESH_TOKEN_SECRET=
+```
+
+Complete the missing variables. Both TOKEN_SECRET should be random strings that you keep secret.
+
+Now install the dependencies using `npm install` and you should be good to go.
+
+Use `node server.js` to run the server. It should be running on `http://localhost:3000`, you can then configure the frontend to use it.
 
 ### Configuration
 
